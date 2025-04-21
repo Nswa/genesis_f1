@@ -15,7 +15,8 @@ class JournalScreen extends StatefulWidget {
   State<JournalScreen> createState() => _JournalScreenState();
 }
 
-class _JournalScreenState extends State<JournalScreen> with TickerProviderStateMixin {
+class _JournalScreenState extends State<JournalScreen>
+    with TickerProviderStateMixin {
   final List<Entry> _entries = [];
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -35,10 +36,10 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
       vsync: this,
       duration: const Duration(milliseconds: 400),
     )..addListener(() {
-        setState(() {
-          _dragOffsetY = _snapBackController.value * 0;
-        });
+      setState(() {
+        _dragOffsetY = _snapBackController.value * 0;
       });
+    });
 
     _handlePulseController = AnimationController(
       vsync: this,
@@ -60,7 +61,16 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
 
   void _saveEntry() {
     final text = _controller.text.trim();
-    if (text.isEmpty) return;
+
+    if (text.isEmpty) {
+      HapticFeedback.heavyImpact();
+      _snapBackController.forward(from: 0);
+      setState(() {
+        _dragOffsetY = 0;
+        _isDragging = false;
+      });
+      return;
+    }
 
     HapticFeedback.lightImpact();
 
@@ -89,27 +99,6 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
     });
 
     animationController.forward();
-
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.grey[900],
-        content: const Text('Entry saved'),
-        action: SnackBarAction(
-          label: 'UNDO',
-          textColor: Colors.amber,
-          onPressed: () {
-            setState(() {
-              _entries.remove(entry);
-              _controller.text = entry.text;
-              _controller.selection = TextSelection.collapsed(offset: entry.text.length);
-              _focusNode.requestFocus();
-            });
-          },
-        ),
-        duration: const Duration(seconds: 4),
-      ),
-    );
   }
 
   @override
