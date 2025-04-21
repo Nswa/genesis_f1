@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 import '../models/entry.dart';
@@ -22,6 +21,9 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
 
   double _dragOffsetY = 0.0;
   bool _isDragging = false;
+  bool _hasTriggeredSave = false;
+  bool _showRipple = false;
+
   final double _swipeThreshold = 120.0;
 
   late AnimationController _snapBackController;
@@ -33,7 +35,7 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
 
     _snapBackController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 300),
     )..addListener(() {
         setState(() {
           _dragOffsetY = _snapBackController.value * 0;
@@ -62,8 +64,6 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
-    HapticFeedback.lightImpact();
-
     final animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -86,30 +86,19 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
       _entries.insert(0, entry);
       _controller.clear();
       _dragOffsetY = 0;
+      _showRipple = true;
     });
 
     animationController.forward();
 
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.grey[900],
-        content: const Text('Entry saved'),
-        action: SnackBarAction(
-          label: 'UNDO',
-          textColor: Colors.amber,
-          onPressed: () {
-            setState(() {
-              _entries.remove(entry);
-              _controller.text = entry.text;
-              _controller.selection = TextSelection.collapsed(offset: entry.text.length);
-              _focusNode.requestFocus();
-            });
-          },
-        ),
-        duration: const Duration(seconds: 4),
-      ),
-    );
+    // Turn off ripple after animation
+    Future.delayed(const Duration(milliseconds: 600), () {
+      if (mounted) {
+        setState(() {
+          _showRipple = false;
+        });
+      }
+    });
   }
 
   @override
@@ -148,22 +137,34 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
             ),
             GestureDetector(
               onVerticalDragUpdate: (details) {
+                if (_controller.text.trim().isEmpty) return;
+
                 setState(() {
                   _dragOffsetY += details.delta.dy;
                   _dragOffsetY = _dragOffsetY.clamp(-300.0, 0.0);
                   _isDragging = true;
                 });
-              },
-              onVerticalDragEnd: (_) {
-                if (_dragOffsetY < -_swipeThreshold) {
+
+                if (!_hasTriggeredSave && _dragOffsetY < -_swipeThreshold) {
+                  _hasTriggeredSave = true;
                   _saveEntry();
-                } else {
+
                   _snapBackController.forward(from: 0);
                   setState(() {
                     _dragOffsetY = 0;
                     _isDragging = false;
                   });
                 }
+              },
+              onVerticalDragEnd: (_) {
+                _hasTriggeredSave = false;
+                if (!_isDragging) return;
+
+                _snapBackController.forward(from: 0);
+                setState(() {
+                  _dragOffsetY = 0;
+                  _isDragging = false;
+                });
               },
               child: JournalInputWidget(
                 controller: _controller,
@@ -173,6 +174,7 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
                 swipeThreshold: _swipeThreshold,
                 onHashtagInsert: _insertHashtag,
                 handlePulseController: _handlePulseController,
+                showRipple: _showRipple,
               ),
             ),
           ],
