@@ -14,7 +14,8 @@ class JournalScreen extends StatefulWidget {
   State<JournalScreen> createState() => _JournalScreenState();
 }
 
-class _JournalScreenState extends State<JournalScreen> with TickerProviderStateMixin {
+class _JournalScreenState extends State<JournalScreen>
+    with TickerProviderStateMixin {
   final List<Entry> _entries = [];
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -37,10 +38,10 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
       vsync: this,
       duration: const Duration(milliseconds: 300),
     )..addListener(() {
-        setState(() {
-          _dragOffsetY = _snapBackController.value * 0;
-        });
+      setState(() {
+        _dragOffsetY = _snapBackController.value * 0;
       });
+    });
 
     _handlePulseController = AnimationController(
       vsync: this,
@@ -63,6 +64,18 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
   void _saveEntry() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
+
+    if (text.isEmpty) {
+      HapticFeedback.heavyImpact();
+      _snapBackController.forward(from: 0);
+      setState(() {
+        _dragOffsetY = 0;
+        _isDragging = false;
+      });
+      return;
+    }
+
+    HapticFeedback.lightImpact();
 
     final animationController = AnimationController(
       vsync: this,
