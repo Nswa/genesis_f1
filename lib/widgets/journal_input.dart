@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:ui';
 import '../utils/mood_utils.dart';
 
-class JournalInputWidget extends StatelessWidget {
+class JournalInputWidget extends StatefulWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final double dragOffsetY;
@@ -31,16 +31,51 @@ class JournalInputWidget extends StatelessWidget {
   });
 
   @override
+  State<JournalInputWidget> createState() => _JournalInputWidgetState();
+}
+
+class _JournalInputWidgetState extends State<JournalInputWidget> 
+    with TickerProviderStateMixin {
+  late AnimationController _emojiBarController;
+  bool _isEmojiBarExpanded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emojiBarController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emojiBarController.dispose();
+    super.dispose();
+  }
+
+  void _toggleEmojiBar() {
+    setState(() {
+      _isEmojiBarExpanded = !_isEmojiBarExpanded;
+      if (_isEmojiBarExpanded) {
+        _emojiBarController.forward();
+      } else {
+        _emojiBarController.reverse();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final timestamp = DateFormat('h:mm a • MMMM d, yyyy').format(now);
 
-    double fadeValue = (1 + (dragOffsetY / swipeThreshold)).clamp(0.0, 1.0);
-    double scaleValue = (1 + (dragOffsetY / (swipeThreshold * 2))).clamp(0.96, 1.0);
-    double dragProgress = (-dragOffsetY / swipeThreshold).clamp(0.0, 1.0);
+    double fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(0.0, 1.0);
+    double scaleValue = (1 + (widget.dragOffsetY / (widget.swipeThreshold * 2))).clamp(0.96, 1.0);
+    double dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(0.0, 1.0);
 
     return Transform.translate(
-      offset: Offset(0, dragOffsetY),
+      offset: Offset(0, widget.dragOffsetY),
       child: Transform.scale(
         scale: scaleValue,
         child: Padding(
@@ -83,13 +118,23 @@ class JournalInputWidget extends StatelessWidget {
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
-                            if (selectedMood != null) ...[
-                              const SizedBox(width: 8),
-                              Text(
-                                selectedMood!,
-                                style: const TextStyle(fontSize: 14),
+                            GestureDetector(
+                              onTap: _toggleEmojiBar,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    widget.selectedMood ?? '😊',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: widget.selectedMood != null 
+                                        ? Colors.white 
+                                        : Colors.white30,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ],
                         ),
                         const Icon(Icons.star, color: Colors.white24, size: 18),
@@ -97,8 +142,8 @@ class JournalInputWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     TextField(
-                      controller: controller,
-                      focusNode: focusNode,
+                      controller: widget.controller,
+                      focusNode: widget.focusNode,
                       maxLines: null,
                       autofocus: true,
                       style: const TextStyle(
@@ -115,34 +160,54 @@ class JournalInputWidget extends StatelessWidget {
                     const SizedBox(height: 12),
                     Column(
                       children: [
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: availableMoods.map((emoji) {
-                              return GestureDetector(
-                                onTap: () => onMoodSelected(emoji),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                                  child: Text(
-                                    emoji,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.white.withOpacity(
-                                        selectedMood == emoji ? 1.0 : 0.5,
+                        // Emoji selection bar
+                        // Emoji selection bar
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeOut,
+                          height: _isEmojiBarExpanded ? 42 : 0,
+                          margin: const EdgeInsets.only(bottom: 8),
+                          child: ClipRect(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: Row(
+                                children: availableMoods.map((emoji) {
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      widget.onMoodSelected(emoji);
+                                      if (_isEmojiBarExpanded) {
+                                        _toggleEmojiBar();
+                                      }
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                                      child: AnimatedScale(
+                                        scale: widget.selectedMood == emoji ? 1.2 : 1.0,
+                                        duration: const Duration(milliseconds: 150),
+                                        child: Text(
+                                          emoji,
+                                          style: TextStyle(
+                                            fontSize: 28,
+                                            color: Colors.white.withOpacity(
+                                              widget.selectedMood == emoji ? 1.0 : 0.8,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             AnimatedOpacity(
-                              opacity: isDragging ? 0.0 : 1.0,
+                              opacity: widget.isDragging ? 0.0 : 1.0,
                               duration: const Duration(milliseconds: 300),
                               child: const Text(
                                 "⬆️ Swipe up to save",
@@ -153,7 +218,7 @@ class JournalInputWidget extends StatelessWidget {
                               ),
                             ),
                             GestureDetector(
-                              onTap: onHashtagInsert,
+                          onTap: widget.onHashtagInsert,
                               child: const Text(
                                 "# TAG",
                                 style: TextStyle(
