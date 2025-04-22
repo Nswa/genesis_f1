@@ -32,13 +32,14 @@ class JournalInputWidget extends StatelessWidget {
 
     double fadeValue = (1 + (dragOffsetY / swipeThreshold)).clamp(0.0, 1.0);
     double scaleValue = (1 + (dragOffsetY / (swipeThreshold * 2))).clamp(0.96, 1.0);
+    double dragProgress = (-dragOffsetY / swipeThreshold).clamp(0.0, 1.0);
 
     return Transform.translate(
       offset: Offset(0, dragOffsetY),
       child: Transform.scale(
         scale: scaleValue,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,19 +49,22 @@ class JournalInputWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: ScaleTransition(
-                        scale: handlePulseController,
-                        child: Container(
-                          width: 40,
-                          height: 5,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white24,
-                            borderRadius: BorderRadius.circular(3),
+                      child: Transform.translate(
+                        offset: Offset(0, -20 * dragProgress),
+                        child: Transform.rotate(
+                          angle: dragProgress * 0.5,
+                          child: Transform.scale(
+                            scale: 0.8 + 0.2 * dragProgress,
+                            child: Icon(
+                              Icons.arrow_upward,
+                              size: 15,
+                              color: Colors.white.withOpacity(dragProgress),
+                            ),
                           ),
                         ),
                       ),
                     ),
+                    const SizedBox(height: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -129,5 +133,3 @@ class JournalInputWidget extends StatelessWidget {
     );
   }
 }
-
-
