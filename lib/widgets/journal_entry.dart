@@ -41,9 +41,16 @@ class JournalEntryWidget extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Text(
-                    '${entry.mood} • ${entry.tags.join(" ")} • ${entry.wordCount} words',
-                    style: const TextStyle(fontSize: 12, color: Colors.white38),
+                  Flexible(
+                    child: Text(
+                      '${entry.mood} • ${entry.tags.join(" ")} • ${entry.wordCount} words',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white38,
+                      ),
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                    ),
                   ),
                 ],
               ),
