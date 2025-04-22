@@ -1,6 +1,7 @@
+// journal_input.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui'; // for ImageFilter
+import 'dart:ui';
 
 class JournalInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -38,35 +39,9 @@ class JournalInputWidget extends StatelessWidget {
         scale: scaleValue,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ✨ Full acrylic shimmer effect
-              Positioned.fill(
-                child: AnimatedOpacity(
-                  opacity: showRipple ? 1.0 : 0.0,
-                  duration: const Duration(milliseconds: 400),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.06),
-                              Colors.transparent,
-                            ],
-                            center: Alignment.center,
-                            radius: 1.0,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
-              // ✍️ Input content with drag-fade
               Opacity(
                 opacity: fadeValue,
                 child: Column(
@@ -154,3 +129,5 @@ class JournalInputWidget extends StatelessWidget {
     );
   }
 }
+
+

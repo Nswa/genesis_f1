@@ -1,3 +1,4 @@
+// journal_screen.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -91,7 +92,6 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
 
     animationController.forward();
 
-    // Turn off ripple after animation
     Future.delayed(const Duration(milliseconds: 600), () {
       if (mounted) {
         setState(() {
@@ -175,6 +175,20 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
                 onHashtagInsert: _insertHashtag,
                 handlePulseController: _handlePulseController,
                 showRipple: _showRipple,
+              ),
+            ),
+            // 📊 Fixed progress bar right below the input widget
+            Container(
+              height: 1,
+              width: double.infinity,
+              color: Colors.white12,
+              alignment: Alignment.centerLeft,
+              child: FractionallySizedBox(
+                widthFactor: (-_dragOffsetY / _swipeThreshold).clamp(0.0, 1.0),
+                child: Container(
+                  height: 1,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],
