@@ -22,6 +22,7 @@ class _JournalScreenState extends State<JournalScreen>
   final FocusNode _focusNode = FocusNode();
 
   double _dragOffsetY = 0.0;
+  String? _selectedMood;
   bool _isDragging = false;
   bool _hasTriggeredSave = false;
   bool _showRipple = false;
@@ -71,7 +72,7 @@ class _JournalScreenState extends State<JournalScreen>
       duration: const Duration(milliseconds: 400),
     );
 
-    final mood = analyzeMood(text);
+    final mood = _selectedMood ?? analyzeMood(text);
     final tags = extractTags(text);
     final wordCount = text.split(RegExp(r'\s+')).length;
 
@@ -89,6 +90,7 @@ class _JournalScreenState extends State<JournalScreen>
       _controller.clear();
       _dragOffsetY = 0;
       _showRipple = true;
+      _selectedMood = null;
     });
 
     animationController.forward();
@@ -199,6 +201,10 @@ class _JournalScreenState extends State<JournalScreen>
                 onHashtagInsert: _insertHashtag,
                 handlePulseController: _handlePulseController,
                 showRipple: _showRipple,
+                onMoodSelected: (mood) {
+                  setState(() => _selectedMood = mood);
+                },
+                selectedMood: _selectedMood,
               ),
             ),
             // 📊 Fixed progress bar right below the input widget

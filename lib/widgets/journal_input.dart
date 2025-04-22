@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui';
+import '../utils/mood_utils.dart';
 
 class JournalInputWidget extends StatelessWidget {
   final TextEditingController controller;
@@ -12,6 +13,8 @@ class JournalInputWidget extends StatelessWidget {
   final VoidCallback onHashtagInsert;
   final AnimationController handlePulseController;
   final bool showRipple;
+  final Function(String) onMoodSelected;
+  final String? selectedMood;
 
   const JournalInputWidget({
     super.key,
@@ -23,6 +26,8 @@ class JournalInputWidget extends StatelessWidget {
     required this.onHashtagInsert,
     required this.handlePulseController,
     required this.showRipple,
+    required this.onMoodSelected,
+    this.selectedMood,
   });
 
   @override
@@ -68,13 +73,24 @@ class JournalInputWidget extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          timestamp,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.white30,
-                            fontStyle: FontStyle.italic,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              timestamp,
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: Colors.white30,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            if (selectedMood != null) ...[
+                              const SizedBox(width: 8),
+                              Text(
+                                selectedMood!,
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ],
                         ),
                         const Icon(Icons.star, color: Colors.white24, size: 18),
                       ],
@@ -97,29 +113,56 @@ class JournalInputWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       children: [
-                        AnimatedOpacity(
-                          opacity: isDragging ? 0.0 : 1.0,
-                          duration: const Duration(milliseconds: 300),
-                          child: const Text(
-                            "⬆️ Swipe up to save",
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.white30,
-                            ),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: availableMoods.map((emoji) {
+                              return GestureDetector(
+                                onTap: () => onMoodSelected(emoji),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  child: Text(
+                                    emoji,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white.withOpacity(
+                                        selectedMood == emoji ? 1.0 : 0.5,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: onHashtagInsert,
-                          child: const Text(
-                            "# TAG",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.white54,
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            AnimatedOpacity(
+                              opacity: isDragging ? 0.0 : 1.0,
+                              duration: const Duration(milliseconds: 300),
+                              child: const Text(
+                                "⬆️ Swipe up to save",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white30,
+                                ),
+                              ),
                             ),
-                          ),
+                            GestureDetector(
+                              onTap: onHashtagInsert,
+                              child: const Text(
+                                "# TAG",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.white54,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
