@@ -15,7 +15,8 @@ class JournalScreen extends StatefulWidget {
   State<JournalScreen> createState() => _JournalScreenState();
 }
 
-class _JournalScreenState extends State<JournalScreen> with TickerProviderStateMixin {
+class _JournalScreenState extends State<JournalScreen>
+    with TickerProviderStateMixin {
   final List<Entry> _entries = [];
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -38,10 +39,10 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
       vsync: this,
       duration: const Duration(milliseconds: 300),
     )..addListener(() {
-        setState(() {
-          _dragOffsetY = _snapBackController.value * 0;
-        });
+      setState(() {
+        _dragOffsetY = _snapBackController.value * 0;
       });
+    });
 
     _handlePulseController = AnimationController(
       vsync: this,
@@ -120,21 +121,44 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
         child: Column(
           children: [
             Expanded(
-              child: ListView.builder(
-                reverse: true,
-                padding: EdgeInsets.zero,
-                itemCount: _entries.length,
-                itemBuilder: (context, index) {
-                  final entry = _entries[index];
-                  return JournalEntryWidget(
-                    entry: entry,
-                    onToggleFavorite: () {
-                      setState(() => entry.isFavorite = !entry.isFavorite);
+              child: Stack(
+                children: [
+                  ListView.builder(
+                    reverse: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: _entries.length,
+                    itemBuilder: (context, index) {
+                      final entry = _entries[index];
+                      return JournalEntryWidget(
+                        entry: entry,
+                        onToggleFavorite: () {
+                          setState(() => entry.isFavorite = !entry.isFavorite);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                  // Fading effect at the bottom
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 100,
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            colors: [Colors.black, Colors.transparent],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+
             GestureDetector(
               onVerticalDragUpdate: (details) {
                 if (_controller.text.trim().isEmpty) return;
@@ -185,10 +209,7 @@ class _JournalScreenState extends State<JournalScreen> with TickerProviderStateM
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: (-_dragOffsetY / _swipeThreshold).clamp(0.0, 1.0),
-                child: Container(
-                  height: 1,
-                  color: Colors.white,
-                ),
+                child: Container(height: 1, color: Colors.white),
               ),
             ),
           ],
