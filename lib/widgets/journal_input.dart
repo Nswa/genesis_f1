@@ -71,7 +71,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     final timestamp = DateFormat('h:mm a • MMMM d, yyyy').format(now);
 
     double fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(0.0, 1.0);
-    double scaleValue = (1 + (widget.dragOffsetY / (widget.swipeThreshold * 2))).clamp(0.96, 1.0);
+    double scaleValue = (1 - (widget.dragOffsetY.abs() / (widget.swipeThreshold * 1.5))).clamp(0.8, 1.0);
     double dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(0.0, 1.0);
 
     return Transform.translate(
