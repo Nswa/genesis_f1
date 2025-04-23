@@ -34,7 +34,7 @@ class JournalInputWidget extends StatefulWidget {
   State<JournalInputWidget> createState() => _JournalInputWidgetState();
 }
 
-class _JournalInputWidgetState extends State<JournalInputWidget> 
+class _JournalInputWidgetState extends State<JournalInputWidget>
     with TickerProviderStateMixin {
   late AnimationController _emojiBarController;
   bool _isEmojiBarExpanded = false;
@@ -78,12 +78,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       offset: Offset(0, widget.dragOffsetY),
       child: Transform.scale(
         scale: scaleValue,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Opacity(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Padded content
+            Padding(
+              padding: const EdgeInsets.fromLTRB(5, 0, 5, 2),
+              child: Opacity(
                 opacity: fadeValue,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,9 +128,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                     widget.selectedMood ?? '😊',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: widget.selectedMood != null 
-                                        ? Colors.white 
-                                        : Colors.white30,
+                                      color: widget.selectedMood != null
+                                          ? Colors.white
+                                          : Colors.white30,
                                     ),
                                   ),
                                 ],
@@ -158,84 +159,75 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Column(
+                    // Bottom actions row
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Emoji selection bar
-                        // Emoji selection bar
-                        AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          curve: Curves.easeOut,
-                          height: _isEmojiBarExpanded ? 42 : 0,
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: ClipRect(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
-                              child: Row(
-                                children: availableMoods.map((emoji) {
-                                  return GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      widget.onMoodSelected(emoji);
-                                      if (_isEmojiBarExpanded) {
-                                        _toggleEmojiBar();
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                                      child: AnimatedScale(
-                                        scale: widget.selectedMood == emoji ? 1.2 : 1.0,
-                                        duration: const Duration(milliseconds: 150),
-                                        child: Text(
-                                          emoji,
-                                          style: TextStyle(
-                                            fontSize: 28,
-                                            color: Colors.white.withOpacity(
-                                              widget.selectedMood == emoji ? 1.0 : 0.8,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
+                        AnimatedOpacity(
+                          opacity: widget.isDragging ? 0.0 : 1.0,
+                          duration: const Duration(milliseconds: 300),
+                          child: const Text(
+                            "⬆️ Swipe up to save",
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.white30,
                             ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            AnimatedOpacity(
-                              opacity: widget.isDragging ? 0.0 : 1.0,
-                              duration: const Duration(milliseconds: 300),
-                              child: const Text(
-                                "⬆️ Swipe up to save",
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.white30,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
+                        GestureDetector(
                           onTap: widget.onHashtagInsert,
-                              child: const Text(
-                                "# TAG",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.white54,
-                                ),
-                              ),
+                          child: const Text(
+                            "# TAG",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white54,
                             ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+
+            // Full-width Emoji bar outside the padding
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeOut,
+              height: _isEmojiBarExpanded ? 33 : 0,
+              margin: const EdgeInsets.only(top: 4),
+              child: ClipRect(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 0),
+                  child: Row(
+                    children: availableMoods.map((emoji) {
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          widget.onMoodSelected(emoji);
+                          _toggleEmojiBar();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Text(
+                            emoji,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white.withOpacity(
+                                widget.selectedMood == emoji ? 1.0 : 0.8,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
