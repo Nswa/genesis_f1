@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "975280955280",
+    "project_id": "genesis-f1",
+    "storage_bucket": "genesis-f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:975280955280:android:1499df6cb146566e265d15",
+        "android_client_info": {
+          "package_name": "com.example.genesis_f1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi65DoAv1o4Tdg-aI4DC3vrkVwzFNNpyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
