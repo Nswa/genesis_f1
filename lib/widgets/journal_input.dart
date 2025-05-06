@@ -1,7 +1,6 @@
 // journal_input.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:ui';
 import '../utils/mood_utils.dart';
 
 class JournalInputWidget extends StatefulWidget {
@@ -70,9 +69,17 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     final now = DateTime.now();
     final timestamp = DateFormat('h:mm a • MMMM d, yyyy').format(now);
 
-    double fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(0.0, 1.0);
-    double scaleValue = (1 - (widget.dragOffsetY.abs() / (widget.swipeThreshold * 1.5))).clamp(0.8, 1.0);
-    double dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(0.0, 1.0);
+    double fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(
+      0.0,
+      1.0,
+    );
+    double scaleValue = (1 -
+            (widget.dragOffsetY.abs() / (widget.swipeThreshold * 1.5)))
+        .clamp(0.8, 1.0);
+    double dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(
+      0.0,
+      1.0,
+    );
 
     return Transform.translate(
       offset: Offset(0, widget.dragOffsetY),
@@ -128,9 +135,10 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                     widget.selectedMood ?? '😊',
                                     style: TextStyle(
                                       fontSize: 14,
-                                      color: widget.selectedMood != null
-                                          ? Colors.white
-                                          : Colors.white30,
+                                      color:
+                                          widget.selectedMood != null
+                                              ? Colors.white
+                                              : Colors.white30,
                                     ),
                                   ),
                                 ],
@@ -202,27 +210,30 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                   scrollDirection: Axis.horizontal,
                   padding: const EdgeInsets.symmetric(horizontal: 0),
                   child: Row(
-                    children: availableMoods.map((emoji) {
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          widget.onMoodSelected(emoji);
-                          _toggleEmojiBar();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Text(
-                            emoji,
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white.withOpacity(
-                                widget.selectedMood == emoji ? 1.0 : 0.8,
+                    children:
+                        availableMoods.map((emoji) {
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              widget.onMoodSelected(emoji);
+                              _toggleEmojiBar();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
+                              child: Text(
+                                emoji,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white.withOpacity(
+                                    widget.selectedMood == emoji ? 1.0 : 0.8,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                 ),
               ),
