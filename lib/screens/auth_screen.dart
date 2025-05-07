@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genesis_f1/digital_assets/auth_bg.dart';
 import '../services/auth_manager.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -28,27 +29,55 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          TextField(
-            onChanged: (val) => email = val,
-            decoration: const InputDecoration(labelText: 'Email'),
+      body: AuthBackground(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.of(context).size.height,
+            ),
+            child: IntrinsicHeight(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'genesis',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'IBM Plex Sans',
+                      fontWeight: FontWeight.w500,
+                      fontSize: 48,
+                      color: Colors.white,
+                      letterSpacing: -1,
+                    ),
+                  ),
+                  const SizedBox(height: 48),
+                  TextField(
+                    onChanged: (val) => email = val,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                  ),
+                  const SizedBox(height: 12),
+                  TextField(
+                    onChanged: (val) => password = val,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: submit,
+                    child: Text(isLogin ? 'Login' : 'Register'),
+                  ),
+                  TextButton(
+                    onPressed: () => setState(() => isLogin = !isLogin),
+                    child: Text(
+                      isLogin ? 'Switch to Register' : 'Switch to Login',
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          TextField(
-            onChanged: (val) => password = val,
-            obscureText: true,
-            decoration: const InputDecoration(labelText: 'Password'),
-          ),
-          ElevatedButton(
-            onPressed: submit,
-            child: Text(isLogin ? 'Login' : 'Register'),
-          ),
-          TextButton(
-            onPressed: () => setState(() => isLogin = !isLogin),
-            child: Text(isLogin ? 'Switch to Register' : 'Switch to Login'),
-          ),
-        ],
+        ),
       ),
     );
   }
