@@ -1,5 +1,6 @@
 // journal_screen.dart
 import 'package:flutter/material.dart';
+import 'package:genesis_f1/utils/system_ui_helper.dart';
 import 'package:intl/intl.dart';
 
 import '../models/entry.dart';
@@ -118,6 +119,7 @@ class _JournalScreenState extends State<JournalScreen>
 
   @override
   Widget build(BuildContext context) {
+    updateSystemUiOverlay(context);
     return Scaffold(
       body: SafeArea(
         child: Column(

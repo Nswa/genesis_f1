@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:genesis_f1/digital_assets/auth_bg.dart';
+import 'package:genesis_f1/utils/system_ui_helper.dart';
 import '../services/auth_manager.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    updateSystemUiOverlay(context);
     return Scaffold(
       body: AuthBackground(
         child: SingleChildScrollView(
