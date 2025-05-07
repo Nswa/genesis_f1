@@ -81,6 +81,9 @@ flutter:
    - family: IBM Plex Sans
      fonts:
        - asset: assets/fonts/IBMPlexSans-VariableFont_wdth,wght.ttf
+   - family: BreeSerif
+     fonts:
+       - asset: assets/fonts/BreeSerif-Regular.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

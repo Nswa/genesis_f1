@@ -156,11 +156,19 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                     ),
                     const SizedBox(height: 10),
                     TextField(
+                      cursorColor:
+                          theme.brightness == Brightness.dark
+                              ? Colors.white70
+                              : Colors.black54,
+
                       controller: widget.controller,
                       focusNode: widget.focusNode,
                       maxLines: null,
                       autofocus: true,
-                      style: theme.textTheme.bodyLarge?.copyWith(fontSize: 20),
+                      style:
+                          theme
+                              .textTheme
+                              .titleMedium, // 👈 uses BreeSerif via theme
                       decoration: InputDecoration(
                         hintText: "Write your thoughts...",
                         hintStyle: TextStyle(color: theme.hintColor),

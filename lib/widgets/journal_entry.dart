@@ -61,14 +61,7 @@ class JournalEntryWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text(
-                      entry.text,
-                      style: TextStyle(
-                        fontSize: 20,
-                        height: 1.55,
-                        color: textColor,
-                      ),
-                    ),
+                    child: Text(entry.text, style: theme.textTheme.titleMedium),
                   ),
                   const SizedBox(width: 12),
                   GestureDetector(
