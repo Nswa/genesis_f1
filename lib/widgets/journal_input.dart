@@ -1,4 +1,3 @@
-// journal_input.dart
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../utils/mood_utils.dart';
@@ -68,15 +67,16 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   Widget build(BuildContext context) {
     final now = DateTime.now();
     final timestamp = DateFormat('h:mm a • MMMM d, yyyy').format(now);
+    final theme = Theme.of(context);
 
-    double fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(
+    final fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(
       0.0,
       1.0,
     );
-    double scaleValue = (1 -
+    final scaleValue = (1 -
             (widget.dragOffsetY.abs() / (widget.swipeThreshold * 1.5)))
         .clamp(0.8, 1.0);
-    double dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(
+    final dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(
       0.0,
       1.0,
     );
@@ -88,7 +88,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Padded content
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 0, 5, 2),
               child: Opacity(
@@ -106,7 +105,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             child: Icon(
                               Icons.arrow_upward,
                               size: 15,
-                              color: Colors.white.withOpacity(dragProgress),
+                              color: theme.iconTheme.color?.withOpacity(
+                                dragProgress,
+                              ),
                             ),
                           ),
                         ),
@@ -120,9 +121,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                           children: [
                             Text(
                               timestamp,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
-                                color: Colors.white30,
+                                color: theme.hintColor,
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
@@ -137,8 +138,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       fontSize: 14,
                                       color:
                                           widget.selectedMood != null
-                                              ? Colors.white
-                                              : Colors.white30,
+                                              ? theme.textTheme.bodyLarge?.color
+                                              : theme.hintColor,
                                     ),
                                   ),
                                 ],
@@ -146,7 +147,11 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             ),
                           ],
                         ),
-                        const Icon(Icons.star, color: Colors.white24, size: 18),
+                        Icon(
+                          Icons.star,
+                          color: theme.iconTheme.color?.withOpacity(0.24),
+                          size: 18,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -155,40 +160,36 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                       focusNode: widget.focusNode,
                       maxLines: null,
                       autofocus: true,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        height: 1.55,
-                      ),
-                      decoration: const InputDecoration(
+                      style: theme.textTheme.bodyLarge?.copyWith(fontSize: 20),
+                      decoration: InputDecoration(
                         hintText: "Write your thoughts...",
-                        hintStyle: TextStyle(color: Colors.white30),
+                        hintStyle: TextStyle(color: theme.hintColor),
                         border: InputBorder.none,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    // Bottom actions row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AnimatedOpacity(
                           opacity: widget.isDragging ? 0.0 : 1.0,
                           duration: const Duration(milliseconds: 300),
-                          child: const Text(
+                          child: Text(
                             "⬆️ Swipe up to save",
                             style: TextStyle(
                               fontSize: 11,
-                              color: Colors.white30,
+                              color: theme.hintColor,
                             ),
                           ),
                         ),
                         GestureDetector(
                           onTap: widget.onHashtagInsert,
-                          child: const Text(
+                          child: Text(
                             "# TAG",
                             style: TextStyle(
                               fontSize: 13,
-                              color: Colors.white54,
+                              color: theme.textTheme.bodyMedium?.color
+                                  ?.withOpacity(0.54),
                             ),
                           ),
                         ),
@@ -198,8 +199,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                 ),
               ),
             ),
-
-            // Full-width Emoji bar outside the padding
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeOut,
@@ -226,9 +225,12 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 emoji,
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: Colors.white.withOpacity(
-                                    widget.selectedMood == emoji ? 1.0 : 0.8,
-                                  ),
+                                  color: theme.textTheme.bodyLarge?.color
+                                      ?.withOpacity(
+                                        widget.selectedMood == emoji
+                                            ? 1.0
+                                            : 0.8,
+                                      ),
                                 ),
                               ),
                             ),

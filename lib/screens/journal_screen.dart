@@ -1,4 +1,3 @@
-// journal_screen.dart
 import 'package:flutter/material.dart';
 import 'package:genesis_f1/utils/system_ui_helper.dart';
 import 'package:intl/intl.dart';
@@ -120,6 +119,15 @@ class _JournalScreenState extends State<JournalScreen>
   @override
   Widget build(BuildContext context) {
     updateSystemUiOverlay(context);
+
+    final theme = Theme.of(context);
+    final dividerColor = theme.dividerColor;
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    final background = theme.scaffoldBackgroundColor;
+    final isDark = theme.brightness == Brightness.dark;
+    final progressBaseColor = isDark ? Colors.black12 : Colors.white12;
+    final progressFillColor = isDark ? Colors.white : Colors.black;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -141,7 +149,6 @@ class _JournalScreenState extends State<JournalScreen>
                       );
                     },
                   ),
-                  // Fading effect at the bottom
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -149,11 +156,11 @@ class _JournalScreenState extends State<JournalScreen>
                     height: 100,
                     child: IgnorePointer(
                       child: Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.bottomCenter,
                             end: Alignment.topCenter,
-                            colors: [Colors.black, Colors.transparent],
+                            colors: [background, background.withOpacity(0.0)],
                           ),
                         ),
                       ),
@@ -162,7 +169,6 @@ class _JournalScreenState extends State<JournalScreen>
                 ],
               ),
             ),
-
             GestureDetector(
               onVerticalDragUpdate: (details) {
                 if (_controller.text.trim().isEmpty) return;
@@ -209,15 +215,14 @@ class _JournalScreenState extends State<JournalScreen>
                 selectedMood: _selectedMood,
               ),
             ),
-            // 📊 Fixed progress bar right below the input widget
             Container(
               height: 1,
               width: double.infinity,
-              color: Colors.white12,
+              color: progressBaseColor,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
                 widthFactor: (-_dragOffsetY / _swipeThreshold).clamp(0.0, 1.0),
-                child: Container(height: 1, color: Colors.white),
+                child: Container(height: 1, color: progressFillColor),
               ),
             ),
           ],

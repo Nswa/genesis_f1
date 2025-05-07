@@ -13,6 +13,11 @@ class JournalEntryWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    final hintColor = theme.hintColor;
+    final metaColor = theme.textTheme.bodySmall?.color?.withOpacity(0.8);
+
     return FadeTransition(
       opacity: CurvedAnimation(
         parent: entry.animController,
@@ -32,9 +37,9 @@ class JournalEntryWidget extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 6, left: 4),
                 child: Text(
                   entry.timestamp,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11,
-                    color: Colors.white30,
+                    color: hintColor,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -44,10 +49,7 @@ class JournalEntryWidget extends StatelessWidget {
                   Flexible(
                     child: Text(
                       '${entry.mood} • ${entry.tags.join(" ")} • ${entry.wordCount} words',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white38,
-                      ),
+                      style: TextStyle(fontSize: 12, color: metaColor),
                       softWrap: true,
                       overflow: TextOverflow.fade,
                     ),
@@ -61,10 +63,10 @@ class JournalEntryWidget extends StatelessWidget {
                   Expanded(
                     child: Text(
                       entry.text,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         height: 1.55,
-                        color: Colors.white,
+                        color: textColor,
                       ),
                     ),
                   ),
@@ -74,7 +76,10 @@ class JournalEntryWidget extends StatelessWidget {
                     child: Icon(
                       Icons.star,
                       size: 18,
-                      color: entry.isFavorite ? Colors.amber : Colors.white24,
+                      color:
+                          entry.isFavorite
+                              ? Colors.amber
+                              : theme.iconTheme.color?.withOpacity(0.24),
                     ),
                   ),
                 ],
