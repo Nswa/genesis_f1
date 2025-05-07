@@ -121,8 +121,6 @@ class _JournalScreenState extends State<JournalScreen>
     updateSystemUiOverlay(context);
 
     final theme = Theme.of(context);
-    final dividerColor = theme.dividerColor;
-    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     final background = theme.scaffoldBackgroundColor;
     final isDark = theme.brightness == Brightness.dark;
     final progressBaseColor = isDark ? Colors.black12 : Colors.white12;
@@ -133,40 +131,61 @@ class _JournalScreenState extends State<JournalScreen>
         child: Column(
           children: [
             Expanded(
-              child: Stack(
-                children: [
-                  ListView.builder(
-                    reverse: true,
-                    padding: EdgeInsets.zero,
-                    itemCount: _entries.length,
-                    itemBuilder: (context, index) {
-                      final entry = _entries[index];
-                      return JournalEntryWidget(
-                        entry: entry,
-                        onToggleFavorite: () {
-                          setState(() => entry.isFavorite = !entry.isFavorite);
-                        },
-                      );
-                    },
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: 30,
-                    child: IgnorePointer(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
-                            colors: [background, background.withOpacity(0.0)],
+              child: SizedBox.expand(
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      reverse: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: _entries.length,
+                      itemBuilder: (context, index) {
+                        final entry = _entries[index];
+                        return JournalEntryWidget(
+                          entry: entry,
+                          onToggleFavorite: () {
+                            setState(
+                              () => entry.isFavorite = !entry.isFavorite,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 30,
+                      child: IgnorePointer(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [background, background.withOpacity(0.0)],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      height: 30,
+                      child: IgnorePointer(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                              colors: [background, background.withOpacity(0.0)],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             GestureDetector(
