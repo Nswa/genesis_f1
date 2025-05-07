@@ -1,28 +1,7 @@
 import 'package:flutter/material.dart';
 
-final darkTheme = ThemeData(
-  brightness: Brightness.dark,
-  scaffoldBackgroundColor: Colors.black,
-  fontFamily: 'Georgia',
-  textTheme: const TextTheme(
-    displayLarge: TextStyle(
-      fontFamily: 'IBM Plex Sans',
-      fontWeight: FontWeight.w500,
-      fontSize: 48,
-      letterSpacing: -1,
-      color: Colors.white,
-    ),
-    bodyLarge: TextStyle(color: Colors.white),
-    bodyMedium: TextStyle(color: Colors.white70),
-    bodySmall: TextStyle(color: Colors.white60),
-    labelSmall: TextStyle(color: Colors.white38),
-  ),
-  hintColor: Colors.white30,
-  iconTheme: IconThemeData(color: Colors.white54),
-  dividerColor: Colors.white12,
-);
-
 final lightTheme = ThemeData(
+  useMaterial3: true,
   brightness: Brightness.light,
   scaffoldBackgroundColor: Colors.white,
   fontFamily: 'Georgia',
@@ -34,12 +13,49 @@ final lightTheme = ThemeData(
       letterSpacing: -1,
       color: Colors.black,
     ),
-    bodyLarge: TextStyle(color: Colors.black),
-    bodyMedium: TextStyle(color: Colors.black87),
-    bodySmall: TextStyle(color: Colors.black54),
-    labelSmall: TextStyle(color: Colors.black38),
   ),
-  hintColor: Colors.black26,
-  iconTheme: IconThemeData(color: Colors.black45),
-  dividerColor: Colors.black12,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.deepPurple,
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: Colors.deepPurple,
+      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+    ),
+  ),
+);
+
+final darkTheme = ThemeData(
+  useMaterial3: true,
+  brightness: Brightness.dark,
+  scaffoldBackgroundColor: Colors.black,
+  fontFamily: 'Georgia',
+  textTheme: const TextTheme(
+    displayLarge: TextStyle(
+      fontFamily: 'IBM Plex Sans',
+      fontWeight: FontWeight.w500,
+      fontSize: 48,
+      letterSpacing: -1,
+      color: Colors.white,
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.deepPurple,
+      foregroundColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    ),
+  ),
+  textButtonTheme: TextButtonThemeData(
+    style: TextButton.styleFrom(
+      foregroundColor: Colors.deepPurple[200],
+      textStyle: const TextStyle(fontWeight: FontWeight.w600),
+    ),
+  ),
 );
