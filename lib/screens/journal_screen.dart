@@ -153,7 +153,7 @@ class _JournalScreenState extends State<JournalScreen>
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: 100,
+                    height: 30,
                     child: IgnorePointer(
                       child: Container(
                         decoration: BoxDecoration(
