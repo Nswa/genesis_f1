@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:genesis_f1/utils/system_ui_helper.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/entry.dart';
 import '../widgets/journal_input.dart';
@@ -36,6 +38,8 @@ class _JournalScreenState extends State<JournalScreen>
   void initState() {
     super.initState();
 
+    _loadEntriesFromFirestore();
+
     _snapBackController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -53,6 +57,39 @@ class _JournalScreenState extends State<JournalScreen>
     )..repeat(reverse: true);
   }
 
+  Future<void> _loadEntriesFromFirestore() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(user.uid)
+            .collection('entries')
+            .orderBy('timestamp', descending: true)
+            .get();
+
+    final loaded =
+        snapshot.docs.map((doc) {
+          final data = doc.data();
+          return Entry(
+            text: data['text'] ?? '',
+            timestamp: DateFormat(
+              'h:mm a • MMMM d, yyyy',
+            ).format(DateTime.parse(data['timestamp'])),
+            animController: AnimationController(
+              vsync: this,
+              duration: const Duration(milliseconds: 400),
+            )..forward(),
+            mood: data['mood'] ?? '😐',
+            tags: List<String>.from(data['tags'] ?? []),
+            wordCount: data['wordCount'] ?? 0,
+          );
+        }).toList();
+
+    setState(() => _entries.addAll(loaded));
+  }
+
   void _insertHashtag() {
     final cursorPos = _controller.selection.base.offset;
     final text = _controller.text;
@@ -63,7 +100,7 @@ class _JournalScreenState extends State<JournalScreen>
     });
   }
 
-  void _saveEntry() {
+  Future<void> _saveEntry() async {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
 
@@ -75,10 +112,11 @@ class _JournalScreenState extends State<JournalScreen>
     final mood = _selectedMood ?? analyzeMood(text);
     final tags = extractTags(text);
     final wordCount = text.split(RegExp(r'\s+')).length;
+    final timestamp = DateTime.now();
 
     final entry = Entry(
       text: text,
-      timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(DateTime.now()),
+      timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(timestamp),
       animController: animationController,
       mood: mood,
       tags: tags,
@@ -94,6 +132,22 @@ class _JournalScreenState extends State<JournalScreen>
     });
 
     animationController.forward();
+
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('entries')
+          .add({
+            'text': text,
+            'timestamp': timestamp.toIso8601String(),
+            'mood': mood,
+            'tags': tags,
+            'wordCount': wordCount,
+            'isFavorite': false,
+          });
+    }
 
     Future.delayed(const Duration(milliseconds: 600), () {
       if (mounted) {
