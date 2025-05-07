@@ -36,6 +36,18 @@ class _AuthBackgroundState extends State<AuthBackground>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final gradientColors =
+        isDark
+            ? const [
+              Color.fromARGB(80, 24, 4, 65),
+              Color.fromARGB(255, 0, 0, 0),
+            ]
+            : const [
+              Color.fromARGB(80, 200, 220, 255),
+              Color.fromARGB(255, 255, 255, 255),
+            ];
+
     return AnimatedBuilder(
       animation: _radiusAnim,
       builder: (context, child) {
@@ -46,11 +58,8 @@ class _AuthBackgroundState extends State<AuthBackground>
             gradient: RadialGradient(
               center: const Alignment(0.0, -1.5),
               radius: _radiusAnim.value,
-              colors: const [
-                Color.fromARGB(80, 24, 4, 65),
-                Color.fromARGB(255, 0, 0, 0),
-              ],
-              stops: [0.0, 1.0],
+              colors: gradientColors,
+              stops: const [0.0, 1.0],
             ),
           ),
           child: widget.child,

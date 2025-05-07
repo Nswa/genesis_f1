@@ -40,17 +40,12 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
+                  Text(
                     'genesis',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'IBM Plex Sans',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 48,
-                      color: Colors.white,
-                      letterSpacing: -1,
-                    ),
+                    style: Theme.of(context).textTheme.displayLarge,
                   ),
+
                   const SizedBox(height: 48),
                   TextField(
                     onChanged: (val) => email = val,

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
 import 'screens/journal_screen.dart';
 import 'screens/auth_screen.dart';
+import 'theme.dart'; // 👈 import your modular theme setup
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +15,6 @@ Future<void> main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   } on FirebaseException catch (e) {
-    // swallow only the “already exists” error
     if (e.code != 'duplicate-app') {
       rethrow;
     }
@@ -30,12 +30,10 @@ class JournalApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Journal Dark',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black,
-        fontFamily: 'Georgia',
-      ),
+      title: 'Journal',
+      themeMode: ThemeMode.system, // 👈 respond to system theme
+      theme: lightTheme,
+      darkTheme: darkTheme,
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (ctx, snapshot) {
