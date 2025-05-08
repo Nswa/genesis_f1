@@ -29,7 +29,7 @@ class JournalEntryWidget extends StatelessWidget {
           end: Offset.zero,
         ).animate(entry.animController),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+          padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

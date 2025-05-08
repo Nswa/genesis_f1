@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../services/auth_manager.dart';
+import '../screens/auth_screen.dart';
 
 class JournalToolbar extends StatelessWidget {
   final VoidCallback onSearch;
@@ -17,21 +19,48 @@ class JournalToolbar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+      padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text('genesis', style: theme.textTheme.titleMedium),
           Row(
             children: [
-              IconButton(icon: const Icon(Icons.search), onPressed: onSearch),
               IconButton(
-                icon: const Icon(Icons.star_border),
-                onPressed: onToggleFavorites,
+                icon: const Icon(Icons.search, size: 20),
+                onPressed: onSearch,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
               ),
               IconButton(
-                icon: const Icon(Icons.more_vert),
-                onPressed: onOpenSettings,
+                icon: const Icon(Icons.star_border, size: 20),
+                onPressed: onToggleFavorites,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              PopupMenuButton(
+                icon: const Icon(Icons.more_vert, size: 20),
+                itemBuilder:
+                    (context) => [
+                      const PopupMenuItem(
+                        value: 'settings',
+                        child: Text('Settings'),
+                      ),
+                      const PopupMenuItem(
+                        value: 'logout',
+                        child: Text('Logout'),
+                      ),
+                    ],
+                onSelected: (value) async {
+                  if (value == 'logout') {
+                    await authManager.signOut();
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (_) => const AuthScreen()),
+                    );
+                  } else {
+                    onOpenSettings();
+                  }
+                },
               ),
             ],
           ),
