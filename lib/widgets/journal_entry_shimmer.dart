@@ -8,8 +8,8 @@ class JournalEntryShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
-    final highlightColor = isDark ? Colors.grey[600]! : Colors.grey[100]!;
+    final baseColor = isDark ? Colors.grey[900]! : Colors.grey[200]!;
+    final highlightColor = isDark ? Colors.grey[850]! : Colors.grey[100]!;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
@@ -26,7 +26,7 @@ class JournalEntryShimmer extends StatelessWidget {
                 width: 120,
                 height: 11,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: isDark ? Colors.grey[900] : Colors.grey[200],
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -40,7 +40,7 @@ class JournalEntryShimmer extends StatelessWidget {
               width: 180,
               height: 12,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: isDark ? Colors.grey[900] : Colors.grey[200],
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -61,7 +61,7 @@ class JournalEntryShimmer extends StatelessWidget {
                         width: double.infinity,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? Colors.grey[900] : Colors.grey[200],
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -74,7 +74,7 @@ class JournalEntryShimmer extends StatelessWidget {
                         width: double.infinity,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? Colors.grey[900] : Colors.grey[200],
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -87,7 +87,7 @@ class JournalEntryShimmer extends StatelessWidget {
                         width: 200,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: isDark ? Colors.grey[900] : Colors.grey[200],
                           borderRadius: BorderRadius.circular(2),
                         ),
                       ),
@@ -104,7 +104,7 @@ class JournalEntryShimmer extends StatelessWidget {
                   width: 18,
                   height: 18,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? Colors.grey[900] : Colors.grey[200],
                     borderRadius: BorderRadius.circular(9),
                   ),
                 ),
