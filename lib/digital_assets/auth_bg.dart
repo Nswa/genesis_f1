@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class AuthBackground extends StatefulWidget {
   final Widget? child;
 
-  const AuthBackground({Key? key, this.child}) : super(key: key);
+  const AuthBackground({super.key, this.child});
 
   @override
   State<AuthBackground> createState() => _AuthBackgroundState();

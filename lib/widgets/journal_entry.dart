@@ -14,9 +14,9 @@ class JournalEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    //final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     final hintColor = theme.hintColor;
-    final metaColor = theme.textTheme.bodySmall?.color?.withOpacity(0.8);
+    final metaColor = theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8);
 
     return FadeTransition(
       opacity: CurvedAnimation(
@@ -29,12 +29,12 @@ class JournalEntryWidget extends StatelessWidget {
           end: Offset.zero,
         ).animate(entry.animController),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 16, 12, 24),
+          padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(bottom: 6, left: 4),
+                padding: const EdgeInsets.only(bottom: 0, left: 4),
                 child: Text(
                   entry.timestamp,
                   style: TextStyle(
@@ -61,7 +61,7 @@ class JournalEntryWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: Text(entry.text, style: theme.textTheme.titleMedium),
+                    child: Text(entry.text, style: theme.textTheme.bodyMedium),
                   ),
                   const SizedBox(width: 12),
                   GestureDetector(
@@ -72,7 +72,7 @@ class JournalEntryWidget extends StatelessWidget {
                       color:
                           entry.isFavorite
                               ? Colors.amber
-                              : theme.iconTheme.color?.withOpacity(0.24),
+                              : theme.iconTheme.color?.withValues(alpha: 0.24),
                     ),
                   ),
                 ],

@@ -76,10 +76,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     final scaleValue = (1 -
             (widget.dragOffsetY.abs() / (widget.swipeThreshold * 1.5)))
         .clamp(0.8, 1.0);
-    final dragProgress = (-widget.dragOffsetY / widget.swipeThreshold).clamp(
-      0.0,
-      1.0,
-    );
 
     return Transform.translate(
       offset: Offset(0, widget.dragOffsetY),
@@ -95,24 +91,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Transform.translate(
-                        offset: Offset(0, -20 * dragProgress),
-                        child: Transform.rotate(
-                          angle: dragProgress * 0.5,
-                          child: Transform.scale(
-                            scale: 0.8 + 0.2 * dragProgress,
-                            child: Icon(
-                              Icons.arrow_upward,
-                              size: 15,
-                              color: theme.iconTheme.color?.withValues(
-                                alpha: dragProgress,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                     const SizedBox(height: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,11 +125,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             ),
                           ],
                         ),
-                        Icon(
-                          Icons.star,
-                          color: theme.iconTheme.color?.withValues(alpha: 0.24),
-                          size: 18,
-                        ),
+                        //Icon(Icons.star,color: theme.iconTheme.color?.withValues(alpha: 0.24),size: 18,),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -168,7 +142,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                       style:
                           theme
                               .textTheme
-                              .titleMedium, // 👈 uses BreeSerif via theme
+                              .bodyMedium, // 👈 uses BreeSerif via theme
                       decoration: InputDecoration(
                         hintText: "Write your thoughts...",
                         hintStyle: TextStyle(color: theme.hintColor),

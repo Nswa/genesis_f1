@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genesis_f1/constant/size.dart';
 
 final lightTheme = ThemeData(
   useMaterial3: true,
@@ -8,13 +9,19 @@ final lightTheme = ThemeData(
   textTheme: const TextTheme(
     displayLarge: TextStyle(
       fontWeight: FontWeight.w500,
-      fontSize: 48,
+      fontSize: SizeConstants.textXXLarge,
       letterSpacing: -1,
       color: Colors.black,
     ),
     titleMedium: TextStyle(
+      fontFamily: 'IBM Plex Sans',
+      fontSize: SizeConstants.textXLarge,
+      height: 1.55,
+      color: Colors.black,
+    ),
+    bodyMedium: TextStyle(
       fontFamily: 'Georgia',
-      fontSize: 20,
+      fontSize: SizeConstants.textXLarge,
       height: 1.55,
       color: Colors.black,
     ),
@@ -23,8 +30,10 @@ final lightTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.deepPurple,
       foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConstants.borderRadiusLarge),
+      ),
+      padding: SizeConstants.paddingButton,
     ),
   ),
   textButtonTheme: TextButtonThemeData(
@@ -43,13 +52,19 @@ final darkTheme = ThemeData(
   textTheme: const TextTheme(
     displayLarge: TextStyle(
       fontWeight: FontWeight.w500,
-      fontSize: 48,
+      fontSize: SizeConstants.textXXLarge,
       letterSpacing: -1,
       color: Colors.white,
     ),
     titleMedium: TextStyle(
+      fontFamily: 'IBM Plex Sans',
+      fontSize: SizeConstants.textXLarge,
+      height: 1.55,
+      color: Colors.white,
+    ),
+    bodyMedium: TextStyle(
       fontFamily: 'Georgia',
-      fontSize: 20,
+      fontSize: SizeConstants.textXLarge,
       height: 1.55,
       color: Colors.white,
     ),
@@ -58,8 +73,10 @@ final darkTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.deepPurple,
       foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConstants.borderRadiusLarge),
+      ),
+      padding: SizeConstants.paddingButton,
     ),
   ),
   textButtonTheme: TextButtonThemeData(

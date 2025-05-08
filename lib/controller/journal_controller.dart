@@ -68,7 +68,7 @@ class JournalController {
             .collection('users')
             .doc(user.uid)
             .collection('entries')
-            .orderBy('timestamp', descending: true)
+            .orderBy('timestamp', descending: false)
             .get();
 
     final loaded =
@@ -117,7 +117,7 @@ class JournalController {
       wordCount: wordCount,
     );
 
-    entries.insert(0, entry);
+    entries.add(entry);
     controller.clear();
     dragOffsetY = 0;
     selectedMood = null;
