@@ -117,7 +117,7 @@ class _JournalScreenState extends State<JournalScreen>
             gradient: LinearGradient(
               begin: top ? Alignment.topCenter : Alignment.bottomCenter,
               end: top ? Alignment.bottomCenter : Alignment.topCenter,
-              colors: [background, background.withOpacity(0.0)],
+              colors: [background, background.withValues(alpha: 0.0)],
             ),
           ),
         ),

@@ -105,8 +105,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             child: Icon(
                               Icons.arrow_upward,
                               size: 15,
-                              color: theme.iconTheme.color?.withOpacity(
-                                dragProgress,
+                              color: theme.iconTheme.color?.withValues(
+                                alpha: dragProgress,
                               ),
                             ),
                           ),
@@ -149,7 +149,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                         ),
                         Icon(
                           Icons.star,
-                          color: theme.iconTheme.color?.withOpacity(0.24),
+                          color: theme.iconTheme.color?.withValues(alpha: 0.24),
                           size: 18,
                         ),
                       ],
@@ -197,7 +197,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             style: TextStyle(
                               fontSize: 13,
                               color: theme.textTheme.bodyMedium?.color
-                                  ?.withOpacity(0.54),
+                                  ?.withValues(alpha: 0.54),
                             ),
                           ),
                         ),
@@ -234,10 +234,11 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: theme.textTheme.bodyLarge?.color
-                                      ?.withOpacity(
-                                        widget.selectedMood == emoji
-                                            ? 1.0
-                                            : 0.8,
+                                      ?.withValues(
+                                        alpha:
+                                            widget.selectedMood == emoji
+                                                ? 1.0
+                                                : 0.8,
                                       ),
                                 ),
                               ),
