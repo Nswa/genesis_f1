@@ -24,6 +24,7 @@ class JournalController {
 
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
+  bool isLoading = false;
 
   JournalController({required this.vsync, required this.onUpdate}) {
     snapBackController = AnimationController(
@@ -52,8 +53,15 @@ class JournalController {
   }
 
   Future<void> loadEntriesFromFirestore() async {
+    isLoading = true;
+    onUpdate();
+
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      isLoading = false;
+      onUpdate();
+      return;
+    }
 
     final snapshot =
         await FirebaseFirestore.instance
@@ -82,6 +90,7 @@ class JournalController {
         }).toList();
 
     entries.addAll(loaded);
+    isLoading = false;
     onUpdate();
   }
 

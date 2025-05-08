@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:genesis_f1/utils/system_ui_helper.dart';
-import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../models/entry.dart';
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
-import '../utils/mood_utils.dart';
-import '../utils/tag_utils.dart';
+import '../widgets/journal_entry_shimmer.dart';
+import '../controller/journal_controller.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -19,154 +14,18 @@ class JournalScreen extends StatefulWidget {
 
 class _JournalScreenState extends State<JournalScreen>
     with TickerProviderStateMixin {
-  final List<Entry> _entries = [];
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-
-  double _dragOffsetY = 0.0;
-  String? _selectedMood;
-  bool _isDragging = false;
-  bool _hasTriggeredSave = false;
-  bool _showRipple = false;
-
-  final double _swipeThreshold = 120.0;
-
-  late AnimationController _snapBackController;
-  late AnimationController _handlePulseController;
+  late final JournalController jc;
 
   @override
   void initState() {
     super.initState();
-
-    _loadEntriesFromFirestore();
-
-    _snapBackController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )..addListener(() {
-      setState(() {
-        _dragOffsetY = _snapBackController.value * 0;
-      });
-    });
-
-    _handlePulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-      lowerBound: 0.95,
-      upperBound: 1.05,
-    )..repeat(reverse: true);
-  }
-
-  Future<void> _loadEntriesFromFirestore() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    final snapshot =
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .collection('entries')
-            .orderBy('timestamp', descending: true)
-            .get();
-
-    final loaded =
-        snapshot.docs.map((doc) {
-          final data = doc.data();
-          return Entry(
-            text: data['text'] ?? '',
-            timestamp: DateFormat(
-              'h:mm a • MMMM d, yyyy',
-            ).format(DateTime.parse(data['timestamp'])),
-            animController: AnimationController(
-              vsync: this,
-              duration: const Duration(milliseconds: 400),
-            )..forward(),
-            mood: data['mood'] ?? '😐',
-            tags: List<String>.from(data['tags'] ?? []),
-            wordCount: data['wordCount'] ?? 0,
-          );
-        }).toList();
-
-    setState(() => _entries.addAll(loaded));
-  }
-
-  void _insertHashtag() {
-    final cursorPos = _controller.selection.base.offset;
-    final text = _controller.text;
-    final newText = text.replaceRange(cursorPos, cursorPos, "#");
-    setState(() {
-      _controller.text = newText;
-      _controller.selection = TextSelection.collapsed(offset: cursorPos + 1);
-    });
-  }
-
-  Future<void> _saveEntry() async {
-    final text = _controller.text.trim();
-    if (text.isEmpty) return;
-
-    final animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-
-    final mood = _selectedMood ?? analyzeMood(text);
-    final tags = extractTags(text);
-    final wordCount = text.split(RegExp(r'\s+')).length;
-    final timestamp = DateTime.now();
-
-    final entry = Entry(
-      text: text,
-      timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(timestamp),
-      animController: animationController,
-      mood: mood,
-      tags: tags,
-      wordCount: wordCount,
-    );
-
-    setState(() {
-      _entries.insert(0, entry);
-      _controller.clear();
-      _dragOffsetY = 0;
-      _showRipple = true;
-      _selectedMood = null;
-    });
-
-    animationController.forward();
-
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('entries')
-          .add({
-            'text': text,
-            'timestamp': timestamp.toIso8601String(),
-            'mood': mood,
-            'tags': tags,
-            'wordCount': wordCount,
-            'isFavorite': false,
-          });
-    }
-
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) {
-        setState(() {
-          _showRipple = false;
-        });
-      }
-    });
+    jc = JournalController(vsync: this, onUpdate: () => setState(() {}));
+    jc.loadEntriesFromFirestore();
   }
 
   @override
   void dispose() {
-    for (var e in _entries) {
-      e.animController.dispose();
-    }
-    _controller.dispose();
-    _focusNode.dispose();
-    _snapBackController.dispose();
-    _handlePulseController.dispose();
+    jc.dispose();
     super.dispose();
   }
 
@@ -175,8 +34,8 @@ class _JournalScreenState extends State<JournalScreen>
     updateSystemUiOverlay(context);
 
     final theme = Theme.of(context);
-    final background = theme.scaffoldBackgroundColor;
     final isDark = theme.brightness == Brightness.dark;
+    final background = theme.scaffoldBackgroundColor;
     final progressBaseColor = isDark ? Colors.black12 : Colors.white12;
     final progressFillColor = isDark ? Colors.white : Colors.black;
 
@@ -185,107 +44,45 @@ class _JournalScreenState extends State<JournalScreen>
         child: Column(
           children: [
             Expanded(
-              child: SizedBox.expand(
-                child: Stack(
-                  children: [
-                    ListView.builder(
-                      reverse: true,
-                      padding: EdgeInsets.zero,
-                      itemCount: _entries.length,
-                      itemBuilder: (context, index) {
-                        final entry = _entries[index];
-                        return JournalEntryWidget(
-                          entry: entry,
-                          onToggleFavorite: () {
-                            setState(
-                              () => entry.isFavorite = !entry.isFavorite,
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 30,
-                      child: IgnorePointer(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [background, background.withOpacity(0.0)],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      height: 30,
-                      child: IgnorePointer(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                              colors: [background, background.withOpacity(0.0)],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: Stack(
+                children: [
+                  ListView.builder(
+                    reverse: true,
+                    padding: EdgeInsets.zero,
+                    itemCount: jc.isLoading ? 5 : jc.entries.length,
+                    itemBuilder: (_, index) {
+                      if (jc.isLoading) {
+                        return const JournalEntryShimmer();
+                      }
+                      final entry = jc.entries[index];
+                      return JournalEntryWidget(
+                        entry: entry,
+                        onToggleFavorite: () {
+                          setState(() => entry.isFavorite = !entry.isFavorite);
+                        },
+                      );
+                    },
+                  ),
+                  _buildEdgeFade(top: true, background: background),
+                  _buildEdgeFade(top: false, background: background),
+                ],
               ),
             ),
             GestureDetector(
-              onVerticalDragUpdate: (details) {
-                if (_controller.text.trim().isEmpty) return;
-
-                setState(() {
-                  _dragOffsetY += details.delta.dy;
-                  _dragOffsetY = _dragOffsetY.clamp(-300.0, 0.0);
-                  _isDragging = true;
-                });
-
-                if (!_hasTriggeredSave && _dragOffsetY < -_swipeThreshold) {
-                  _hasTriggeredSave = true;
-                  _saveEntry();
-
-                  _snapBackController.forward(from: 0);
-                  setState(() {
-                    _dragOffsetY = 0;
-                    _isDragging = false;
-                  });
-                }
-              },
-              onVerticalDragEnd: (_) {
-                _hasTriggeredSave = false;
-                if (!_isDragging) return;
-
-                _snapBackController.forward(from: 0);
-                setState(() {
-                  _dragOffsetY = 0;
-                  _isDragging = false;
-                });
-              },
+              onVerticalDragUpdate: jc.handleDragUpdate,
+              onVerticalDragEnd: (_) => jc.handleDragEnd(),
               child: JournalInputWidget(
-                controller: _controller,
-                focusNode: _focusNode,
-                dragOffsetY: _dragOffsetY,
-                isDragging: _isDragging,
-                swipeThreshold: _swipeThreshold,
-                onHashtagInsert: _insertHashtag,
-                handlePulseController: _handlePulseController,
-                showRipple: _showRipple,
-                onMoodSelected: (mood) {
-                  setState(() => _selectedMood = mood);
-                },
-                selectedMood: _selectedMood,
+                controller: jc.controller,
+                focusNode: jc.focusNode,
+                dragOffsetY: jc.dragOffsetY,
+                isDragging: jc.isDragging,
+                swipeThreshold: jc.swipeThreshold,
+                onHashtagInsert: jc.insertHashtag,
+                handlePulseController: jc.handlePulseController,
+                showRipple: jc.showRipple,
+                onMoodSelected:
+                    (mood) => setState(() => jc.selectedMood = mood),
+                selectedMood: jc.selectedMood,
               ),
             ),
             Container(
@@ -294,11 +91,35 @@ class _JournalScreenState extends State<JournalScreen>
               color: progressBaseColor,
               alignment: Alignment.centerLeft,
               child: FractionallySizedBox(
-                widthFactor: (-_dragOffsetY / _swipeThreshold).clamp(0.0, 1.0),
+                widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(
+                  0.0,
+                  1.0,
+                ),
                 child: Container(height: 1, color: progressFillColor),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEdgeFade({required bool top, required Color background}) {
+    return Positioned(
+      top: top ? 0 : null,
+      bottom: top ? null : 0,
+      left: 0,
+      right: 0,
+      height: 30,
+      child: IgnorePointer(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: top ? Alignment.topCenter : Alignment.bottomCenter,
+              end: top ? Alignment.bottomCenter : Alignment.topCenter,
+              colors: [background, background.withOpacity(0.0)],
+            ),
+          ),
         ),
       ),
     );
