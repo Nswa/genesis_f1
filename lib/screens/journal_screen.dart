@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
 import 'package:genesis_f1/utils/system_ui_helper.dart';
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
 import '../widgets/journal_entry_shimmer.dart';
 import '../widgets/journal_toolbar.dart';
 import '../controller/journal_controller.dart';
+import '../models/entry.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -43,7 +46,6 @@ class _JournalScreenState extends State<JournalScreen>
     return Scaffold(
       body: Column(
         children: [
-          // ✅ Top toolbar
           SafeArea(
             bottom: false,
             child: JournalToolbar(
@@ -52,32 +54,20 @@ class _JournalScreenState extends State<JournalScreen>
               onOpenSettings: () {},
             ),
           ),
-
-          // ✅ Scrollable entries
           Expanded(
             child: Stack(
               children: [
-                ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: jc.isLoading ? 5 : jc.entries.length,
-                  itemBuilder: (_, index) {
-                    if (jc.isLoading) return const JournalEntryShimmer();
-                    final entry = jc.entries[index];
-                    return JournalEntryWidget(
-                      entry: entry,
-                      onToggleFavorite: () {
-                        setState(() => entry.isFavorite = !entry.isFavorite);
-                      },
-                    );
-                  },
-                ),
+                jc.isLoading
+                    ? ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (_, __) => const JournalEntryShimmer(),
+                    )
+                    : CustomScrollView(slivers: _buildSliverJournal(context)),
                 _buildEdgeFade(top: true, background: background),
                 _buildEdgeFade(top: false, background: background),
               ],
             ),
           ),
-
-          // ✅ Sticky journal input at bottom
           GestureDetector(
             onVerticalDragUpdate: jc.handleDragUpdate,
             onVerticalDragEnd: (_) => jc.handleDragEnd(),
@@ -94,8 +84,6 @@ class _JournalScreenState extends State<JournalScreen>
               selectedMood: jc.selectedMood,
             ),
           ),
-
-          // ✅ Progress bar (under input)
           Container(
             height: 1,
             width: double.infinity,
@@ -114,6 +102,50 @@ class _JournalScreenState extends State<JournalScreen>
     );
   }
 
+  List<Widget> _buildSliverJournal(BuildContext context) {
+    final List<Widget> slivers = [];
+    final theme = Theme.of(context);
+
+    if (jc.entries.isEmpty) return [];
+
+    final grouped = <DateTime, List<Entry>>{};
+
+    for (final entry in jc.entries) {
+      final date = DateTime(
+        entry.timestampRaw.year,
+        entry.timestampRaw.month,
+        entry.timestampRaw.day,
+      );
+      grouped.putIfAbsent(date, () => []).add(entry);
+    }
+
+    grouped.forEach((date, entries) {
+      slivers.add(
+        SliverPersistentHeader(
+          pinned: true,
+          floating: false, // ensure it's not stacking
+          delegate: _DateHeaderDelegate(date: date, theme: theme),
+        ),
+      );
+
+      slivers.add(
+        SliverList(
+          delegate: SliverChildBuilderDelegate((context, index) {
+            final entry = entries[index];
+            return JournalEntryWidget(
+              entry: entry,
+              onToggleFavorite: () {
+                setState(() => entry.isFavorite = !entry.isFavorite);
+              },
+            );
+          }, childCount: entries.length),
+        ),
+      );
+    });
+
+    return slivers;
+  }
+
   Widget _buildEdgeFade({required bool top, required Color background}) {
     return Positioned(
       top: top ? 0 : null,
@@ -127,11 +159,49 @@ class _JournalScreenState extends State<JournalScreen>
             gradient: LinearGradient(
               begin: top ? Alignment.topCenter : Alignment.bottomCenter,
               end: top ? Alignment.bottomCenter : Alignment.topCenter,
-              colors: [background, background.withValues(alpha: 0.0)],
+              colors: [background, background.withOpacity(0)],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _DateHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final DateTime date;
+  final ThemeData theme;
+
+  _DateHeaderDelegate({required this.date, required this.theme});
+
+  @override
+  double get minExtent => 32;
+  @override
+  double get maxExtent => 32;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: theme.scaffoldBackgroundColor,
+      padding: const EdgeInsets.fromLTRB(16, 8, 0, 8),
+      alignment: Alignment.centerLeft,
+      child: Text(
+        DateFormat('EEEE, MMMM d').format(date),
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: theme.hintColor,
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _DateHeaderDelegate oldDelegate) {
+    return date != oldDelegate.date;
   }
 }

@@ -8,8 +8,10 @@ class Entry {
   final String mood;
   final List<String> tags;
   final int wordCount;
+  final DateTime timestampRaw; // Add this line
 
   Entry({
+    required this.timestampRaw, // Add this
     required this.text,
     required this.timestamp,
     this.isFavorite = false,

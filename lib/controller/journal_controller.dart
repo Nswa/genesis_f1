@@ -74,11 +74,12 @@ class JournalController {
     final loaded =
         snapshot.docs.map((doc) {
           final data = doc.data();
+          final rawTime = DateTime.parse(data['timestamp']);
+
           return Entry(
             text: data['text'] ?? '',
-            timestamp: DateFormat(
-              'h:mm a • MMMM d, yyyy',
-            ).format(DateTime.parse(data['timestamp'])),
+            timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(rawTime),
+            timestampRaw: rawTime,
             animController: AnimationController(
               vsync: vsync,
               duration: const Duration(milliseconds: 400),
@@ -89,6 +90,7 @@ class JournalController {
           );
         }).toList();
 
+    entries.clear();
     entries.addAll(loaded);
     isLoading = false;
     onUpdate();
@@ -111,6 +113,7 @@ class JournalController {
     final entry = Entry(
       text: text,
       timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(timestamp),
+      timestampRaw: timestamp,
       animController: animationController,
       mood: mood,
       tags: tags,
