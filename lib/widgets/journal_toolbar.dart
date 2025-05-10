@@ -6,12 +6,14 @@ class JournalToolbar extends StatelessWidget {
   final VoidCallback onSearch;
   final VoidCallback onToggleFavorites;
   final VoidCallback onOpenSettings;
+  final VoidCallback onOpenDatePicker;
 
   const JournalToolbar({
     super.key,
     required this.onSearch,
     required this.onToggleFavorites,
     required this.onOpenSettings,
+    required this.onOpenDatePicker,
   });
 
   @override
@@ -27,6 +29,12 @@ class JournalToolbar extends StatelessWidget {
           Row(
             children: [
               IconButton(
+                icon: const Icon(Icons.calendar_today, size: 20),
+                onPressed: onOpenDatePicker,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+              ),
+              IconButton(
                 icon: const Icon(Icons.search, size: 20),
                 onPressed: onSearch,
                 padding: EdgeInsets.zero,
@@ -41,15 +49,9 @@ class JournalToolbar extends StatelessWidget {
               PopupMenuButton(
                 icon: const Icon(Icons.more_vert, size: 20),
                 itemBuilder:
-                    (context) => [
-                      const PopupMenuItem(
-                        value: 'settings',
-                        child: Text('Settings'),
-                      ),
-                      const PopupMenuItem(
-                        value: 'logout',
-                        child: Text('Logout'),
-                      ),
+                    (context) => const [
+                      PopupMenuItem(value: 'settings', child: Text('Settings')),
+                      PopupMenuItem(value: 'logout', child: Text('Logout')),
                     ],
                 onSelected: (value) async {
                   if (value == 'logout') {

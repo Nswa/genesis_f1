@@ -1,6 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import '../utils/date_formatter.dart';
+import 'package:genesis_f1/widgets/calendar_modal.dart';
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
@@ -9,6 +10,7 @@ import '../widgets/journal_toolbar.dart';
 import '../controller/journal_controller.dart';
 import '../models/entry.dart';
 import '../utils/system_ui_helper.dart';
+import '../utils/date_formatter.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -49,7 +51,6 @@ class _JournalScreenState extends State<JournalScreen>
   Widget build(BuildContext context) {
     updateSystemUiOverlay(context);
     final background = Theme.of(context).scaffoldBackgroundColor;
-
     final grouped = groupEntriesByDate(jc.entries);
 
     return Scaffold(
@@ -61,6 +62,9 @@ class _JournalScreenState extends State<JournalScreen>
               onSearch: () {},
               onToggleFavorites: () {},
               onOpenSettings: () {},
+              onOpenDatePicker: () {
+                showCalendarModal(context, jc.entries, scrollController);
+              },
             ),
           ),
           Expanded(
