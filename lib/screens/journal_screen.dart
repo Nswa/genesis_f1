@@ -27,7 +27,11 @@ class _JournalScreenState extends State<JournalScreen>
   @override
   void initState() {
     super.initState();
-    jc = JournalController(vsync: this, onUpdate: () => setState(() {}));
+    jc = JournalController(
+      vsync: this,
+      onUpdate: () => setState(() {}),
+      scrollController: scrollController,
+    );
     jc.loadEntriesFromFirestore();
   }
 

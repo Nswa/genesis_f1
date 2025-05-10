@@ -13,6 +13,7 @@ class JournalController {
   final List<Entry> entries = [];
   final TextEditingController controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
+  final ScrollController scrollController;
 
   final double swipeThreshold = 120.0;
   final TickerProvider vsync;
@@ -23,12 +24,16 @@ class JournalController {
   bool isDragging = false;
   bool hasTriggeredSave = false;
   bool showRipple = false;
+  bool isLoading = false;
 
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
-  bool isLoading = false;
 
-  JournalController({required this.vsync, required this.onUpdate}) {
+  JournalController({
+    required this.vsync,
+    required this.onUpdate,
+    required this.scrollController,
+  }) {
     snapBackController = AnimationUtils.createSnapBackController(vsync)
       ..addListener(() {
         dragOffsetY = snapBackController.value * 0;
@@ -115,6 +120,17 @@ class JournalController {
     onUpdate();
 
     animationController.forward();
+
+    // Scroll to bottom after adding new entry
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (scrollController.hasClients) {
+        scrollController.animateTo(
+          scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOut,
+        );
+      }
+    });
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
