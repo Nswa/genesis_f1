@@ -162,7 +162,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                       controller: widget.controller,
                       focusNode: widget.focusNode,
                       maxLines: null,
-                      autofocus: true,
                       style: theme.textTheme.bodyMedium,
                       decoration: InputDecoration(
                         hintText: "Write your thoughts...",
