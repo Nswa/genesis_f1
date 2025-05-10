@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/entry.dart';
 import '../utils/mood_utils.dart';
 import '../utils/tag_utils.dart';
+import '../utils/date_formatter.dart';
+import '../utils/firestore_paths.dart';
+import '../utils/animation_utils.dart';
 
 class JournalController {
   final List<Entry> entries = [];
@@ -27,20 +29,14 @@ class JournalController {
   bool isLoading = false;
 
   JournalController({required this.vsync, required this.onUpdate}) {
-    snapBackController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 300),
-    )..addListener(() {
-      dragOffsetY = snapBackController.value * 0;
-      onUpdate();
-    });
+    snapBackController = AnimationUtils.createSnapBackController(vsync)
+      ..addListener(() {
+        dragOffsetY = snapBackController.value * 0;
+        onUpdate();
+      });
 
-    handlePulseController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 1000),
-      lowerBound: 0.95,
-      upperBound: 1.05,
-    )..repeat(reverse: true);
+    handlePulseController = AnimationUtils.createPulseController(vsync)
+      ..repeat(reverse: true);
   }
 
   void insertHashtag() {
@@ -65,9 +61,7 @@ class JournalController {
 
     final snapshot =
         await FirebaseFirestore.instance
-            .collection('users')
-            .doc(user.uid)
-            .collection('entries')
+            .collection(FirestorePaths.userEntriesPath())
             .orderBy('timestamp', descending: false)
             .get();
 
@@ -77,12 +71,10 @@ class JournalController {
           final parsedTimestamp = DateTime.parse(data['timestamp']);
           return Entry(
             text: data['text'] ?? '',
-            timestamp: DateFormat('h:mm a').format(parsedTimestamp),
+            timestamp: DateFormatter.formatTime(parsedTimestamp),
             rawDateTime: parsedTimestamp,
-            animController: AnimationController(
-              vsync: vsync,
-              duration: const Duration(milliseconds: 400),
-            )..forward(),
+            animController: AnimationUtils.createDefaultController(vsync)
+              ..forward(),
             mood: data['mood'] ?? '😐',
             tags: List<String>.from(data['tags'] ?? []),
             wordCount: data['wordCount'] ?? 0,
@@ -98,10 +90,7 @@ class JournalController {
     final text = controller.text.trim();
     if (text.isEmpty) return;
 
-    final animationController = AnimationController(
-      vsync: vsync,
-      duration: const Duration(milliseconds: 400),
-    );
+    final animationController = AnimationUtils.createDefaultController(vsync);
 
     final mood = selectedMood ?? analyzeMood(text);
     final tags = extractTags(text);
@@ -110,7 +99,7 @@ class JournalController {
 
     final entry = Entry(
       text: text,
-      timestamp: DateFormat('h:mm a').format(timestamp),
+      timestamp: DateFormatter.formatTime(timestamp),
       rawDateTime: timestamp,
       animController: animationController,
       mood: mood,
@@ -130,9 +119,7 @@ class JournalController {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('entries')
+          .collection(FirestorePaths.userEntriesPath())
           .add({
             'text': text,
             'timestamp': timestamp.toIso8601String(),

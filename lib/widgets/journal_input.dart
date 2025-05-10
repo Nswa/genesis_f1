@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../utils/mood_utils.dart';
+import '../utils/date_formatter.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final TextEditingController controller;
@@ -111,7 +111,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              DateFormat('h:mm a').format(now),
+                              DateFormatter.formatTime(now),
                               style: TextStyle(
                                 fontSize: 11,
                                 color: theme.hintColor,
@@ -134,7 +134,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             ),
                             const Spacer(),
                             Text(
-                              DateFormat('MMMM d, yyyy').format(now),
+                              DateFormatter.formatFullDate(now),
                               style: TextStyle(
                                 fontSize: 11,
                                 color: theme.hintColor,

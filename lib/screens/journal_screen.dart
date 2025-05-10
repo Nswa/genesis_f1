@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:intl/intl.dart';
+import '../utils/date_formatter.dart';
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
@@ -39,7 +39,7 @@ class _JournalScreenState extends State<JournalScreen>
   Map<String, List<Entry>> groupEntriesByDate(List<Entry> entries) {
     final Map<String, List<Entry>> map = {};
     for (var e in entries) {
-      final dateStr = DateFormat('MMMM d, yyyy').format(e.rawDateTime);
+      final dateStr = DateFormatter.formatForGrouping(e.rawDateTime);
       map.putIfAbsent(dateStr, () => []).add(e);
     }
     return map;
