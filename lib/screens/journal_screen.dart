@@ -39,8 +39,7 @@ class _JournalScreenState extends State<JournalScreen>
   Map<String, List<Entry>> groupEntriesByDate(List<Entry> entries) {
     final Map<String, List<Entry>> map = {};
     for (var e in entries) {
-      final dt = DateFormat('h:mm a • MMMM d, yyyy').parse(e.timestamp);
-      final dateStr = DateFormat('MMMM d, yyyy').format(dt);
+      final dateStr = DateFormat('MMMM d, yyyy').format(e.rawDateTime);
       map.putIfAbsent(dateStr, () => []).add(e);
     }
     return map;
@@ -106,14 +105,12 @@ class _JournalScreenState extends State<JournalScreen>
                                       child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
                                         onToggleFavorite: () {
-                                          setState(
-                                            () =>
-                                                entryGroup
+                                          setState(() {
+                                            entryGroup.value[index].isFavorite =
+                                                !entryGroup
                                                     .value[index]
-                                                    .isFavorite = !entryGroup
-                                                        .value[index]
-                                                        .isFavorite,
-                                          );
+                                                    .isFavorite;
+                                          });
                                         },
                                       ),
                                     );

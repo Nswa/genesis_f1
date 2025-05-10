@@ -37,6 +37,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   late AnimationController _emojiBarController;
   bool _isEmojiBarExpanded = false;
 
+  late AnimationController _arrowAnimController;
+  late Animation<double> _arrowBounce;
+
   @override
   void initState() {
     super.initState();
@@ -44,11 +47,21 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
+
+    _arrowAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+
+    _arrowBounce = Tween<double>(begin: 0, end: -4).animate(
+      CurvedAnimation(parent: _arrowAnimController, curve: Curves.easeInOut),
+    );
   }
 
   @override
   void dispose() {
     _emojiBarController.dispose();
+    _arrowAnimController.dispose();
     super.dispose();
   }
 
@@ -66,7 +79,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final timestamp = DateFormat('h:mm a • MMMM d, yyyy').format(now);
     final theme = Theme.of(context);
 
     final fadeValue = (1 + (widget.dragOffsetY / widget.swipeThreshold)).clamp(
@@ -92,57 +104,66 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 1),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Stack(
+                      alignment: Alignment.center,
                       children: [
                         Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              timestamp,
+                              DateFormat('h:mm a').format(now),
                               style: TextStyle(
                                 fontSize: 11,
                                 color: theme.hintColor,
                                 fontStyle: FontStyle.italic,
                               ),
                             ),
+                            const SizedBox(width: 6),
                             GestureDetector(
                               onTap: _toggleEmojiBar,
-                              child: Row(
-                                children: [
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    widget.selectedMood ?? '😊',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color:
-                                          widget.selectedMood != null
-                                              ? theme.textTheme.bodyLarge?.color
-                                              : theme.hintColor,
-                                    ),
-                                  ),
-                                ],
+                              child: Text(
+                                widget.selectedMood ?? '😊',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color:
+                                      widget.selectedMood != null
+                                          ? theme.textTheme.bodyLarge?.color
+                                          : theme.hintColor,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              DateFormat('MMMM d, yyyy').format(now),
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: theme.hintColor,
+                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ],
                         ),
-                        //Icon(Icons.star,color: theme.iconTheme.color?.withValues(alpha: 0.24),size: 18,),
+                        IgnorePointer(
+                          ignoring: true,
+                          child: Icon(
+                            Icons.keyboard_arrow_up,
+                            size: 18,
+                            color: theme.hintColor,
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 6),
                     TextField(
                       cursorColor:
                           theme.brightness == Brightness.dark
                               ? Colors.white70
                               : Colors.black54,
-
                       controller: widget.controller,
                       focusNode: widget.focusNode,
                       maxLines: null,
                       autofocus: true,
-                      style:
-                          theme
-                              .textTheme
-                              .bodyMedium, // 👈 uses BreeSerif via theme
+                      style: theme.textTheme.bodyMedium,
                       decoration: InputDecoration(
                         hintText: "Write your thoughts...",
                         hintStyle: TextStyle(color: theme.hintColor),
@@ -150,33 +171,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AnimatedOpacity(
-                          opacity: widget.isDragging ? 0.0 : 1.0,
-                          duration: const Duration(milliseconds: 300),
-                          child: Text(
-                            "⬆️ Swipe up to save",
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: theme.hintColor,
-                            ),
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: widget.onHashtagInsert,
-                          child: Text(
-                            "# TAG",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: theme.textTheme.bodyMedium?.color
-                                  ?.withValues(alpha: 0.54),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -208,11 +202,10 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: theme.textTheme.bodyLarge?.color
-                                      ?.withValues(
-                                        alpha:
-                                            widget.selectedMood == emoji
-                                                ? 1.0
-                                                : 0.8,
+                                      ?.withOpacity(
+                                        widget.selectedMood == emoji
+                                            ? 1.0
+                                            : 0.8,
                                       ),
                                 ),
                               ),

@@ -74,11 +74,11 @@ class JournalController {
     final loaded =
         snapshot.docs.map((doc) {
           final data = doc.data();
+          final parsedTimestamp = DateTime.parse(data['timestamp']);
           return Entry(
             text: data['text'] ?? '',
-            timestamp: DateFormat(
-              'h:mm a • MMMM d, yyyy',
-            ).format(DateTime.parse(data['timestamp'])),
+            timestamp: DateFormat('h:mm a').format(parsedTimestamp),
+            rawDateTime: parsedTimestamp,
             animController: AnimationController(
               vsync: vsync,
               duration: const Duration(milliseconds: 400),
@@ -110,7 +110,8 @@ class JournalController {
 
     final entry = Entry(
       text: text,
-      timestamp: DateFormat('h:mm a • MMMM d, yyyy').format(timestamp),
+      timestamp: DateFormat('h:mm a').format(timestamp),
+      rawDateTime: timestamp,
       animController: animationController,
       mood: mood,
       tags: tags,
