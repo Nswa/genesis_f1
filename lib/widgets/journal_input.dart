@@ -38,7 +38,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   bool _isEmojiBarExpanded = false;
 
   late AnimationController _arrowAnimController;
-  late Animation<double> _arrowBounce;
 
   @override
   void initState() {
@@ -52,10 +51,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       vsync: this,
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
-
-    _arrowBounce = Tween<double>(begin: 0, end: -4).animate(
-      CurvedAnimation(parent: _arrowAnimController, curve: Curves.easeInOut),
-    );
   }
 
   @override
