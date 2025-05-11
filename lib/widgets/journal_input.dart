@@ -114,18 +114,20 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                               ),
                             ),
                             const SizedBox(width: 6),
-                            GestureDetector(
-                              onTap: _toggleEmojiBar,
-                              child: Text(
-                                widget.selectedMood ?? '😊',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color:
-                                      widget.selectedMood != null
-                                          ? theme.textTheme.bodyLarge?.color
-                                          : theme.hintColor,
-                                ),
+                            IconButton(
+                              // Changed from GestureDetector(Text(...)) to IconButton
+                              icon: Icon(
+                                Icons.mood,
+                                size: 14, // Adjusted size to match nearby text
+                                color:
+                                    widget.selectedMood != null
+                                        ? theme.textTheme.bodyLarge?.color
+                                        : theme.hintColor,
                               ),
+                              onPressed: _toggleEmojiBar,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              visualDensity: VisualDensity.compact,
                             ),
                             const Spacer(),
                             Text(

@@ -29,25 +29,38 @@ class JournalToolbar extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                icon: const Icon(Icons.calendar_today, size: 20),
+                icon: const Icon(
+                  Icons.calendar_today,
+                  size: 19,
+                ), // Reduced size
                 onPressed: onOpenDatePicker,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
+                visualDensity:
+                    VisualDensity.compact, // Added for closer spacing
               ),
               IconButton(
                 icon: const Icon(Icons.search, size: 20),
                 onPressed: onSearch,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
+                visualDensity:
+                    VisualDensity.compact, // Added for closer spacing
               ),
               IconButton(
-                icon: const Icon(Icons.star_border, size: 20),
+                icon: const Icon(
+                  Icons.bookmark_border,
+                  size: 20,
+                ), // Changed to bookmark_border
                 onPressed: onToggleFavorites,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
+                visualDensity:
+                    VisualDensity.compact, // Added for closer spacing
               ),
               PopupMenuButton(
                 icon: const Icon(Icons.more_vert, size: 20),
+                // visualDensity: VisualDensity.compact, // Removed, not a property of PopupMenuButton
                 itemBuilder:
                     (context) => const [
                       PopupMenuItem(value: 'settings', child: Text('Settings')),

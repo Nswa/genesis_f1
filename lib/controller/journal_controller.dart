@@ -201,6 +201,34 @@ class JournalController {
     onUpdate();
   }
 
+  void selectEntriesByDate(List<Entry> entriesInGroup) {
+    bool changed = false;
+    for (var entry in entriesInGroup) {
+      if (!entry.isSelected) {
+        entry.isSelected = true;
+        selectedEntries.add(entry);
+        changed = true;
+      }
+    }
+    if (changed) {
+      onUpdate();
+    }
+  }
+
+  void deselectEntriesByDate(List<Entry> entriesInGroup) {
+    bool changed = false;
+    for (var entry in entriesInGroup) {
+      if (entry.isSelected) {
+        entry.isSelected = false;
+        selectedEntries.remove(entry);
+        changed = true;
+      }
+    }
+    if (changed) {
+      onUpdate();
+    }
+  }
+
   Future<void> deleteSelectedEntries() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return; // Or handle error

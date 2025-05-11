@@ -18,8 +18,8 @@ class JournalEntryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final hintColor = theme.hintColor;
-    final metaColor = theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8);
+    // final hintColor = theme.hintColor; // No longer used directly for timestamp
+    // final metaColor = theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8); // Will use theme.textTheme.bodySmall directly
 
     return FadeTransition(
       opacity: CurvedAnimation(
@@ -40,13 +40,17 @@ class JournalEntryWidget extends StatelessWidget {
               milliseconds: 120,
             ), // Shorter duration for snappier feel
             curve: Curves.easeOutQuart, // Curve for a smooth but quick start
-            padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
+            padding: const EdgeInsets.fromLTRB(
+              12,
+              8, // Further reduced top padding
+              12,
+              8, // Further reduced bottom padding
+            ),
             decoration: BoxDecoration(
               color:
                   entry.isSelected
-                      ? theme.highlightColor.withOpacity(
-                        0.3,
-                      ) // More subtle contrast
+                      ? theme
+                          .highlightColor // Use defined highlightColor directly
                       : Colors.transparent,
               borderRadius: BorderRadius.circular(
                 entry.isSelected ? 6.0 : 0.0, // Slightly smaller radius
@@ -61,14 +65,11 @@ class JournalEntryWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 0, left: 4),
+                  padding: const EdgeInsets.only(bottom: 0), // Removed left: 4
                   child: Text(
                     entry.timestamp,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: hintColor,
-                      fontStyle: FontStyle.italic,
-                    ),
+                    style:
+                        theme.textTheme.bodySmall, // Use bodySmall from theme
                   ),
                 ),
                 Row(
@@ -76,7 +77,10 @@ class JournalEntryWidget extends StatelessWidget {
                     Flexible(
                       child: Text(
                         '${entry.mood} • ${entry.tags.join(" ")} • ${entry.wordCount} words',
-                        style: TextStyle(fontSize: 12, color: metaColor),
+                        style:
+                            theme
+                                .textTheme
+                                .bodySmall, // Use bodySmall from theme
                         softWrap: true,
                         overflow: TextOverflow.fade,
                       ),
@@ -96,19 +100,33 @@ class JournalEntryWidget extends StatelessWidget {
                     const SizedBox(width: 12),
                     GestureDetector(
                       onTap: onToggleFavorite,
-                      child: Icon(
-                        Icons.star,
-                        size: 18,
-                        color:
-                            entry.isFavorite
-                                ? Colors.amber
-                                : theme.iconTheme.color?.withValues(
-                                  alpha: 0.24,
-                                ),
+                      behavior:
+                          HitTestBehavior
+                              .opaque, // Ensure tap registers on padding
+                      child: Padding(
+                        // Add padding to increase touch target
+                        padding: const EdgeInsets.all(
+                          8.0,
+                        ), // 8dp padding around icon
+                        child: Icon(
+                          entry.isFavorite
+                              ? Icons.bookmark
+                              : Icons.bookmark_outline,
+                          size: 18, // Icon size remains 18
+                          color:
+                              entry.isFavorite
+                                  ? Colors
+                                      .amber // Or another color for selected bookmark
+                                  : theme
+                                      .iconTheme
+                                      .color, // Use iconTheme color directly
+                        ),
                       ),
                     ),
                   ],
                 ),
+                // const SizedBox(height: 4), // Removed space for divider
+                // Divider Removed
               ],
             ),
           ),

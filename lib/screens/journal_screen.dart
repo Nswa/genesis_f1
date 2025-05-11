@@ -102,20 +102,34 @@ class _JournalScreenState extends State<JournalScreen>
                             ? List.generate(5, (_) => _shimmerSliver()).toList()
                             : grouped.entries.map((entryGroup) {
                               return SliverStickyHeader(
-                                header: Container(
-                                  color: background,
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16,
-                                    10,
-                                    0,
-                                    6,
-                                  ),
-                                  child: Text(
-                                    entryGroup.key,
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context).hintColor,
-                                      fontWeight: FontWeight.w600,
+                                header: GestureDetector(
+                                  onLongPress: () {
+                                    jc.selectEntriesByDate(entryGroup.value);
+                                  },
+                                  onTap: () {
+                                    // Added onTap for deselection
+                                    if (jc.isSelectionMode) {
+                                      jc.deselectEntriesByDate(
+                                        entryGroup.value,
+                                      );
+                                    }
+                                  },
+                                  child: Container(
+                                    color:
+                                        background, // Ensure background for tap area
+                                    padding: const EdgeInsets.fromLTRB(
+                                      16,
+                                      8, // Reduced top padding
+                                      0,
+                                      4, // Reduced bottom padding
+                                    ),
+                                    child: Text(
+                                      entryGroup.key,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context).hintColor,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ),
