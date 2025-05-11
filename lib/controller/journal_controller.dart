@@ -11,6 +11,7 @@ import '../utils/animation_utils.dart';
 
 class JournalController {
   final List<Entry> entries = [];
+  final List<Entry> selectedEntries = [];
   final TextEditingController controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
   final ScrollController scrollController;
@@ -28,6 +29,8 @@ class JournalController {
 
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
+
+  bool get isSelectionMode => selectedEntries.isNotEmpty;
 
   JournalController({
     required this.vsync,
@@ -177,6 +180,61 @@ class JournalController {
     snapBackController.forward(from: 0);
     dragOffsetY = 0;
     isDragging = false;
+    onUpdate();
+  }
+
+  void toggleEntrySelection(Entry entry) {
+    entry.isSelected = !entry.isSelected;
+    if (entry.isSelected) {
+      selectedEntries.add(entry);
+    } else {
+      selectedEntries.remove(entry);
+    }
+    onUpdate();
+  }
+
+  void clearSelection() {
+    for (var entry in selectedEntries) {
+      entry.isSelected = false;
+    }
+    selectedEntries.clear();
+    onUpdate();
+  }
+
+  Future<void> deleteSelectedEntries() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return; // Or handle error
+
+    final batch = FirebaseFirestore.instance.batch();
+    final entriesToRemove = List<Entry>.from(selectedEntries); // Create a copy
+
+    for (var entry in entriesToRemove) {
+      // Assuming entries have a unique ID or can be identified for deletion in Firestore
+      // For this example, we'll assume we need to query by text and timestamp,
+      // which is not ideal for production but works for this context.
+      // A better approach would be to store Firestore document IDs in the Entry model.
+      final querySnapshot =
+          await FirebaseFirestore.instance
+              .collection(FirestorePaths.userEntriesPath())
+              .where('text', isEqualTo: entry.text)
+              .where(
+                'timestamp',
+                isEqualTo: entry.rawDateTime.toIso8601String(),
+              )
+              .limit(
+                1,
+              ) // Expecting unique entries based on text and exact timestamp
+              .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        batch.delete(querySnapshot.docs.first.reference);
+      }
+      entries.remove(entry); // Remove from local list
+      entry.animController.dispose(); // Dispose animation controller
+    }
+
+    await batch.commit();
+    selectedEntries.clear();
     onUpdate();
   }
 

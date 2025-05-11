@@ -7,6 +7,7 @@ import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
 import '../widgets/journal_entry_shimmer.dart';
 import '../widgets/journal_toolbar.dart';
+import '../widgets/journal_selection_toolbar.dart'; // Added import
 import '../controller/journal_controller.dart';
 import '../models/entry.dart';
 import '../utils/system_ui_helper.dart';
@@ -62,14 +63,29 @@ class _JournalScreenState extends State<JournalScreen>
         children: [
           SafeArea(
             bottom: false,
-            child: JournalToolbar(
-              onSearch: () {},
-              onToggleFavorites: () {},
-              onOpenSettings: () {},
-              onOpenDatePicker: () {
-                showCalendarModal(context, jc.entries, scrollController);
-              },
-            ),
+            child:
+                jc.isSelectionMode
+                    ? JournalSelectionToolbar(
+                      selectedCount: jc.selectedEntries.length,
+                      onClearSelection:
+                          () => setState(() => jc.clearSelection()),
+                      onDeleteSelected: () async {
+                        await jc.deleteSelectedEntries();
+                        // setState is called by jc.onUpdate via deleteSelectedEntries
+                      },
+                    )
+                    : JournalToolbar(
+                      onSearch: () {},
+                      onToggleFavorites: () {},
+                      onOpenSettings: () {},
+                      onOpenDatePicker: () {
+                        showCalendarModal(
+                          context,
+                          jc.entries,
+                          scrollController,
+                        );
+                      },
+                    ),
           ),
           Expanded(
             child: Stack(
@@ -113,12 +129,34 @@ class _JournalScreenState extends State<JournalScreen>
                                       child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
                                         onToggleFavorite: () {
-                                          setState(() {
-                                            entryGroup.value[index].isFavorite =
-                                                !entryGroup
-                                                    .value[index]
-                                                    .isFavorite;
-                                          });
+                                          // TODO: Handle favorite toggle in selection mode?
+                                          if (!jc.isSelectionMode) {
+                                            setState(() {
+                                              entryGroup
+                                                  .value[index]
+                                                  .isFavorite = !entryGroup
+                                                      .value[index]
+                                                      .isFavorite;
+                                            });
+                                          }
+                                        },
+                                        onTap: () {
+                                          if (jc.isSelectionMode) {
+                                            setState(
+                                              () => jc.toggleEntrySelection(
+                                                entryGroup.value[index],
+                                              ),
+                                            );
+                                          } else {
+                                            // Optional: Handle tap when not in selection mode
+                                          }
+                                        },
+                                        onLongPress: () {
+                                          setState(
+                                            () => jc.toggleEntrySelection(
+                                              entryGroup.value[index],
+                                            ),
+                                          );
                                         },
                                       ),
                                     );

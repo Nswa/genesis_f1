@@ -9,6 +9,7 @@ class Entry {
   final String mood;
   final List<String> tags;
   final int wordCount;
+  bool isSelected;
 
   Entry({
     required this.text,
@@ -19,5 +20,6 @@ class Entry {
     required this.mood,
     required this.tags,
     required this.wordCount,
+    this.isSelected = false,
   });
 }
