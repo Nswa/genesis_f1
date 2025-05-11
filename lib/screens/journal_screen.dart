@@ -25,6 +25,9 @@ class _JournalScreenState extends State<JournalScreen>
     with TickerProviderStateMixin {
   late final JournalController jc;
   final scrollController = ScrollController();
+  final _searchController = TextEditingController();
+  final _searchFocusNode = FocusNode();
+  bool _isSearching = false;
 
   @override
   void initState() {
@@ -35,20 +38,46 @@ class _JournalScreenState extends State<JournalScreen>
       scrollController: scrollController,
     );
     jc.loadEntriesFromFirestore();
+    _searchController.addListener(() {
+      // Listener to update UI when search text changes (e.g. for clear button)
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   void dispose() {
     jc.dispose();
     scrollController.dispose();
+    _searchController.dispose();
+    _searchFocusNode.dispose();
     super.dispose();
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (_isSearching) {
+        _searchFocusNode.requestFocus();
+      } else {
+        _searchFocusNode.unfocus();
+        _searchController.clear();
+        jc.updateSearchTerm(''); // Clear search term in controller
+      }
+    });
+  }
+
+  void _onSearchChanged(String query) {
+    jc.updateSearchTerm(query);
   }
 
   @override
   Widget build(BuildContext context) {
     updateSystemUiOverlay(context);
     final background = Theme.of(context).scaffoldBackgroundColor;
-    final grouped = jc.groupEntriesByDate(jc.entries);
+    // Use filteredEntries for display
+    final grouped = jc.groupEntriesByDate(jc.filteredEntries);
 
     return Scaffold(
       body: Column(
@@ -67,13 +96,21 @@ class _JournalScreenState extends State<JournalScreen>
                       },
                     )
                     : JournalToolbar(
-                      onSearch: () {},
-                      onToggleFavorites: () {},
-                      onOpenSettings: () {},
+                      isSearching: _isSearching,
+                      onToggleSearch: _toggleSearch,
+                      searchController: _searchController,
+                      searchFocusNode: _searchFocusNode,
+                      onSearchChanged: _onSearchChanged,
+                      onToggleFavorites: () {
+                        // Placeholder for favorites functionality
+                      },
+                      onOpenSettings: () {
+                        // Placeholder for settings functionality
+                      },
                       onOpenDatePicker: () {
                         showCalendarModal(
                           context,
-                          jc.entries,
+                          jc.entries, // Show all entries in calendar, not filtered
                           scrollController,
                         );
                       },

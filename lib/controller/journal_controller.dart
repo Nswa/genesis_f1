@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For Firebase Storage
 import 'package:image_picker/image_picker.dart'; // For ImagePicker
 import 'package:firebase_app_check/firebase_app_check.dart'; // Import App Check
+import 'package:fuzzy/fuzzy.dart';
 
 import '../models/entry.dart';
 import '../utils/mood_utils.dart';
@@ -34,10 +35,43 @@ class JournalController {
   File? pickedImageFile; // Moved from JournalInputWidget
   final ImagePicker _picker = ImagePicker(); // Moved from JournalInputWidget
 
+  String _searchTerm = ''; // Added for search
+
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
 
   bool get isSelectionMode => selectedEntries.isNotEmpty;
+
+  List<Entry> get filteredEntries {
+    if (_searchTerm.isEmpty) {
+      return List<Entry>.from(
+        entries,
+      ); // Return a copy to avoid direct modification
+    }
+    final fuse = Fuzzy(
+      entries,
+      options: FuzzyOptions(
+        keys: [
+          WeightedKey(
+            name: 'text',
+            getter: (entry) => (entry as Entry).text,
+            weight: 0.7,
+          ),
+          WeightedKey(
+            name: 'tags',
+            getter:
+                (entry) => (entry as Entry).tags.join(
+                  ' ',
+                ), // Join tags into a single string
+            weight: 0.3,
+          ),
+        ],
+        threshold: 0.6, // Adjust threshold as needed
+      ),
+    );
+    final results = fuse.search(_searchTerm);
+    return results.map((r) => r.item as Entry).toList();
+  }
 
   Map<String, List<Entry>> groupEntriesByDate(List<Entry> entriesToGroup) {
     final Map<String, List<Entry>> map = {};
@@ -46,6 +80,11 @@ class JournalController {
       map.putIfAbsent(dateStr, () => []).add(e);
     }
     return map;
+  }
+
+  void updateSearchTerm(String term) {
+    _searchTerm = term;
+    onUpdate();
   }
 
   JournalController({
