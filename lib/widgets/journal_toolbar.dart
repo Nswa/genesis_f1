@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:genesis_f1/constant/size.dart'; // Import SizeConstants
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
 
@@ -31,8 +32,8 @@ class JournalToolbar extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                   Icons.calendar_today,
-                  size: 19,
-                ), // Reduced size
+                  size: SizeConstants.iconMedium, // Use constant
+                ),
                 onPressed: onOpenDatePicker,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -40,7 +41,10 @@ class JournalToolbar extends StatelessWidget {
                     VisualDensity.compact, // Added for closer spacing
               ),
               IconButton(
-                icon: const Icon(Icons.search, size: 20),
+                icon: const Icon(
+                  Icons.search,
+                  size: SizeConstants.iconMedium,
+                ), // Use constant
                 onPressed: onSearch,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -50,8 +54,8 @@ class JournalToolbar extends StatelessWidget {
               IconButton(
                 icon: const Icon(
                   Icons.bookmark_border,
-                  size: 20,
-                ), // Changed to bookmark_border
+                  size: SizeConstants.iconMedium, // Use constant
+                ),
                 onPressed: onToggleFavorites,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
@@ -59,7 +63,10 @@ class JournalToolbar extends StatelessWidget {
                     VisualDensity.compact, // Added for closer spacing
               ),
               PopupMenuButton(
-                icon: const Icon(Icons.more_vert, size: 20),
+                icon: const Icon(
+                  Icons.more_vert,
+                  size: SizeConstants.iconMedium,
+                ), // Use constant
                 // visualDensity: VisualDensity.compact, // Removed, not a property of PopupMenuButton
                 itemBuilder:
                     (context) => const [

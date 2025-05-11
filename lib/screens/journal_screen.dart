@@ -2,16 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
+import '../widgets/edge_fade.dart'; // Import new widget
+import '../widgets/shimmer_sliver.dart'; // Import new widget
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
-import '../widgets/journal_entry_shimmer.dart';
 import '../widgets/journal_toolbar.dart';
 import '../widgets/journal_selection_toolbar.dart'; // Added import
 import '../controller/journal_controller.dart';
-import '../models/entry.dart';
 import '../utils/system_ui_helper.dart';
-import '../utils/date_formatter.dart';
 
 class JournalScreen extends StatefulWidget {
   const JournalScreen({super.key});
@@ -43,20 +42,11 @@ class _JournalScreenState extends State<JournalScreen>
     super.dispose();
   }
 
-  Map<String, List<Entry>> groupEntriesByDate(List<Entry> entries) {
-    final Map<String, List<Entry>> map = {};
-    for (var e in entries) {
-      final dateStr = DateFormatter.formatForGrouping(e.rawDateTime);
-      map.putIfAbsent(dateStr, () => []).add(e);
-    }
-    return map;
-  }
-
   @override
   Widget build(BuildContext context) {
     updateSystemUiOverlay(context);
     final background = Theme.of(context).scaffoldBackgroundColor;
-    final grouped = groupEntriesByDate(jc.entries);
+    final grouped = jc.groupEntriesByDate(jc.entries);
 
     return Scaffold(
       body: Column(
@@ -99,7 +89,8 @@ class _JournalScreenState extends State<JournalScreen>
                     controller: scrollController,
                     slivers:
                         jc.isLoading
-                            ? List.generate(5, (_) => _shimmerSliver()).toList()
+                            ? List.generate(5, (_) => const ShimmerSliver())
+                                .toList() // Use new widget
                             : grouped.entries.map((entryGroup) {
                               return SliverStickyHeader(
                                 header: GestureDetector(
@@ -142,17 +133,8 @@ class _JournalScreenState extends State<JournalScreen>
                                       axisAlignment: 0.0,
                                       child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
-                                        onToggleFavorite: () {
-                                          if (!jc.isSelectionMode) {
-                                            setState(() {
-                                              entryGroup
-                                                  .value[index]
-                                                  .isFavorite = !entryGroup
-                                                      .value[index]
-                                                      .isFavorite;
-                                            });
-                                          }
-                                        },
+                                        onToggleFavorite:
+                                            jc.toggleFavorite, // Pass the controller's method
                                         onTap: () {
                                           if (jc.isSelectionMode) {
                                             setState(
@@ -179,8 +161,8 @@ class _JournalScreenState extends State<JournalScreen>
                             }).toList(),
                   ),
                 ),
-                _buildEdgeFade(top: true, background: background),
-                _buildEdgeFade(top: false, background: background),
+                EdgeFade(top: true, background: background), // Use new widget
+                EdgeFade(top: false, background: background), // Use new widget
               ],
             ),
           ),
@@ -189,16 +171,6 @@ class _JournalScreenState extends State<JournalScreen>
             onVerticalDragEnd: (_) => jc.handleDragEnd(),
             child: JournalInputWidget(
               journalController: jc, // Pass the full controller instance
-              // controller: jc.controller, // No longer passed directly
-              // focusNode: jc.focusNode, // No longer passed directly
-              dragOffsetY: jc.dragOffsetY,
-              isDragging: jc.isDragging,
-              swipeThreshold: jc.swipeThreshold,
-              onHashtagInsert: jc.insertHashtag,
-              handlePulseController: jc.handlePulseController,
-              showRipple: jc.showRipple,
-              onMoodSelected: (mood) => setState(() => jc.selectedMood = mood),
-              selectedMood: jc.selectedMood,
             ),
           ),
           Container(
@@ -215,37 +187,6 @@ class _JournalScreenState extends State<JournalScreen>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  SliverStickyHeader _shimmerSliver() => SliverStickyHeader(
-    header: Container(height: 32, color: Colors.transparent),
-    sliver: SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (_, __) => const JournalEntryShimmer(),
-        childCount: 1,
-      ),
-    ),
-  );
-
-  Widget _buildEdgeFade({required bool top, required Color background}) {
-    return Positioned(
-      top: top ? 0 : null,
-      bottom: top ? null : 0,
-      left: 0,
-      right: 0,
-      height: 12,
-      child: IgnorePointer(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: top ? Alignment.topCenter : Alignment.bottomCenter,
-              end: top ? Alignment.bottomCenter : Alignment.topCenter,
-              colors: [background, background.withAlpha(0)],
-            ),
-          ),
-        ),
       ),
     );
   }

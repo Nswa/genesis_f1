@@ -3,7 +3,7 @@ import '../models/entry.dart';
 
 class JournalEntryWidget extends StatelessWidget {
   final Entry entry;
-  final VoidCallback onToggleFavorite;
+  final void Function(Entry) onToggleFavorite;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
 
@@ -150,7 +150,7 @@ class JournalEntryWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 12),
                     GestureDetector(
-                      onTap: onToggleFavorite,
+                      onTap: () => onToggleFavorite(entry),
                       behavior:
                           HitTestBehavior
                               .opaque, // Ensure tap registers on padding
