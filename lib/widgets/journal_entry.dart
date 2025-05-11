@@ -36,22 +36,26 @@ class JournalEntryWidget extends StatelessWidget {
           onLongPress: onLongPress,
           behavior: HitTestBehavior.opaque, // Improve hit detection
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150), // Animation duration
-            curve: Curves.easeInOut,
+            duration: const Duration(
+              milliseconds: 120,
+            ), // Shorter duration for snappier feel
+            curve: Curves.easeOutQuart, // Curve for a smooth but quick start
             padding: const EdgeInsets.fromLTRB(12, 16, 12, 12),
             decoration: BoxDecoration(
               color:
                   entry.isSelected
-                      ? theme.highlightColor.withOpacity(0.7)
+                      ? theme.highlightColor.withOpacity(
+                        0.3,
+                      ) // More subtle contrast
                       : Colors.transparent,
               borderRadius: BorderRadius.circular(
-                entry.isSelected ? 8.0 : 0.0,
-              ), // Optional: rounded corners when selected
+                entry.isSelected ? 6.0 : 0.0, // Slightly smaller radius
+              ),
             ),
             transform:
                 Matrix4.identity()..scale(
-                  entry.isSelected ? 0.98 : 1.0,
-                ), // Subtle scale animation
+                  entry.isSelected ? 0.97 : 1.0, // Adjusted scale for selection
+                ),
             transformAlignment: Alignment.center,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
