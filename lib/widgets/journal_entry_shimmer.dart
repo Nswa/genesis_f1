@@ -32,6 +32,22 @@ class JournalEntryShimmer extends StatelessWidget {
               ),
             ),
           ),
+          // Image Placeholder Shimmer
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+            child: Shimmer.fromColors(
+              baseColor: baseColor,
+              highlightColor: highlightColor,
+              child: Container(
+                height: 100, // A reasonable shimmer height, less than max 200
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: isDark ? Colors.grey[900] : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+            ),
+          ),
           // Metadata shimmer (mood/tags/word count)
           Shimmer.fromColors(
             baseColor: baseColor,

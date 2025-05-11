@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart'; // Import Shimmer
 import '../models/entry.dart';
 
 class JournalEntryWidget extends StatelessWidget {
@@ -84,23 +85,45 @@ class JournalEntryWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4.0),
                         child: Image.network(
                           entry.imageUrl!,
+                          key: ValueKey(entry.imageUrl!),
                           fit: BoxFit.cover,
-                          loadingBuilder: (
+                          frameBuilder: (
                             BuildContext context,
                             Widget child,
-                            ImageChunkEvent? loadingProgress,
+                            int? frame,
+                            bool wasSynchronouslyLoaded,
                           ) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            loadingProgress.expectedTotalBytes!
-                                        : null,
-                              ),
-                            );
+                            if (wasSynchronouslyLoaded) {
+                              return child;
+                            }
+                            if (frame == null) {
+                              // Image is still loading, show shimmer
+                              final isDark =
+                                  Theme.of(context).brightness ==
+                                  Brightness.dark;
+                              final baseColor =
+                                  isDark
+                                      ? Colors.grey[700]!
+                                      : Colors.grey[300]!;
+                              final highlightColor =
+                                  isDark
+                                      ? Colors.grey[600]!
+                                      : Colors.grey[100]!;
+                              return Shimmer.fromColors(
+                                baseColor: baseColor,
+                                highlightColor: highlightColor,
+                                period: const Duration(milliseconds: 1000),
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 200,
+                                  decoration: BoxDecoration(
+                                    color: baseColor,
+                                    borderRadius: BorderRadius.circular(4.0),
+                                  ),
+                                ),
+                              );
+                            }
+                            return child; // Image is loaded, display it
                           },
                           errorBuilder: (
                             BuildContext context,
