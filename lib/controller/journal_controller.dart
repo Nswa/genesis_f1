@@ -30,6 +30,7 @@ class JournalController {
   bool hasTriggeredSave = false;
   bool showRipple = false;
   bool isLoading = false;
+  bool isSavingEntry = false; // New flag for saving state
   File? pickedImageFile; // Moved from JournalInputWidget
   final ImagePicker _picker = ImagePicker(); // Moved from JournalInputWidget
 
@@ -125,120 +126,132 @@ class JournalController {
   }
 
   Future<void> _saveEntry() async {
+    if (isSavingEntry) return; // Prevent concurrent saves
+
+    isSavingEntry = true;
+    onUpdate();
+
     final text = controller.text.trim();
     // Allow saving even if text is empty, if there's an image
-    if (text.isEmpty && pickedImageFile == null) return;
+    if (text.isEmpty && pickedImageFile == null) {
+      isSavingEntry = false;
+      onUpdate();
+      return;
+    }
 
     final animationController = AnimationUtils.createDefaultController(vsync);
     String? uploadedImageUrl;
     final user = FirebaseAuth.instance.currentUser;
 
-    // Upload image if one is picked
-    if (pickedImageFile != null && user != null) {
-      debugPrint("Attempting to upload image: ${pickedImageFile!.path}");
-      try {
-        // Force refresh App Check token before storage operation
-        debugPrint(
-          "Forcing App Check token refresh before storage operation...",
-        );
-        String? currentToken = await FirebaseAppCheck.instance.getToken(true);
-        debugPrint("Token before storage op: $currentToken");
-        if (currentToken == null) {
+    try {
+      // Upload image if one is picked
+      if (pickedImageFile != null && user != null) {
+        debugPrint("Attempting to upload image: ${pickedImageFile!.path}");
+        // try/catch for image upload specifically
+        try {
           debugPrint(
-            "Failed to get a fresh App Check token before storage operation. Upload will likely fail.",
+            "Forcing App Check token refresh before storage operation...",
+          );
+          String? currentToken = await FirebaseAppCheck.instance.getToken(true);
+          debugPrint("Token before storage op: $currentToken");
+          if (currentToken == null) {
+            debugPrint(
+              "Failed to get a fresh App Check token. Upload will likely fail.",
+            );
+          }
+
+          final fileName =
+              '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_images')
+              .child(user.uid)
+              .child(fileName);
+          debugPrint("Storage reference: ${storageRef.fullPath}");
+          UploadTask uploadTask = storageRef.putFile(pickedImageFile!);
+          TaskSnapshot snapshot = await uploadTask;
+          uploadedImageUrl = await snapshot.ref.getDownloadURL();
+          debugPrint("Image uploaded successfully. URL: $uploadedImageUrl");
+        } catch (e) {
+          debugPrint("Error uploading image: $e");
+        }
+      } else {
+        if (pickedImageFile == null) {
+          debugPrint("No image picked to upload.");
+        }
+        if (user == null) {
+          debugPrint("User not authenticated, cannot upload image.");
+        }
+      }
+
+      final mood = selectedMood ?? analyzeMood(text);
+      final tags = extractTags(text);
+      final wordCount = text.split(RegExp(r'\s+')).length;
+      final timestamp = DateTime.now();
+
+      final entry = Entry(
+        text: text,
+        timestamp: DateFormatter.formatTime(timestamp),
+        rawDateTime: timestamp,
+        animController: animationController,
+        mood: mood,
+        tags: tags,
+        wordCount: wordCount,
+        imageUrl: uploadedImageUrl,
+      );
+
+      entries.add(entry);
+      controller.clear();
+      pickedImageFile = null;
+      dragOffsetY = 0;
+      selectedMood = null;
+      showRipple = true;
+
+      animationController.forward();
+
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        // Make callback async
+        // Add a small delay to allow the list to build and dimensions to settle
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (scrollController.hasClients) {
+          // Check again if mounted or if scrollController is still valid if issues persist
+          scrollController.animateTo(
+            scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOut,
           );
         }
+      });
 
-        final fileName =
-            '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child(user.uid)
-            .child(fileName);
-
-        debugPrint("Storage reference: ${storageRef.fullPath}");
-
-        UploadTask uploadTask = storageRef.putFile(pickedImageFile!);
-        TaskSnapshot snapshot = await uploadTask;
-        uploadedImageUrl = await snapshot.ref.getDownloadURL();
-        debugPrint("Image uploaded successfully. URL: $uploadedImageUrl");
-      } catch (e) {
-        // Handle upload error, e.g., show a snackbar or log
-        debugPrint("Error uploading image: $e");
-        // Optionally, decide if you want to proceed saving without the image
-        // or stop the save process. For now, it will proceed without image URL.
+      if (user != null) {
+        final Map<String, dynamic> firestoreData = {
+          'text': text,
+          'timestamp': timestamp.toIso8601String(),
+          'mood': mood,
+          'tags': tags,
+          'wordCount': wordCount,
+          'isFavorite': false,
+          'imageUrl': uploadedImageUrl,
+        };
+        debugPrint("Data to save to Firestore: $firestoreData");
+        await FirebaseFirestore.instance
+            .collection(FirestorePaths.userEntriesPath())
+            .add(firestoreData);
       }
-    } else {
-      if (pickedImageFile == null) {
-        debugPrint("No image picked to upload.");
-      }
-      if (user == null) {
-        debugPrint("User not authenticated, cannot upload image.");
-      }
-    }
 
-    final mood = selectedMood ?? analyzeMood(text);
-    final tags = extractTags(text);
-    final wordCount = text.split(RegExp(r'\s+')).length;
-    final timestamp = DateTime.now();
-
-    final entry = Entry(
-      text: text,
-      timestamp: DateFormatter.formatTime(timestamp),
-      rawDateTime: timestamp,
-      animController: animationController,
-      mood: mood,
-      tags: tags,
-      wordCount: wordCount,
-      imageUrl: uploadedImageUrl, // Assign uploaded image URL
-    );
-
-    entries.add(entry);
-    controller.clear();
-    pickedImageFile = null; // Clear picked image after processing
-    dragOffsetY = 0;
-    selectedMood = null;
-    showRipple = true;
-    onUpdate();
-
-    animationController.forward();
-
-    // Scroll to bottom after adding new entry
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      }
-    });
-
-    if (user != null) {
-      final Map<String, dynamic> firestoreData = {
-        'text': text,
-        'timestamp': timestamp.toIso8601String(),
-        'mood': mood,
-        'tags': tags,
-        'wordCount': wordCount,
-        'isFavorite': false,
-        'imageUrl': uploadedImageUrl, // Save imageUrl to Firestore
-      };
-      debugPrint("Data to save to Firestore: $firestoreData");
-      await FirebaseFirestore.instance
-          .collection(FirestorePaths.userEntriesPath())
-          .add(firestoreData);
-    }
-
-    Future.delayed(const Duration(milliseconds: 600), () {
-      showRipple = false;
+      Future.delayed(const Duration(milliseconds: 600), () {
+        showRipple = false;
+        // onUpdate is called in finally
+      });
+    } finally {
+      isSavingEntry = false;
       onUpdate();
-    });
+    }
   }
 
   void handleDragUpdate(DragUpdateDetails details) {
-    if (controller.text.trim().isEmpty) return;
+    if (isSavingEntry || controller.text.trim().isEmpty)
+      return; // Check isSavingEntry
 
     dragOffsetY += details.delta.dy;
     dragOffsetY = dragOffsetY.clamp(-300.0, 0.0);

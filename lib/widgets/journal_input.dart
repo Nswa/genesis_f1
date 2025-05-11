@@ -84,211 +84,220 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                 (widget.journalController.swipeThreshold * 1.5)))
         .clamp(0.8, 1.0);
 
-    return Transform.translate(
-      offset: Offset(0, widget.journalController.dragOffsetY),
-      child: Transform.scale(
-        scale: scaleValue,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(5, 0, 5, 2),
-              child: Opacity(
-                opacity: fadeValue,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 1),
-                    Stack(
-                      alignment: Alignment.center,
+    final bool isSaving = widget.journalController.isSavingEntry;
+
+    return IgnorePointer(
+      // Ignore all pointer events if saving
+      ignoring: isSaving,
+      child: AnimatedOpacity(
+        // Wrap with AnimatedOpacity
+        duration: const Duration(milliseconds: 200),
+        opacity: isSaving ? 0.5 : 1.0, // Grey out if saving
+        child: Transform.translate(
+          offset: Offset(0, widget.journalController.dragOffsetY),
+          child: Transform.scale(
+            scale: scaleValue,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 2),
+                  child: Opacity(
+                    // This opacity is for the drag fade effect
+                    opacity: fadeValue,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        const SizedBox(height: 1),
+                        Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Text(
-                              DateFormatter.formatTime(now),
-                              style: TextStyle(
-                                fontSize: 11,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  DateFormatter.formatTime(now),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: theme.hintColor,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.mood,
+                                    size: 14,
+                                    color:
+                                        widget.journalController.selectedMood !=
+                                                null
+                                            ? theme.textTheme.bodyLarge?.color
+                                            : theme.hintColor,
+                                  ),
+                                  onPressed:
+                                      _toggleEmojiBar, // Individual disabling handled by IgnorePointer + TextField's enabled
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  visualDensity: VisualDensity.compact,
+                                ),
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.add_photo_alternate_outlined,
+                                    size: 20,
+                                  ),
+                                  onPressed:
+                                      widget
+                                          .journalController
+                                          .pickImage, // Individual disabling handled by IgnorePointer
+                                  padding: EdgeInsets.zero,
+                                  constraints: const BoxConstraints(),
+                                  visualDensity: VisualDensity.compact,
+                                  color: theme.hintColor,
+                                ),
+                                const Spacer(),
+                                Text(
+                                  DateFormatter.formatFullDate(now),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: theme.hintColor,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            IgnorePointer(
+                              ignoring: true,
+                              child: Icon(
+                                Icons.keyboard_arrow_up,
+                                size: 18,
                                 color: theme.hintColor,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            IconButton(
-                              // Changed from GestureDetector(Text(...)) to IconButton
-                              icon: Icon(
-                                Icons.mood,
-                                size: 14, // Adjusted size to match nearby text
-                                color:
-                                    widget.journalController.selectedMood !=
-                                            null
-                                        ? theme.textTheme.bodyLarge?.color
-                                        : theme.hintColor,
-                              ),
-                              onPressed: _toggleEmojiBar,
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              visualDensity: VisualDensity.compact,
-                            ),
-                            IconButton(
-                              // Added image picker button
-                              icon: const Icon(
-                                Icons.add_photo_alternate_outlined,
-                                size: 20,
-                              ),
-                              onPressed:
-                                  widget
-                                      .journalController
-                                      .pickImage, // Call controller's method
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              visualDensity: VisualDensity.compact,
-                              color: theme.hintColor,
-                            ),
-                            const Spacer(),
-                            Text(
-                              DateFormatter.formatFullDate(now),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: theme.hintColor,
-                                fontStyle: FontStyle.italic,
                               ),
                             ),
                           ],
                         ),
-                        IgnorePointer(
-                          ignoring: true,
-                          child: Icon(
-                            Icons.keyboard_arrow_up,
-                            size: 18,
-                            color: theme.hintColor,
+                        const SizedBox(height: 6),
+                        TextField(
+                          cursorColor:
+                              theme.brightness == Brightness.dark
+                                  ? Colors.white70
+                                  : Colors.black54,
+                          controller: widget.journalController.controller,
+                          focusNode: widget.journalController.focusNode,
+                          enabled:
+                              !isSaving, // Still useful for visual cue and semantics
+                          maxLines: null,
+                          style: theme.textTheme.bodyMedium,
+                          decoration: InputDecoration(
+                            hintText:
+                                isSaving
+                                    ? "Saving entry..."
+                                    : "Write your thoughts...",
+                            hintStyle: TextStyle(color: theme.hintColor),
+                            border: InputBorder.none,
                           ),
                         ),
+                        if (widget.journalController.pickedImageFile != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Container(
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 100,
+                                    maxWidth: 150,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                      color: theme.dividerColor,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(3.5),
+                                    child: Image.file(
+                                      widget.journalController.pickedImageFile!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap:
+                                      widget
+                                          .journalController
+                                          .clearImage, // Individual disabling handled by IgnorePointer
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withAlpha(128),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        const SizedBox(height: 12),
                       ],
                     ),
-                    const SizedBox(height: 6),
-                    TextField(
-                      cursorColor:
-                          theme.brightness == Brightness.dark
-                              ? Colors.white70
-                              : Colors.black54,
-                      controller:
-                          widget
-                              .journalController
-                              .controller, // Use controller's TextEditingController
-                      focusNode:
-                          widget
-                              .journalController
-                              .focusNode, // Use controller's FocusNode
-                      maxLines: null,
-                      style: theme.textTheme.bodyMedium,
-                      decoration: InputDecoration(
-                        hintText: "Write your thoughts...",
-                        hintStyle: TextStyle(color: theme.hintColor),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                    if (widget
-                            .journalController
-                            .pickedImageFile != // Use controller's pickedImageFile
-                        null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Stack(
-                          alignment: Alignment.topRight,
-                          children: [
-                            Container(
-                              constraints: const BoxConstraints(
-                                maxHeight: 100, // Max height for thumbnail
-                                maxWidth: 150, // Max width for thumbnail
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4),
-                                border: Border.all(
-                                  color: theme.dividerColor,
-                                  width: 0.5,
-                                ),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(3.5),
-                                child: Image.file(
-                                  widget
-                                      .journalController
-                                      .pickedImageFile!, // Use controller's pickedImageFile
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap:
-                                  widget
-                                      .journalController
-                                      .clearImage, // Call controller's method
-                              child: Container(
-                                margin: const EdgeInsets.all(4),
-                                padding: const EdgeInsets.all(2),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withAlpha(128),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  size: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    const SizedBox(height: 12),
-                  ],
-                ),
-              ),
-            ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeOut,
-              height: _isEmojiBarExpanded ? 33 : 0,
-              margin: const EdgeInsets.only(top: 4),
-              child: ClipRect(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 0),
-                  child: Row(
-                    children:
-                        availableMoods.map((emoji) {
-                          return GestureDetector(
-                            behavior: HitTestBehavior.opaque,
-                            onTap: () {
-                              widget.journalController.selectedMood = emoji;
-                              // widget.journalController.onUpdate(); // Ensure UI updates if needed
-                              _toggleEmojiBar();
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 4,
-                              ),
-                              child: Text(
-                                emoji,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color:
-                                      widget.journalController.selectedMood ==
-                                              emoji
-                                          ? theme.textTheme.bodyLarge?.color
-                                          : theme.textTheme.bodyLarge?.color
-                                              ?.withAlpha((0.8 * 255).round()),
-                                ),
-                              ),
-                            ),
-                          );
-                        }).toList(),
                   ),
                 ),
-              ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                  height: _isEmojiBarExpanded ? 33 : 0,
+                  margin: const EdgeInsets.only(top: 4),
+                  child: ClipRect(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(horizontal: 0),
+                      child: Row(
+                        children:
+                            availableMoods.map((emoji) {
+                              return GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () {
+                                  // Individual disabling handled by IgnorePointer
+                                  widget.journalController.selectedMood = emoji;
+                                  _toggleEmojiBar();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  child: Text(
+                                    emoji,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color:
+                                          widget
+                                                      .journalController
+                                                      .selectedMood ==
+                                                  emoji
+                                              ? theme.textTheme.bodyLarge?.color
+                                              : theme.textTheme.bodyLarge?.color
+                                                  ?.withAlpha(
+                                                    (0.8 * 255).round(),
+                                                  ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

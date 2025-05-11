@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
-import '../widgets/edge_fade.dart'; // Import new widget
-import '../widgets/shimmer_sliver.dart'; // Import new widget
+// import 'package:shimmer/shimmer.dart'; // No longer needed here
+import '../widgets/edge_fade.dart';
+import '../widgets/shimmer_sliver.dart';
+import '../widgets/indeterminate_progress_bar.dart'; // Import new progress bar
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
@@ -178,13 +180,22 @@ class _JournalScreenState extends State<JournalScreen>
             width: double.infinity,
             color: background.withAlpha(24),
             alignment: Alignment.centerLeft,
-            child: FractionallySizedBox(
-              widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(
-                0.0,
-                1.0,
-              ),
-              child: Container(height: 1, color: Theme.of(context).hintColor),
-            ),
+            child:
+                jc.isSavingEntry
+                    ? IndeterminateProgressBar(
+                      color: Theme.of(context).hintColor,
+                      height: 1.5, // Match thickness
+                    )
+                    : FractionallySizedBox(
+                      widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(
+                        0.0,
+                        1.0,
+                      ),
+                      child: Container(
+                        height: 1, // Original height for drag progress
+                        color: Theme.of(context).hintColor,
+                      ),
+                    ),
           ),
         ],
       ),
