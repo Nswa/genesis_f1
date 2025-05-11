@@ -1,6 +1,6 @@
-import 'dart:io'; // Added for File type
+// import 'dart:io'; // No longer needed here
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Added image_picker
+// import 'package:image_picker/image_picker.dart'; // No longer needed here
 import '../controller/journal_controller.dart'; // Added controller import
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
@@ -261,7 +261,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 margin: const EdgeInsets.all(4),
                                 padding: const EdgeInsets.all(2),
                                 decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.5),
+                                  color: Colors.black.withAlpha(128),
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Icon(
@@ -305,12 +305,11 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 emoji,
                                 style: TextStyle(
                                   fontSize: 20,
-                                  color: theme.textTheme.bodyLarge?.color
-                                      ?.withOpacity(
-                                        widget.selectedMood == emoji
-                                            ? 1.0
-                                            : 0.8,
-                                      ),
+                                  color:
+                                      widget.selectedMood == emoji
+                                          ? theme.textTheme.bodyLarge?.color
+                                          : theme.textTheme.bodyLarge?.color
+                                              ?.withAlpha((0.8 * 255).round()),
                                 ),
                               ),
                             ),

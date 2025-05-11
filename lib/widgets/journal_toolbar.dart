@@ -69,6 +69,7 @@ class JournalToolbar extends StatelessWidget {
                 onSelected: (value) async {
                   if (value == 'logout') {
                     await authManager.signOut();
+                    if (!context.mounted) return;
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (_) => const AuthScreen()),
                     );

@@ -32,20 +32,20 @@ final lightTheme = ThemeData(
       // Added bodySmall
       fontFamily: 'IBM Plex Sans',
       fontSize: SizeConstants.textSmall, // Using textSmall (14.0)
-      color: Colors.black.withOpacity(
-        0.55,
+      color: Colors.black.withAlpha(
+        (0.55 * 255).round(),
       ), // Reduced contrast for secondary text
     ),
   ),
   iconTheme: IconThemeData(
     // Added iconTheme
-    color: Colors.black.withOpacity(
-      0.5,
+    color: Colors.black.withAlpha(
+      (0.5 * 255).round(),
     ), // Reduced opacity for less apparent unselected icons
     size: SizeConstants.iconMedium,
   ),
-  highlightColor: Colors.deepPurple.withOpacity(
-    0.15,
+  highlightColor: Colors.deepPurple.withAlpha(
+    (0.15 * 255).round(),
   ), // Defined highlight color
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
@@ -96,20 +96,20 @@ final darkTheme = ThemeData(
       // Added bodySmall
       fontFamily: 'IBM Plex Sans',
       fontSize: SizeConstants.textSmall, // Using textSmall (14.0)
-      color: Colors.white.withOpacity(
-        0.6,
+      color: Colors.white.withAlpha(
+        (0.6 * 255).round(),
       ), // Reduced contrast for secondary text
     ),
   ),
   iconTheme: IconThemeData(
     // Added iconTheme
-    color: Colors.white.withOpacity(
-      0.5,
+    color: Colors.white.withAlpha(
+      (0.5 * 255).round(),
     ), // Reduced opacity for less apparent unselected icons
     size: SizeConstants.iconMedium,
   ),
-  highlightColor: Colors.deepPurpleAccent.withOpacity(
-    0.2,
+  highlightColor: Colors.deepPurpleAccent.withAlpha(
+    (0.2 * 255).round(),
   ), // Defined highlight color
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

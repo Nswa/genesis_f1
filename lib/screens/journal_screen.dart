@@ -1,4 +1,4 @@
-import 'dart:ui';
+// import 'dart:ui'; // Unnecessary import
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
@@ -143,7 +143,6 @@ class _JournalScreenState extends State<JournalScreen>
                                       child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
                                         onToggleFavorite: () {
-                                          // TODO: Handle favorite toggle in selection mode?
                                           if (!jc.isSelectionMode) {
                                             setState(() {
                                               entryGroup

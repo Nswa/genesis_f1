@@ -14,7 +14,7 @@ void showCalendarModal(
     context: context,
     barrierDismissible: true,
     barrierLabel: "calendar",
-    barrierColor: Colors.black.withOpacity(0.25),
+    barrierColor: Colors.black.withAlpha((0.25 * 255).round()),
     transitionDuration: const Duration(milliseconds: 250),
     transitionBuilder: (context, animation, _, child) {
       final curved = CurvedAnimation(
@@ -132,15 +132,17 @@ Widget _buildCalendar(
         disabledTextStyle: TextStyle(
           fontFamily: 'IBM Plex Sans',
           fontSize: 13,
-          color: Theme.of(context).disabledColor.withOpacity(0.2),
+          color: Theme.of(context).disabledColor.withAlpha((0.2 * 255).round()),
         ),
         outsideTextStyle: TextStyle(
           fontFamily: 'IBM Plex Sans',
           fontSize: 13,
-          color: Theme.of(context).hintColor.withOpacity(0.2),
+          color: Theme.of(context).hintColor.withAlpha((0.2 * 255).round()),
         ),
         todayDecoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+          color: Theme.of(
+            context,
+          ).colorScheme.secondary.withAlpha((0.1 * 255).round()),
           shape: BoxShape.circle,
         ),
         selectedDecoration: BoxDecoration(
@@ -156,9 +158,17 @@ Widget _buildCalendar(
       enabledDayPredicate:
           (day) => validDates.contains(DateTime(day.year, day.month, day.day)),
       onDaySelected: (selectedDay, _) {
+        // The mounted check is tricky here as this is a top-level function.
+        // Generally, if the dialog is visible, context for pop should be valid.
+        // If this lint persists as critical, the calling widget needs to manage it.
         Navigator.of(context).pop();
         Future.delayed(const Duration(milliseconds: 100), () {
-          FocusScope.of(context).unfocus();
+          // Assuming context is still valid for FocusScope after a short delay
+          // if the previous pop didn't destroy it too quickly.
+          if (context.mounted) {
+            // Added mounted check for FocusScope
+            FocusScope.of(context).unfocus();
+          }
           final index = entries.indexWhere(
             (e) =>
                 e.rawDateTime.year == selectedDay.year &&
