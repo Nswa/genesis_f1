@@ -1,10 +1,13 @@
+import 'dart:io'; // Added for File type
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Added image_picker
+import '../controller/journal_controller.dart'; // Added controller import
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
 
 class JournalInputWidget extends StatefulWidget {
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  // final TextEditingController controller; // Will use widget.journalController.controller
+  // final FocusNode focusNode; // Will use widget.journalController.focusNode
   final double dragOffsetY;
   final bool isDragging;
   final double swipeThreshold;
@@ -13,11 +16,23 @@ class JournalInputWidget extends StatefulWidget {
   final bool showRipple;
   final Function(String) onMoodSelected;
   final String? selectedMood;
+  // final TextEditingController controller; // Will use widget.journalController.controller
+  // final FocusNode focusNode; // Will use widget.journalController.focusNode
+  // final double dragOffsetY; // Will use widget.journalController.dragOffsetY
+  // final bool isDragging; // Will use widget.journalController.isDragging
+  // final double swipeThreshold; // Will use widget.journalController.swipeThreshold
+  // final VoidCallback onHashtagInsert; // Will use widget.journalController.insertHashtag
+  // final AnimationController handlePulseController; // Will use widget.journalController.handlePulseController
+  // final bool showRipple; // Will use widget.journalController.showRipple
+  // final String? selectedMood; // Will use widget.journalController.selectedMood
+  // final Function(String) onMoodSelected; // Will use widget.journalController.selectedMood setter
+
+  final JournalController journalController; // Added JournalController instance
 
   const JournalInputWidget({
     super.key,
-    required this.controller,
-    required this.focusNode,
+    required this.journalController, // Changed to accept JournalController
+    // Keep these for now as they are directly used by parent for other things or passed down
     required this.dragOffsetY,
     required this.isDragging,
     required this.swipeThreshold,
@@ -26,6 +41,7 @@ class JournalInputWidget extends StatefulWidget {
     required this.showRipple,
     required this.onMoodSelected,
     this.selectedMood,
+    // controller and focusNode are no longer passed directly
   });
 
   @override
@@ -36,6 +52,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     with TickerProviderStateMixin {
   late AnimationController _emojiBarController;
   bool _isEmojiBarExpanded = false;
+  // File? _pickedImageFile; // Removed, will use widget.journalController.pickedImageFile
+  // final ImagePicker _picker = ImagePicker(); // Removed, logic in JournalController
 
   late AnimationController _arrowAnimController;
 
@@ -59,6 +77,21 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     _arrowAnimController.dispose();
     super.dispose();
   }
+
+  // Future<void> _pickImage() async { // Moved to JournalController
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     setState(() {
+  //       _pickedImageFile = File(image.path);
+  //     });
+  //   }
+  // }
+
+  // void _clearImage() { // Moved to JournalController
+  //   setState(() {
+  //     _pickedImageFile = null;
+  //   });
+  // }
 
   void _toggleEmojiBar() {
     setState(() {
@@ -120,7 +153,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 Icons.mood,
                                 size: 14, // Adjusted size to match nearby text
                                 color:
-                                    widget.selectedMood != null
+                                    widget.journalController.selectedMood !=
+                                            null // Use controller's state
                                         ? theme.textTheme.bodyLarge?.color
                                         : theme.hintColor,
                               ),
@@ -128,6 +162,21 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(),
                               visualDensity: VisualDensity.compact,
+                            ),
+                            IconButton(
+                              // Added image picker button
+                              icon: const Icon(
+                                Icons.add_photo_alternate_outlined,
+                                size: 20,
+                              ),
+                              onPressed:
+                                  widget
+                                      .journalController
+                                      .pickImage, // Call controller's method
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              visualDensity: VisualDensity.compact,
+                              color: theme.hintColor,
                             ),
                             const Spacer(),
                             Text(
@@ -156,8 +205,14 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                           theme.brightness == Brightness.dark
                               ? Colors.white70
                               : Colors.black54,
-                      controller: widget.controller,
-                      focusNode: widget.focusNode,
+                      controller:
+                          widget
+                              .journalController
+                              .controller, // Use controller's TextEditingController
+                      focusNode:
+                          widget
+                              .journalController
+                              .focusNode, // Use controller's FocusNode
                       maxLines: null,
                       style: theme.textTheme.bodyMedium,
                       decoration: InputDecoration(
@@ -166,6 +221,59 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                         border: InputBorder.none,
                       ),
                     ),
+                    if (widget
+                            .journalController
+                            .pickedImageFile != // Use controller's pickedImageFile
+                        null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              constraints: const BoxConstraints(
+                                maxHeight: 100, // Max height for thumbnail
+                                maxWidth: 150, // Max width for thumbnail
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                border: Border.all(
+                                  color: theme.dividerColor,
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(3.5),
+                                child: Image.file(
+                                  widget
+                                      .journalController
+                                      .pickedImageFile!, // Use controller's pickedImageFile
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap:
+                                  widget
+                                      .journalController
+                                      .clearImage, // Call controller's method
+                              child: Container(
+                                margin: const EdgeInsets.all(4),
+                                padding: const EdgeInsets.all(2),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.5),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close,
+                                  size: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     const SizedBox(height: 12),
                   ],
                 ),

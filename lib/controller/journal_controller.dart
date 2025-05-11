@@ -1,6 +1,10 @@
+import 'dart:io'; // For File
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart'; // For Firebase Storage
+import 'package:image_picker/image_picker.dart'; // For ImagePicker
+import 'package:firebase_app_check/firebase_app_check.dart'; // Import App Check
 
 import '../models/entry.dart';
 import '../utils/mood_utils.dart';
@@ -26,6 +30,8 @@ class JournalController {
   bool hasTriggeredSave = false;
   bool showRipple = false;
   bool isLoading = false;
+  File? pickedImageFile; // Moved from JournalInputWidget
+  final ImagePicker _picker = ImagePicker(); // Moved from JournalInputWidget
 
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
@@ -54,6 +60,20 @@ class JournalController {
     controller.text = newText;
     controller.selection = TextSelection.collapsed(offset: cursorPos + 1);
     onUpdate();
+  }
+
+  // Methods moved from JournalInputWidget's state
+  Future<void> pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      pickedImageFile = File(image.path);
+      onUpdate(); // Notify UI to update
+    }
+  }
+
+  void clearImage() {
+    pickedImageFile = null;
+    onUpdate(); // Notify UI to update
   }
 
   Future<void> loadEntriesFromFirestore() async {
@@ -86,6 +106,7 @@ class JournalController {
             mood: data['mood'] ?? '😐',
             tags: List<String>.from(data['tags'] ?? []),
             wordCount: data['wordCount'] ?? 0,
+            imageUrl: data['imageUrl'] as String?, // Load imageUrl
           );
         }).toList();
 
@@ -96,9 +117,57 @@ class JournalController {
 
   Future<void> _saveEntry() async {
     final text = controller.text.trim();
-    if (text.isEmpty) return;
+    // Allow saving even if text is empty, if there's an image
+    if (text.isEmpty && pickedImageFile == null) return;
 
     final animationController = AnimationUtils.createDefaultController(vsync);
+    String? uploadedImageUrl;
+    final user = FirebaseAuth.instance.currentUser;
+
+    // Upload image if one is picked
+    if (pickedImageFile != null && user != null) {
+      debugPrint("Attempting to upload image: ${pickedImageFile!.path}");
+      try {
+        // Force refresh App Check token before storage operation
+        debugPrint(
+          "Forcing App Check token refresh before storage operation...",
+        );
+        String? currentToken = await FirebaseAppCheck.instance.getToken(true);
+        debugPrint("Token before storage op: $currentToken");
+        if (currentToken == null) {
+          debugPrint(
+            "Failed to get a fresh App Check token before storage operation. Upload will likely fail.",
+          );
+        }
+
+        final fileName =
+            '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child(user.uid)
+            .child(fileName);
+
+        debugPrint("Storage reference: ${storageRef.fullPath}");
+
+        UploadTask uploadTask = storageRef.putFile(pickedImageFile!);
+        TaskSnapshot snapshot = await uploadTask;
+        uploadedImageUrl = await snapshot.ref.getDownloadURL();
+        debugPrint("Image uploaded successfully. URL: $uploadedImageUrl");
+      } catch (e) {
+        // Handle upload error, e.g., show a snackbar or log
+        debugPrint("Error uploading image: $e");
+        // Optionally, decide if you want to proceed saving without the image
+        // or stop the save process. For now, it will proceed without image URL.
+      }
+    } else {
+      if (pickedImageFile == null) {
+        debugPrint("No image picked to upload.");
+      }
+      if (user == null) {
+        debugPrint("User not authenticated, cannot upload image.");
+      }
+    }
 
     final mood = selectedMood ?? analyzeMood(text);
     final tags = extractTags(text);
@@ -113,10 +182,12 @@ class JournalController {
       mood: mood,
       tags: tags,
       wordCount: wordCount,
+      imageUrl: uploadedImageUrl, // Assign uploaded image URL
     );
 
     entries.add(entry);
     controller.clear();
+    pickedImageFile = null; // Clear picked image after processing
     dragOffsetY = 0;
     selectedMood = null;
     showRipple = true;
@@ -135,18 +206,20 @@ class JournalController {
       }
     });
 
-    final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      final Map<String, dynamic> firestoreData = {
+        'text': text,
+        'timestamp': timestamp.toIso8601String(),
+        'mood': mood,
+        'tags': tags,
+        'wordCount': wordCount,
+        'isFavorite': false,
+        'imageUrl': uploadedImageUrl, // Save imageUrl to Firestore
+      };
+      debugPrint("Data to save to Firestore: $firestoreData");
       await FirebaseFirestore.instance
           .collection(FirestorePaths.userEntriesPath())
-          .add({
-            'text': text,
-            'timestamp': timestamp.toIso8601String(),
-            'mood': mood,
-            'tags': tags,
-            'wordCount': wordCount,
-            'isFavorite': false,
-          });
+          .add(firestoreData);
     }
 
     Future.delayed(const Duration(milliseconds: 600), () {

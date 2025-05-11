@@ -72,6 +72,57 @@ class JournalEntryWidget extends StatelessWidget {
                         theme.textTheme.bodySmall, // Use bodySmall from theme
                   ),
                 ),
+                if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: 200, // Max height for the displayed image
+                        minWidth: double.infinity, // Try to take full width
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(4.0),
+                        child: Image.network(
+                          entry.imageUrl!,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (
+                            BuildContext context,
+                            Widget child,
+                            ImageChunkEvent? loadingProgress,
+                          ) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                        ? loadingProgress
+                                                .cumulativeBytesLoaded /
+                                            loadingProgress.expectedTotalBytes!
+                                        : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (
+                            BuildContext context,
+                            Object error,
+                            StackTrace? stackTrace,
+                          ) {
+                            return Container(
+                              height: 100, // Placeholder height on error
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Icon(
+                                  Icons.broken_image,
+                                  color: Colors.grey[600],
+                                  size: 40,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
                 Row(
                   children: [
                     Flexible(

@@ -189,8 +189,9 @@ class _JournalScreenState extends State<JournalScreen>
             onVerticalDragUpdate: jc.handleDragUpdate,
             onVerticalDragEnd: (_) => jc.handleDragEnd(),
             child: JournalInputWidget(
-              controller: jc.controller,
-              focusNode: jc.focusNode,
+              journalController: jc, // Pass the full controller instance
+              // controller: jc.controller, // No longer passed directly
+              // focusNode: jc.focusNode, // No longer passed directly
               dragOffsetY: jc.dragOffsetY,
               isDragging: jc.isDragging,
               swipeThreshold: jc.swipeThreshold,

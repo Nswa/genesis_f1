@@ -42,6 +42,9 @@ dependencies:
   shimmer: ^2.0.0
   flutter_sticky_header: ^0.7.0
   table_calendar: ^3.2.0
+  image_picker: ^1.1.2 # Added image_picker
+  firebase_storage: ^12.1.1 # Added Firebase Storage
+  firebase_app_check: ^0.3.0+1 # Added Firebase App Check
 
 dev_dependencies:
   flutter_test:

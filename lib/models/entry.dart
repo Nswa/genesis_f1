@@ -9,6 +9,7 @@ class Entry {
   final String mood;
   final List<String> tags;
   final int wordCount;
+  String? imageUrl; // Added for image URL
   bool isSelected;
 
   Entry({
@@ -20,6 +21,7 @@ class Entry {
     required this.mood,
     required this.tags,
     required this.wordCount,
+    this.imageUrl, // Added to constructor
     this.isSelected = false,
   });
 }
