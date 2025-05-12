@@ -73,6 +73,11 @@ class JournalController {
     return results.map((r) => r.item as Entry).toList();
   }
 
+  // Getter for favorite entries
+  List<Entry> get favoriteEntries {
+    return entries.where((entry) => entry.isFavorite).toList();
+  }
+
   Map<String, List<Entry>> groupEntriesByDate(List<Entry> entriesToGroup) {
     final Map<String, List<Entry>> map = {};
     for (var e in entriesToGroup) {

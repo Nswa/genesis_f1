@@ -148,16 +148,23 @@ class JournalEntryWidget extends StatelessWidget {
                   ),
                 Row(
                   children: [
+                    Text(
+                      '${entry.mood} • ', // Display mood first
+                      style: theme.textTheme.bodySmall,
+                    ),
                     Flexible(
+                      // Wrap tags in Flexible
                       child: Text(
-                        '${entry.mood} • ${entry.tags.join(" ")} • ${entry.wordCount} words',
-                        style:
-                            theme
-                                .textTheme
-                                .bodySmall, // Use bodySmall from theme
-                        softWrap: true,
-                        overflow: TextOverflow.fade,
+                        entry.tags.join(" "), // Display tags
+                        style: theme.textTheme.bodySmall,
+                        overflow: TextOverflow.fade, // Fade overflow
+                        softWrap: false, // Prevent wrapping
+                        maxLines: 1, // Ensure single line
                       ),
+                    ),
+                    Text(
+                      ' • ${entry.wordCount} words', // Display word count last
+                      style: theme.textTheme.bodySmall,
                     ),
                   ],
                 ),

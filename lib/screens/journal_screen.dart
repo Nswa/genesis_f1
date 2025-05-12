@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
+import 'favorites_screen.dart'; // Import the new screen
 // import 'package:shimmer/shimmer.dart'; // No longer needed here
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
@@ -102,7 +103,15 @@ class _JournalScreenState extends State<JournalScreen>
                       searchFocusNode: _searchFocusNode,
                       onSearchChanged: _onSearchChanged,
                       onToggleFavorites: () {
-                        // Placeholder for favorites functionality
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => FavoritesScreen(
+                                  journalController: jc, // Pass the controller
+                                ),
+                          ),
+                        );
                       },
                       onOpenSettings: () {
                         // Placeholder for settings functionality
