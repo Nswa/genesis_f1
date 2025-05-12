@@ -228,9 +228,9 @@ class JournalController {
         }
       }
 
-      final mood = selectedMood ?? analyzeMood(text);
+      final mood = selectedMood; // Use selectedMood directly, allowing null
       final tags = extractTags(text);
-      final wordCount = text.split(RegExp(r'\s+')).length;
+      final wordCount = text.split(RegExp(r'\s+')).where((s) => s.isNotEmpty).length; // More robust count
       final timestamp = DateTime.now();
 
       final entry = Entry(
@@ -271,7 +271,7 @@ class JournalController {
         final Map<String, dynamic> firestoreData = {
           'text': text,
           'timestamp': timestamp.toIso8601String(),
-          'mood': mood,
+          'mood': mood, // Can be null now
           'tags': tags,
           'wordCount': wordCount,
           'isFavorite': false,

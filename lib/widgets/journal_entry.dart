@@ -65,14 +65,7 @@ class JournalEntryWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 0), // Removed left: 4
-                  child: Text(
-                    entry.timestamp,
-                    style:
-                        theme.textTheme.bodySmall, // Use bodySmall from theme
-                  ),
-                ),
+                // Timestamp Padding removed - will be added to the metadata row below
                 if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
@@ -146,29 +139,94 @@ class JournalEntryWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                Row(
-                  children: [
-                    Text(
-                      '${entry.mood} • ', // Display mood first
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    Flexible(
-                      // Wrap tags in Flexible
-                      child: Text(
-                        entry.tags.join(" "), // Display tags
-                        style: theme.textTheme.bodySmall,
-                        overflow: TextOverflow.fade, // Fade overflow
-                        softWrap: false, // Prevent wrapping
-                        maxLines: 1, // Ensure single line
-                      ),
-                    ),
-                    Text(
-                      ' • ${entry.wordCount} words', // Display word count last
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ],
+                Builder(
+                  // Use Builder to compute widgets conditionally
+                  builder: (context) {
+                    final regularStyle = theme.textTheme.bodySmall;
+                    // Create timestamp style: copy bodySmall, increase size by 1, keep color
+                    final timestampStyle = regularStyle?.copyWith(
+                      fontSize:
+                          (regularStyle.fontSize ?? 12.0) +
+                          1.0, // Default to 12 if null
+                    );
+                    final separator = Text(' • ', style: regularStyle);
+
+                    // 1. Build the list of actual metadata widgets to display
+                    final List<Widget> actualMetadataWidgets = [];
+
+                    // Add Timestamp
+                    actualMetadataWidgets.add(
+                      Text(entry.timestamp, style: timestampStyle),
+                    );
+
+                    // Add Mood if available
+                    if (entry.mood != null && entry.mood!.isNotEmpty) {
+                      actualMetadataWidgets.add(
+                        Text(entry.mood!, style: regularStyle),
+                      );
+                    }
+
+                    // Add Tags if available (using a Key for identification)
+                    const tagsKey = ValueKey('tags');
+                    if (entry.tags.isNotEmpty) {
+                      actualMetadataWidgets.add(
+                        Flexible(
+                          key: tagsKey, // Add key to identify the tags widget
+                          child: Text(
+                            entry.tags.join(" "),
+                            style: regularStyle,
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                            maxLines: 1,
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Add Word Count if available
+                    if (entry.wordCount > 0) {
+                      actualMetadataWidgets.add(
+                        Text('${entry.wordCount} words', style: regularStyle),
+                      );
+                    }
+
+                    // 2. Build the final list for the Row, inserting separators conditionally
+                    final List<Widget> rowChildren = [];
+                    for (int i = 0; i < actualMetadataWidgets.length; i++) {
+                      rowChildren.add(
+                        actualMetadataWidgets[i],
+                      ); // Add the widget itself
+
+                      // Check if a separator is needed *after* this item
+                      if (i < actualMetadataWidgets.length - 1) {
+                        // Get the next widget
+                        final nextWidget = actualMetadataWidgets[i + 1];
+                        // Check if the next widget is the Tags widget (using the key)
+                        if (!(nextWidget is Flexible &&
+                            nextWidget.key == tagsKey)) {
+                          // Only add separator if the *next* item is NOT tags
+                          rowChildren.add(separator);
+                        } else {
+                          // If next item IS tags, add a slightly wider space instead of '•'
+                          rowChildren.add(Text(' ', style: regularStyle));
+                        }
+                      }
+                    }
+
+                    // 3. Return the Row
+                    // Only show the row if there's more than just the timestamp potentially
+                    if (rowChildren.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: rowChildren,
+                    );
+                  },
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 4), // Keep spacing consistent
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
