@@ -230,6 +230,7 @@ class JournalController {
               isFavorite: data['isFavorite'] ?? false,
               isSynced: true,
               localId: doc.id,
+              localImagePath: null,
             );
           }).toList();
 
@@ -272,6 +273,7 @@ class JournalController {
 
     final animationController = AnimationUtils.createDefaultController(vsync);
     String? uploadedImageUrl;
+    String? localImagePath;
     final user = FirebaseAuth.instance.currentUser;
     final timestamp = DateTime.now();
     final localId =
@@ -280,20 +282,25 @@ class JournalController {
     final connectivityResult = await Connectivity().checkConnectivity();
     bool isOnline = connectivityResult != ConnectivityResult.none;
 
-    if (pickedImageFile != null && user != null && isOnline) {
-      try {
-        final fileName =
-            '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('user_images')
-            .child(user.uid)
-            .child(fileName);
-        UploadTask uploadTask = storageRef.putFile(pickedImageFile!);
-        TaskSnapshot snapshot = await uploadTask;
-        uploadedImageUrl = await snapshot.ref.getDownloadURL();
-      } catch (e) {
-        debugPrint("Error uploading image: $e");
+    if (pickedImageFile != null) {
+      if (isOnline && user != null) {
+        try {
+          final fileName =
+              '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_images')
+              .child(user.uid)
+              .child(fileName);
+          UploadTask uploadTask = storageRef.putFile(pickedImageFile!);
+          TaskSnapshot snapshot = await uploadTask;
+          uploadedImageUrl = await snapshot.ref.getDownloadURL();
+        } catch (e) {
+          debugPrint("Error uploading image: $e");
+        }
+      } else {
+        // Offline: store local image path
+        localImagePath = pickedImageFile!.path;
       }
     }
 
@@ -328,6 +335,7 @@ class JournalController {
       imageUrl: uploadedImageUrl,
       isSynced: false,
       firestoreId: null,
+      localImagePath: localImagePath, // Save local image path if offline
     );
 
     entries.add(entry);
@@ -414,6 +422,34 @@ class JournalController {
       final localId = recordSnapshot.key;
       Entry entry = _entryFromMap(localId, entryData);
 
+      // If entry has a local image path but no imageUrl, upload the image
+      if (entry.localImagePath != null &&
+          (entry.imageUrl == null || entry.imageUrl!.isEmpty)) {
+        try {
+          final user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            final file = File(entry.localImagePath!);
+            if (await file.exists()) {
+              final fileName =
+                  '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+              final storageRef = FirebaseStorage.instance
+                  .ref()
+                  .child('user_images')
+                  .child(user.uid)
+                  .child(fileName);
+              UploadTask uploadTask = storageRef.putFile(file);
+              TaskSnapshot snapshot = await uploadTask;
+              final url = await snapshot.ref.getDownloadURL();
+              entry.imageUrl = url;
+              // Optionally clear localImagePath after upload
+              entry.localImagePath = null;
+            }
+          }
+        } catch (e) {
+          debugPrint("Error uploading offline image for entry $localId: $e");
+        }
+      }
+
       try {
         final firestoreData = _entryToFirestoreMap(entry);
         DocumentReference docRef;
@@ -434,6 +470,8 @@ class JournalController {
         await _store!.record(localId).update(_db!, {
           'isSynced': true,
           'firestoreId': entry.firestoreId,
+          'imageUrl': entry.imageUrl,
+          'localImagePath': entry.localImagePath,
         });
 
         final index = entries.indexWhere((e) => e.localId == localId);
@@ -461,6 +499,7 @@ class JournalController {
       'imageUrl': entry.imageUrl,
       'isFavorite': entry.isFavorite,
       'isSynced': entry.isSynced,
+      'localImagePath': entry.localImagePath, // Save local image path
     };
   }
 
@@ -480,6 +519,8 @@ class JournalController {
       imageUrl: map['imageUrl'] as String?,
       isFavorite: map['isFavorite'] as bool? ?? false,
       isSynced: map['isSynced'] as bool? ?? false,
+      localImagePath:
+          map['localImagePath'] as String?, // Restore local image path
     );
   }
 

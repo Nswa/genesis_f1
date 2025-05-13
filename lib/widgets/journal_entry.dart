@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart'; // Import Shimmer
+import 'dart:io'; // Import for File
 import '../models/entry.dart';
 
 class JournalEntryWidget extends StatelessWidget {
@@ -169,76 +170,105 @@ class JournalEntryWidget extends StatelessWidget {
                     );
                   },
                 ),
-                if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty)
+                if ((entry.imageUrl != null && entry.imageUrl!.isNotEmpty) ||
+                    (entry.localImagePath != null &&
+                        entry.localImagePath!.isNotEmpty))
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxHeight: 200, // Max height for the displayed image
-                        minWidth: double.infinity, // Try to take full width
+                        maxHeight: 200,
+                        minWidth: double.infinity,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4.0),
-                        child: Image.network(
-                          entry.imageUrl!,
-                          key: ValueKey(entry.imageUrl!),
-                          fit: BoxFit.cover,
-                          frameBuilder: (
-                            BuildContext context,
-                            Widget child,
-                            int? frame,
-                            bool wasSynchronouslyLoaded,
-                          ) {
-                            if (wasSynchronouslyLoaded) {
-                              return child;
-                            }
-                            if (frame == null) {
-                              // Image is still loading, show shimmer
-                              final isDark =
-                                  Theme.of(context).brightness ==
-                                  Brightness.dark;
-                              final baseColor =
-                                  isDark
-                                      ? Colors.grey[700]!
-                                      : Colors.grey[300]!;
-                              final highlightColor =
-                                  isDark
-                                      ? Colors.grey[600]!
-                                      : Colors.grey[100]!;
-                              return Shimmer.fromColors(
-                                baseColor: baseColor,
-                                highlightColor: highlightColor,
-                                period: const Duration(milliseconds: 1000),
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 200,
-                                  decoration: BoxDecoration(
-                                    color: baseColor,
-                                    borderRadius: BorderRadius.circular(4.0),
-                                  ),
+                        child:
+                            entry.imageUrl != null && entry.imageUrl!.isNotEmpty
+                                ? Image.network(
+                                  entry.imageUrl!,
+                                  key: ValueKey(entry.imageUrl!),
+                                  fit: BoxFit.cover,
+                                  frameBuilder: (
+                                    BuildContext context,
+                                    Widget child,
+                                    int? frame,
+                                    bool wasSynchronouslyLoaded,
+                                  ) {
+                                    if (wasSynchronouslyLoaded) {
+                                      return child;
+                                    }
+                                    if (frame == null) {
+                                      final isDark =
+                                          Theme.of(context).brightness ==
+                                          Brightness.dark;
+                                      final baseColor =
+                                          isDark
+                                              ? Colors.grey[700]!
+                                              : Colors.grey[300]!;
+                                      final highlightColor =
+                                          isDark
+                                              ? Colors.grey[600]!
+                                              : Colors.grey[100]!;
+                                      return Shimmer.fromColors(
+                                        baseColor: baseColor,
+                                        highlightColor: highlightColor,
+                                        period: const Duration(
+                                          milliseconds: 1000,
+                                        ),
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 200,
+                                          decoration: BoxDecoration(
+                                            color: baseColor,
+                                            borderRadius: BorderRadius.circular(
+                                              4.0,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    return child;
+                                  },
+                                  errorBuilder: (
+                                    BuildContext context,
+                                    Object error,
+                                    StackTrace? stackTrace,
+                                  ) {
+                                    return Container(
+                                      height: 100,
+                                      color: Colors.grey[300],
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          color: Colors.grey[600],
+                                          size: 40,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                                : Image.file(
+                                  File(entry.localImagePath!),
+                                  key: ValueKey(entry.localImagePath!),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (
+                                    BuildContext context,
+                                    Object error,
+                                    StackTrace? stackTrace,
+                                  ) {
+                                    return Container(
+                                      height: 100,
+                                      color: Colors.grey[300],
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.broken_image,
+                                          color: Colors.grey[600],
+                                          size: 40,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            }
-                            return child; // Image is loaded, display it
-                          },
-                          errorBuilder: (
-                            BuildContext context,
-                            Object error,
-                            StackTrace? stackTrace,
-                          ) {
-                            return Container(
-                              height: 100, // Placeholder height on error
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey[600],
-                                  size: 40,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                   ),

@@ -14,6 +14,7 @@ class Entry {
   bool isSelected;
   String? localId; // For local DB key before Firestore sync
   bool isSynced; // To track if the entry is synced with Firestore
+  String? localImagePath; // For offline image path
 
   Entry({
     this.firestoreId, // Added to constructor
@@ -29,5 +30,6 @@ class Entry {
     this.isSelected = false,
     this.localId, // Added to constructor
     this.isSynced = false, // Added to constructor
+    this.localImagePath, // Add to constructor
   });
 }
