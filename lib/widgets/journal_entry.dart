@@ -16,11 +16,95 @@ class JournalEntryWidget extends StatelessWidget {
     this.onLongPress,
   });
 
+  Widget _buildTagsBar(BuildContext context, TextStyle? style) {
+    final theme = Theme.of(context);
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 14),
+            child: Text(
+              entry.tags.join(" "),
+              style: style,
+              softWrap: false,
+              maxLines: 1,
+            ),
+          ),
+        ),
+        Positioned(
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: 10,
+          child: IgnorePointer(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Colors.transparent,
+                    theme.scaffoldBackgroundColor.withOpacity(0.85),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  List<Widget> _buildMetadata(
+    BuildContext context,
+    TextStyle? regularStyle,
+    TextStyle? timestampStyle,
+  ) {
+    final List<Widget?> widgets = [
+      Text(entry.timestamp, style: timestampStyle),
+      entry.mood?.isNotEmpty == true
+          ? Text(entry.mood!, style: regularStyle)
+          : null,
+      entry.tags.isNotEmpty
+          ? Flexible(child: _buildTagsBar(context, regularStyle))
+          : null,
+      entry.wordCount > 0
+          ? Text('${entry.wordCount} words', style: regularStyle)
+          : null,
+    ];
+    // Remove nulls
+    return widgets.whereType<Widget>().toList();
+  }
+
+  Widget _joinWithSeparator(
+    List<Widget> widgets,
+    Widget separator,
+    Widget tagsSpacer,
+  ) {
+    if (widgets.isEmpty) return const SizedBox.shrink();
+    final List<Widget> children = [];
+    for (int i = 0; i < widgets.length; i++) {
+      children.add(widgets[i]);
+      if (i < widgets.length - 1) {
+        // If next is tags, use tagsSpacer
+        if (widgets[i + 1] is Flexible) {
+          children.add(tagsSpacer);
+        } else {
+          children.add(separator);
+        }
+      }
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: children,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final hintColor = theme.hintColor; // No longer used directly for timestamp
-    // final metaColor = theme.textTheme.bodySmall?.color?.withValues(alpha: 0.8); // Will use theme.textTheme.bodySmall directly
 
     return FadeTransition(
       opacity: CurvedAnimation(
@@ -140,122 +224,22 @@ class JournalEntryWidget extends StatelessWidget {
                     ),
                   ),
                 Builder(
-                  // Use Builder to compute widgets conditionally
                   builder: (context) {
                     final regularStyle = theme.textTheme.bodySmall;
-                    // Create timestamp style: copy bodySmall, increase size by 1, keep color
                     final timestampStyle = regularStyle?.copyWith(
-                      fontSize:
-                          (regularStyle.fontSize ?? 12.0) +
-                          1.0, // Default to 12 if null
+                      fontSize: (regularStyle.fontSize ?? 12.0) + 1.0,
                     );
                     final separator = Text(' • ', style: regularStyle);
-
-                    // 1. Build the list of actual metadata widgets to display
-                    final List<Widget> actualMetadataWidgets = [];
-
-                    // Add Timestamp
-                    actualMetadataWidgets.add(
-                      Text(entry.timestamp, style: timestampStyle),
+                    final tagsSpacer = Text(' ', style: regularStyle);
+                    final metadataWidgets = _buildMetadata(
+                      context,
+                      regularStyle,
+                      timestampStyle,
                     );
-
-                    // Add Mood if available
-                    if (entry.mood != null && entry.mood!.isNotEmpty) {
-                      actualMetadataWidgets.add(
-                        Text(entry.mood!, style: regularStyle),
-                      );
-                    }
-
-                    // Add Tags if available (using a Key for identification)
-                    const tagsKey = ValueKey('tags');
-                    if (entry.tags.isNotEmpty) {
-                      actualMetadataWidgets.add(
-                        Flexible(
-                          key: tagsKey, // Add key to identify the tags widget
-                          child: Stack(
-                            children: [
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                    right: 14,
-                                  ), // Add right padding before fade
-                                  child: Text(
-                                    entry.tags.join(" "),
-                                    style: regularStyle,
-                                    softWrap: false,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                              ),
-                              // Fade effect on the right edge
-                              Positioned(
-                                right: 0,
-                                top: 0,
-                                bottom: 0,
-                                width: 10, // Width of the fade effect
-                                child: IgnorePointer(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.centerLeft,
-                                        end: Alignment.centerRight,
-                                        colors: [
-                                          Colors.transparent,
-                                          theme.scaffoldBackgroundColor
-                                              .withOpacity(0.85),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-
-                    // Add Word Count if available
-                    if (entry.wordCount > 0) {
-                      actualMetadataWidgets.add(
-                        Text('${entry.wordCount} words', style: regularStyle),
-                      );
-                    }
-
-                    // 2. Build the final list for the Row, inserting separators conditionally
-                    final List<Widget> rowChildren = [];
-                    for (int i = 0; i < actualMetadataWidgets.length; i++) {
-                      rowChildren.add(
-                        actualMetadataWidgets[i],
-                      ); // Add the widget itself
-
-                      // Check if a separator is needed *after* this item
-                      if (i < actualMetadataWidgets.length - 1) {
-                        // Get the next widget
-                        final nextWidget = actualMetadataWidgets[i + 1];
-                        // Check if the next widget is the Tags widget (using the key)
-                        if (!(nextWidget is Flexible &&
-                            nextWidget.key == tagsKey)) {
-                          // Only add separator if the *next* item is NOT tags
-                          rowChildren.add(separator);
-                        } else {
-                          // If next item IS tags, add a slightly wider space instead of '•'
-                          rowChildren.add(Text(' ', style: regularStyle));
-                        }
-                      }
-                    }
-
-                    // 3. Return the Row
-                    // Only show the row if there's more than just the timestamp potentially
-                    if (rowChildren.isEmpty) {
-                      return const SizedBox.shrink();
-                    }
-
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: rowChildren,
+                    return _joinWithSeparator(
+                      metadataWidgets,
+                      separator,
+                      tagsSpacer,
                     );
                   },
                 ),
