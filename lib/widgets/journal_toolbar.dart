@@ -31,6 +31,7 @@ class JournalToolbar extends StatelessWidget {
   Widget _buildSyncStatusIcon(BuildContext context) {
     IconData iconData;
     Color iconColor;
+    bool shouldAnimate = false;
     String statusText;
 
     switch (syncStatus) {
@@ -42,6 +43,7 @@ class JournalToolbar extends StatelessWidget {
       case SyncStatus.syncing:
         iconData = Icons.sync_outlined;
         iconColor = Colors.orange;
+        shouldAnimate = true;
         statusText = 'Syncing...';
         break;
       case SyncStatus.offline:
@@ -55,18 +57,32 @@ class JournalToolbar extends StatelessWidget {
         statusText = 'Sync Error';
         break;
     }
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(iconData, color: iconColor, size: SizeConstants.iconSmall),
-        const SizedBox(width: 4),
-        Text(
-          statusText,
-          style: Theme.of(
-            context,
-          ).textTheme.bodySmall?.copyWith(color: iconColor),
-        ),
-      ],
+
+    Widget iconWidget = Icon(
+      iconData,
+      color: iconColor,
+      size: SizeConstants.iconSmall,
+    );
+    if (shouldAnimate) {
+      iconWidget = TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0.0, end: 1.0),
+        duration: const Duration(seconds: 1),
+        builder: (context, value, child) {
+          return Transform.rotate(
+            angle: value * 6.28319, // 2*pi
+            child: child,
+          );
+        },
+        child: iconWidget,
+      );
+    }
+
+    return Tooltip(
+      message: statusText,
+      waitDuration: const Duration(milliseconds: 200),
+      showDuration: const Duration(seconds: 2),
+      triggerMode: TooltipTriggerMode.tap,
+      child: iconWidget,
     );
   }
 
@@ -80,9 +96,16 @@ class JournalToolbar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (!isSearching) _buildSyncStatusIcon(context),
-          if (!isSearching) const SizedBox(width: 8), // Spacer
-          if (!isSearching) Text('genesis', style: theme.textTheme.titleMedium),
+          if (!isSearching) ...[
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('genesis', style: theme.textTheme.titleMedium),
+                const SizedBox(width: 5.0),
+                _buildSyncStatusIcon(context),
+              ],
+            ),
+          ],
           if (isSearching)
             Expanded(
               child: SizedBox(
