@@ -101,7 +101,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 2),
+                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                   child: Opacity(
                     // This opacity is for the drag fade effect
                     opacity: fadeValue,
@@ -123,7 +123,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),
-                                const SizedBox(width: 6),
+                                const SizedBox(
+                                  width: 8,
+                                ), // Standardized spacing
                                 IconButton(
                                   icon:
                                       widget.journalController.selectedMood !=
@@ -133,33 +135,37 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                                 .journalController
                                                 .selectedMood!,
                                             style: const TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 16, // Consistent size
                                             ),
                                           )
                                           : Icon(
                                             Icons.mood,
-                                            size: 14,
-                                            color: theme.hintColor,
+                                            size: 18, // Consistent icon size
+                                            color: theme.iconTheme.color
+                                                ?.withOpacity(
+                                                  0.7,
+                                                ), // Consistent color
                                           ),
-                                  onPressed:
-                                      _toggleEmojiBar, // Individual disabling handled by IgnorePointer + TextField's enabled
+                                  onPressed: _toggleEmojiBar,
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   visualDensity: VisualDensity.compact,
                                 ),
+                                const SizedBox(
+                                  width: 4,
+                                ), // Standardized spacing
                                 IconButton(
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.add_photo_alternate_outlined,
-                                    size: 20,
+                                    size: 18, // Consistent icon size
+                                    color: theme.iconTheme.color?.withOpacity(
+                                      0.7,
+                                    ), // Consistent color
                                   ),
-                                  onPressed:
-                                      widget
-                                          .journalController
-                                          .pickImage, // Individual disabling handled by IgnorePointer
+                                  onPressed: widget.journalController.pickImage,
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   visualDensity: VisualDensity.compact,
-                                  color: theme.hintColor,
                                 ),
                                 const Spacer(),
                                 Text(
@@ -176,13 +182,15 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                               ignoring: true,
                               child: Icon(
                                 Icons.keyboard_arrow_up,
-                                size: 18,
-                                color: theme.hintColor,
+                                size: 18, // Consistent icon size
+                                color: theme.iconTheme.color?.withOpacity(
+                                  0.5,
+                                ), // Consistent color
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8), // Standardized spacing
                         TextField(
                           cursorColor:
                               theme.brightness == Brightness.dark
