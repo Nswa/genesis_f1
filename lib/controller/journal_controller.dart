@@ -158,7 +158,7 @@ class JournalController {
             rawDateTime: parsedTimestamp,
             animController: AnimationUtils.createDefaultController(vsync)
               ..forward(),
-            mood: data['mood'] ?? '😐',
+            mood: data['mood'], // Allow null mood
             tags: List<String>.from(data['tags'] ?? []),
             wordCount: data['wordCount'] ?? 0,
             imageUrl: data['imageUrl'] as String?, // Load imageUrl
