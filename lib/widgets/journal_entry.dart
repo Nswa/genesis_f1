@@ -149,7 +149,26 @@ class JournalEntryWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Timestamp Padding removed - will be added to the metadata row below
+                Builder(
+                  builder: (context) {
+                    final regularStyle = theme.textTheme.bodySmall;
+                    final timestampStyle = regularStyle?.copyWith(
+                      fontSize: (regularStyle.fontSize ?? 12.0) + 1.0,
+                    );
+                    final separator = Text(' • ', style: regularStyle);
+                    final tagsSpacer = Text(' ', style: regularStyle);
+                    final metadataWidgets = _buildMetadata(
+                      context,
+                      regularStyle,
+                      timestampStyle,
+                    );
+                    return _joinWithSeparator(
+                      metadataWidgets,
+                      separator,
+                      tagsSpacer,
+                    );
+                  },
+                ),
                 if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
@@ -223,26 +242,6 @@ class JournalEntryWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                Builder(
-                  builder: (context) {
-                    final regularStyle = theme.textTheme.bodySmall;
-                    final timestampStyle = regularStyle?.copyWith(
-                      fontSize: (regularStyle.fontSize ?? 12.0) + 1.0,
-                    );
-                    final separator = Text(' • ', style: regularStyle);
-                    final tagsSpacer = Text(' ', style: regularStyle);
-                    final metadataWidgets = _buildMetadata(
-                      context,
-                      regularStyle,
-                      timestampStyle,
-                    );
-                    return _joinWithSeparator(
-                      metadataWidgets,
-                      separator,
-                      tagsSpacer,
-                    );
-                  },
-                ),
                 const SizedBox(height: 4), // Keep spacing consistent
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
