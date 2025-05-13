@@ -64,50 +64,60 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               ),
             )
           else
-            CustomScrollView(
-              controller: _scrollController,
-              slivers:
-                  grouped.entries.map((entryGroup) {
-                    return SliverStickyHeader(
-                      header: Container(
-                        color: background, // Ensure background for tap area
-                        padding: const EdgeInsets.fromLTRB(
-                          16,
-                          8, // Reduced top padding
-                          0,
-                          4, // Reduced bottom padding
-                        ),
-                        child: Text(
-                          entryGroup.key,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Theme.of(context).hintColor,
-                            fontWeight: FontWeight.w600,
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 16.0,
+              ), // Added bottom padding
+              child: CustomScrollView(
+                controller: _scrollController,
+                slivers:
+                    grouped.entries.map((entryGroup) {
+                      return SliverStickyHeader(
+                        header: Container(
+                          color: background, // Ensure background for tap area
+                          padding: const EdgeInsets.fromLTRB(
+                            16,
+                            8, // Reduced top padding
+                            0,
+                            4, // Reduced bottom padding
+                          ),
+                          child: Text(
+                            entryGroup.key,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Theme.of(context).hintColor,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
-                      ),
-                      sliver: SliverList(
-                        // Using SliverList as animations aren't strictly needed here
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final entry = entryGroup.value[index];
-                          return JournalEntryWidget(
-                            entry: entry,
-                            // Allow unfavoriting from this screen
-                            onToggleFavorite: (Entry e) async {
-                              await widget.journalController.toggleFavorite(e);
-                              // Call setState here to rebuild FavoritesScreen immediately
-                              if (mounted) {
-                                setState(() {});
-                              }
-                            },
-                            // Disable selection mode interactions on this screen
-                            onTap: null,
-                            onLongPress: null,
-                          );
-                        }, childCount: entryGroup.value.length),
-                      ),
-                    );
-                  }).toList(),
+                        sliver: SliverList(
+                          // Using SliverList as animations aren't strictly needed here
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            final entry = entryGroup.value[index];
+                            return JournalEntryWidget(
+                              entry: entry,
+                              // Allow unfavoriting from this screen
+                              onToggleFavorite: (Entry e) async {
+                                await widget.journalController.toggleFavorite(
+                                  e,
+                                );
+                                // Call setState here to rebuild FavoritesScreen immediately
+                                if (mounted) {
+                                  setState(() {});
+                                }
+                              },
+                              // Disable selection mode interactions on this screen
+                              onTap: null,
+                              onLongPress: null,
+                            );
+                          }, childCount: entryGroup.value.length),
+                        ),
+                      );
+                    }).toList(),
+              ),
             ),
           EdgeFade(top: true, background: background),
           EdgeFade(top: false, background: background),
