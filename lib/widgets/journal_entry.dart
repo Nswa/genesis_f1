@@ -172,12 +172,45 @@ class JournalEntryWidget extends StatelessWidget {
                       actualMetadataWidgets.add(
                         Flexible(
                           key: tagsKey, // Add key to identify the tags widget
-                          child: Text(
-                            entry.tags.join(" "),
-                            style: regularStyle,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            maxLines: 1,
+                          child: Stack(
+                            children: [
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 14,
+                                  ), // Add right padding before fade
+                                  child: Text(
+                                    entry.tags.join(" "),
+                                    style: regularStyle,
+                                    softWrap: false,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                              ),
+                              // Fade effect on the right edge
+                              Positioned(
+                                right: 0,
+                                top: 0,
+                                bottom: 0,
+                                width: 10, // Width of the fade effect
+                                child: IgnorePointer(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Colors.transparent,
+                                          theme.scaffoldBackgroundColor
+                                              .withOpacity(0.85),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
