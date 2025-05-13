@@ -110,6 +110,18 @@ class JournalController {
   void insertHashtag() {
     final cursorPos = controller.selection.base.offset;
     final text = controller.text;
+
+    // Check if the character before the cursor is already a hashtag
+    if (cursorPos > 0 && text[cursorPos - 1] == '#') {
+      // If already a hashtag, just move cursor or do nothing
+      // Optionally, ensure cursor is after the existing hashtag
+      if (controller.selection.extent.offset != cursorPos) {
+        controller.selection = TextSelection.collapsed(offset: cursorPos);
+      }
+      return; // Do not insert another hashtag
+    }
+
+    // If cursor is at the beginning or the preceding char is not '#', insert it
     final newText = text.replaceRange(cursorPos, cursorPos, "#");
     controller.text = newText;
     controller.selection = TextSelection.collapsed(offset: cursorPos + 1);
@@ -231,7 +243,29 @@ class JournalController {
       }
 
       final mood = selectedMood; // Use selectedMood directly, allowing null
-      final tags = extractTags(text);
+      final List<String> rawTags = extractTags(text);
+      final List<String> tags =
+          rawTags
+              .map((tag) {
+                String currentTag = tag.trim(); // Trim whitespace
+                if (currentTag.isEmpty)
+                  return null; // Skip empty tags after trim
+
+                // Remove all leading '#' characters
+                String tagName = currentTag;
+                while (tagName.startsWith('#')) {
+                  tagName = tagName.substring(1);
+                }
+
+                // If tagName is empty after stripping hashes (e.g., tag was "##" or "#"), skip it.
+                if (tagName.isEmpty) return null;
+
+                // Prepend a single '#'
+                return '#$tagName';
+              })
+              .whereType<String>()
+              .toList(); // Filter out nulls and keep non-null strings
+
       final wordCount =
           text
               .split(RegExp(r'\s+'))
