@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:genesis_f1/constant/size.dart'; // Import SizeConstants
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
+import '../controller/journal_controller.dart'; // Import SyncStatus
 
 class JournalToolbar extends StatelessWidget {
   final bool isSearching; // To toggle search field visibility
@@ -12,6 +13,7 @@ class JournalToolbar extends StatelessWidget {
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final ValueChanged<String> onSearchChanged;
+  final SyncStatus syncStatus; // Added sync status
 
   const JournalToolbar({
     super.key,
@@ -23,7 +25,50 @@ class JournalToolbar extends StatelessWidget {
     required this.searchController,
     required this.searchFocusNode,
     required this.onSearchChanged,
+    required this.syncStatus, // Added sync status
   });
+
+  Widget _buildSyncStatusIcon(BuildContext context) {
+    IconData iconData;
+    Color iconColor;
+    String statusText;
+
+    switch (syncStatus) {
+      case SyncStatus.synced:
+        iconData = Icons.cloud_done_outlined;
+        iconColor = Colors.green;
+        statusText = 'Synced';
+        break;
+      case SyncStatus.syncing:
+        iconData = Icons.sync_outlined;
+        iconColor = Colors.orange;
+        statusText = 'Syncing...';
+        break;
+      case SyncStatus.offline:
+        iconData = Icons.cloud_off_outlined;
+        iconColor = Colors.grey;
+        statusText = 'Offline';
+        break;
+      case SyncStatus.error:
+        iconData = Icons.error_outline;
+        iconColor = Colors.red;
+        statusText = 'Sync Error';
+        break;
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(iconData, color: iconColor, size: SizeConstants.iconSmall),
+        const SizedBox(width: 4),
+        Text(
+          statusText,
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: iconColor),
+        ),
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +80,8 @@ class JournalToolbar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          if (!isSearching) _buildSyncStatusIcon(context),
+          if (!isSearching) const SizedBox(width: 8), // Spacer
           if (!isSearching) Text('genesis', style: theme.textTheme.titleMedium),
           if (isSearching)
             Expanded(

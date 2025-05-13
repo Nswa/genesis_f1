@@ -46,6 +46,9 @@ dependencies:
   firebase_storage: ^12.1.1 # Added Firebase Storage
   firebase_app_check: ^0.3.0+1 # Added Firebase App Check
   fuzzy: ^0.5.1
+  sembast: ^3.6.0+1
+  path_provider: ^2.0.0
+  connectivity_plus: ^5.0.2 # Added for network connectivity
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'package:flutter/animation.dart';
 
 class Entry {
-  final String? firestoreId; // Added for Firestore document ID
+  String? firestoreId; // Changed to non-final to allow update after sync
   final String text;
   final String timestamp; // formatted time only: e.g., "3:42 PM"
   final DateTime rawDateTime; // raw full datetime for grouping
@@ -12,6 +12,8 @@ class Entry {
   final int wordCount;
   String? imageUrl; // Added for image URL
   bool isSelected;
+  String? localId; // For local DB key before Firestore sync
+  bool isSynced; // To track if the entry is synced with Firestore
 
   Entry({
     this.firestoreId, // Added to constructor
@@ -25,5 +27,7 @@ class Entry {
     required this.wordCount,
     this.imageUrl, // Added to constructor
     this.isSelected = false,
+    this.localId, // Added to constructor
+    this.isSynced = false, // Added to constructor
   });
 }

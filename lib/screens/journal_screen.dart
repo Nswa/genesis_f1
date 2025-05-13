@@ -35,7 +35,11 @@ class _JournalScreenState extends State<JournalScreen>
     super.initState();
     jc = JournalController(
       vsync: this,
-      onUpdate: () => setState(() {}),
+      onUpdate: () {
+        if (mounted) {
+          setState(() {});
+        }
+      }, // Ensure mounted check
       scrollController: scrollController,
     );
     jc.loadEntriesFromFirestore();
@@ -102,6 +106,7 @@ class _JournalScreenState extends State<JournalScreen>
                       searchController: _searchController,
                       searchFocusNode: _searchFocusNode,
                       onSearchChanged: _onSearchChanged,
+                      syncStatus: jc.syncStatus, // Pass syncStatus
                       onToggleFavorites: () {
                         Navigator.push(
                           context,
