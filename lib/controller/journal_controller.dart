@@ -152,6 +152,7 @@ class JournalController {
           final data = doc.data();
           final parsedTimestamp = DateTime.parse(data['timestamp']);
           return Entry(
+            firestoreId: doc.id, // Store Firestore document ID
             text: data['text'] ?? '',
             timestamp: DateFormatter.formatTime(parsedTimestamp),
             rawDateTime: parsedTimestamp,
@@ -161,6 +162,7 @@ class JournalController {
             tags: List<String>.from(data['tags'] ?? []),
             wordCount: data['wordCount'] ?? 0,
             imageUrl: data['imageUrl'] as String?, // Load imageUrl
+            isFavorite: data['isFavorite'] ?? false, // Load isFavorite
           );
         }).toList();
 
@@ -230,7 +232,11 @@ class JournalController {
 
       final mood = selectedMood; // Use selectedMood directly, allowing null
       final tags = extractTags(text);
-      final wordCount = text.split(RegExp(r'\s+')).where((s) => s.isNotEmpty).length; // More robust count
+      final wordCount =
+          text
+              .split(RegExp(r'\s+'))
+              .where((s) => s.isNotEmpty)
+              .length; // More robust count
       final timestamp = DateTime.now();
 
       final entry = Entry(
@@ -381,43 +387,22 @@ class JournalController {
       return;
     }
 
-    // Find the document to update. This requires entries to have a Firestore ID.
-    // Assuming entry.id holds the Firestore document ID.
-    // This part needs to be adjusted based on how Firestore IDs are managed.
-    // For now, let's assume we query by timestamp and text, similar to delete.
-    // THIS IS NOT IDEAL AND SHOULD BE REPLACED WITH DOCUMENT ID LOOKUP.
-    try {
-      final querySnapshot =
-          await FirebaseFirestore.instance
-              .collection(FirestorePaths.userEntriesPath())
-              .where(
-                'timestamp',
-                isEqualTo: entry.rawDateTime.toIso8601String(),
-              )
-              .where(
-                'text',
-                isEqualTo: entry.text,
-              ) // This makes it less reliable
-              .limit(1)
-              .get();
+    if (entry.firestoreId == null) {
+      debugPrint("Entry has no Firestore ID, cannot update favorite status.");
+      // Optionally revert local change
+      // entry.isFavorite = !entry.isFavorite;
+      // onUpdate();
+      return;
+    }
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final docId = querySnapshot.docs.first.id;
-        await FirebaseFirestore.instance
-            .collection(FirestorePaths.userEntriesPath())
-            .doc(docId)
-            .update({'isFavorite': entry.isFavorite});
-        debugPrint(
-          "Updated favorite status for entry $docId to ${entry.isFavorite}",
-        );
-      } else {
-        debugPrint(
-          "Could not find entry in Firestore to update favorite status.",
-        );
-        // Optionally revert local change
-        // entry.isFavorite = !entry.isFavorite;
-        // onUpdate();
-      }
+    try {
+      await FirebaseFirestore.instance
+          .collection(FirestorePaths.userEntriesPath())
+          .doc(entry.firestoreId)
+          .update({'isFavorite': entry.isFavorite});
+      debugPrint(
+        "Updated favorite status for entry ${entry.firestoreId} to ${entry.isFavorite}",
+      );
     } catch (e) {
       debugPrint("Error updating favorite status in Firestore: $e");
       // Optionally revert local change
