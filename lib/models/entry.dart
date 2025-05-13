@@ -1,6 +1,7 @@
 import 'package:flutter/animation.dart';
 
 class Entry {
+  final String? firestoreId; // Added for Firestore document ID
   final String text;
   final String timestamp; // formatted time only: e.g., "3:42 PM"
   final DateTime rawDateTime; // raw full datetime for grouping
@@ -13,6 +14,7 @@ class Entry {
   bool isSelected;
 
   Entry({
+    this.firestoreId, // Added to constructor
     required this.text,
     required this.timestamp,
     required this.rawDateTime,

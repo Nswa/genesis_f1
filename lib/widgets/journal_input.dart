@@ -125,15 +125,22 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                 ),
                                 const SizedBox(width: 6),
                                 IconButton(
-                                  icon: Icon(
-                                    Icons.mood,
-                                    size: 14,
-                                    color:
-                                        widget.journalController.selectedMood !=
-                                                null
-                                            ? theme.textTheme.bodyLarge?.color
-                                            : theme.hintColor,
-                                  ),
+                                  icon:
+                                      widget.journalController.selectedMood !=
+                                              null
+                                          ? Text(
+                                            widget
+                                                .journalController
+                                                .selectedMood!,
+                                            style: const TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          )
+                                          : Icon(
+                                            Icons.mood,
+                                            size: 14,
+                                            color: theme.hintColor,
+                                          ),
                                   onPressed:
                                       _toggleEmojiBar, // Individual disabling handled by IgnorePointer + TextField's enabled
                                   padding: EdgeInsets.zero,
