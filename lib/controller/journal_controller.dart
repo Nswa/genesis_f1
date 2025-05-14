@@ -700,8 +700,15 @@ class JournalController {
       if (entry.firestoreId != null) {
         firestoreIdsToDelete.add(entry.firestoreId!);
       }
-      entries.remove(entry);
-      entry.animController.dispose();
+      // Animate removal for instant responsiveness illusion
+      entry.animController.reverse();
+      entry.animController.addStatusListener((status) async {
+        if (status == AnimationStatus.dismissed) {
+          entries.remove(entry);
+          entry.animController.dispose();
+          onUpdate();
+        }
+      });
     }
 
     final connectivityResult = await Connectivity().checkConnectivity();
