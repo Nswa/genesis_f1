@@ -135,9 +135,13 @@ class JournalController {
   }
 
   Future<void> _updateConnectivityStatus(ConnectivityResult result) async {
-    if (result != ConnectivityResult.none) {
-      await _syncOfflineEntries();
+    // Always update sync status instantly on connectivity change
+    if (result == ConnectivityResult.none) {
+      _syncStatus = SyncStatus.offline;
+      onUpdate();
+      return;
     }
+    await _syncOfflineEntries();
     _updateSyncStatus();
   }
 
@@ -145,27 +149,28 @@ class JournalController {
     Connectivity().checkConnectivity().then((connectivityResult) {
       if (connectivityResult == ConnectivityResult.none) {
         _syncStatus = SyncStatus.offline;
+        onUpdate();
+        return;
+      }
+      if (_store != null && _db != null) {
+        _store!
+            .query(
+              finder: sembast.Finder(
+                filter: sembast.Filter.equals('isSynced', false),
+              ),
+            )
+            .count(_db!)
+            .then((count) {
+              if (count > 0) {
+                _syncStatus = SyncStatus.syncing;
+              } else {
+                _syncStatus = SyncStatus.synced;
+              }
+              onUpdate();
+            });
       } else {
-        if (_store != null && _db != null) {
-          _store!
-              .query(
-                finder: sembast.Finder(
-                  filter: sembast.Filter.equals('isSynced', false),
-                ),
-              )
-              .count(_db!)
-              .then((count) {
-                if (count > 0) {
-                  _syncStatus = SyncStatus.syncing;
-                } else {
-                  _syncStatus = SyncStatus.synced;
-                }
-                onUpdate();
-              });
-        } else {
-          _syncStatus = SyncStatus.synced;
-          onUpdate();
-        }
+        _syncStatus = SyncStatus.synced;
+        onUpdate();
       }
     });
   }
