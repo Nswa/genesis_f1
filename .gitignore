@@ -1,6 +1,6 @@
 # Miscellaneous
 *.class
-*.github
+#*.github
 *.log
 *.pyc
 *.swp
