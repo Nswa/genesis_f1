@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart'; // Import Shimmer
 import 'dart:io'; // Import for File
+import 'package:cached_network_image/cached_network_image.dart'; // Import CachedNetworkImage
 import '../models/entry.dart';
 
 class JournalEntryWidget extends StatelessWidget {
@@ -184,91 +184,37 @@ class JournalEntryWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4.0),
                         child:
                             entry.imageUrl != null && entry.imageUrl!.isNotEmpty
-                                ? Image.network(
-                                  entry.imageUrl!,
-                                  key: ValueKey(entry.imageUrl!),
-                                  fit: BoxFit.cover,
-                                  frameBuilder: (
-                                    BuildContext context,
-                                    Widget child,
-                                    int? frame,
-                                    bool wasSynchronouslyLoaded,
-                                  ) {
-                                    if (wasSynchronouslyLoaded) {
-                                      return child;
-                                    }
-                                    if (frame == null) {
-                                      final isDark =
-                                          Theme.of(context).brightness ==
-                                          Brightness.dark;
-                                      final baseColor =
-                                          isDark
-                                              ? Colors.grey[700]!
-                                              : Colors.grey[300]!;
-                                      final highlightColor =
-                                          isDark
-                                              ? Colors.grey[600]!
-                                              : Colors.grey[100]!;
-                                      return Shimmer.fromColors(
-                                        baseColor: baseColor,
-                                        highlightColor: highlightColor,
-                                        period: const Duration(
-                                          milliseconds: 1000,
-                                        ),
-                                        child: Container(
-                                          width: double.infinity,
-                                          height: 200,
-                                          decoration: BoxDecoration(
-                                            color: baseColor,
-                                            borderRadius: BorderRadius.circular(
-                                              4.0,
-                                            ),
+                                ? CachedNetworkImage(
+                                    imageUrl: entry.imageUrl!,
+                                    key: ValueKey(entry.imageUrl!),
+                                    fit: BoxFit.cover,
+                                    placeholder: (context, url) =>
+                                        CircularProgressIndicator(),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  )
+                                : Image.file(
+                                    File(entry.localImagePath!),
+                                    key: ValueKey(entry.localImagePath!),
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (
+                                      BuildContext context,
+                                      Object error,
+                                      StackTrace? stackTrace,
+                                    ) {
+                                      return Container(
+                                        height: 100,
+                                        color: Colors.grey[300],
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.broken_image,
+                                            color: Colors.grey[600],
+                                            size: 40,
                                           ),
                                         ),
                                       );
-                                    }
-                                    return child;
-                                  },
-                                  errorBuilder: (
-                                    BuildContext context,
-                                    Object error,
-                                    StackTrace? stackTrace,
-                                  ) {
-                                    return Container(
-                                      height: 100,
-                                      color: Colors.grey[300],
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.broken_image,
-                                          color: Colors.grey[600],
-                                          size: 40,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                )
-                                : Image.file(
-                                  File(entry.localImagePath!),
-                                  key: ValueKey(entry.localImagePath!),
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (
-                                    BuildContext context,
-                                    Object error,
-                                    StackTrace? stackTrace,
-                                  ) {
-                                    return Container(
-                                      height: 100,
-                                      color: Colors.grey[300],
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.broken_image,
-                                          color: Colors.grey[600],
-                                          size: 40,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                                    },
+                                  ),
                       ),
                     ),
                   ),

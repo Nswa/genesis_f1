@@ -1,4 +1,4 @@
-# Copilot Instructions (Agentic Brain)
+# Copilot Instructions
 
 ## Parameters (Toggle Settings)
 
@@ -39,31 +39,6 @@
    - Always keep the context file minimal, easy to scan, and up to date.
    - Maintain a clean, logical order: Project summary, features, NFR/design language, WIP (optional), current state, and notes.
    - Avoid bloat or repetition.
-
----
-
-## Standard Structure for Context File
-
-When creating or updating the context file, use this structure—sections included/excluded based on toggle parameters:
-
-Project Summary
-Main Features
-Non-Functional Requirements / Design Language
-Work In Progress <!-- (if include_WIP_in_context: true) -->
-Intentionally Left Out <!-- (if include_intentionally_left_out: true) -->
-Current State
-Notes
-yaml
-Copy
-Edit
-
----
-
-## Maintenance & Agentic Behavior
-
-- You must follow the parameters above as your operational settings.
-- All high-level, evolving context and project description must reside in the context file specified by `context_file_path`.
-- If you ever detect ambiguity, prompt the user to clarify before updating files or context.
 
 ---
 
