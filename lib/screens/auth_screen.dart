@@ -4,6 +4,8 @@ import 'package:genesis_f1/digital_assets/auth_bg.dart';
 import 'package:genesis_f1/utils/system_ui_helper.dart';
 import '../services/auth_manager.dart';
 import 'package:genesis_f1/constant/colors.dart';
+import 'package:genesis_f1/widgets/floating_tooltip.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -17,6 +19,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   String email = '';
   String password = '';
   bool _isSubmitting = false;
+  final GlobalKey _emailFieldKey = GlobalKey();
+  final GlobalKey _passwordFieldKey = GlobalKey();
   late AnimationController _borderAnimController;
   late Animation<Color?> _borderColorAnim;
 
@@ -43,7 +47,9 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   }
 
   Future<void> submit() async {
-    setState(() => _isSubmitting = true);
+    setState(() {
+      _isSubmitting = true;
+    });
     _borderAnimController.repeat(reverse: true);
     try {
       if (isLogin) {
@@ -51,8 +57,45 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       } else {
         await authManager.signUp(email, password);
       }
-    } catch (e) {
-      debugPrint('Auth error: $e');
+    } on FirebaseAuthException catch (e) {
+      String? emailError;
+      String? passwordError;
+      switch (e.code) {
+        case 'user-not-found':
+        case 'wrong-password':
+        case 'invalid-credential':
+          emailError = 'Wrong email or password.';
+          passwordError = 'Wrong email or password.';
+          break;
+        case 'email-already-in-use':
+          emailError = 'This email is already registered.';
+          break;
+        case 'invalid-email':
+          emailError = 'Please enter a valid email address.';
+          break;
+        case 'weak-password':
+          passwordError = 'Password is too short.';
+          break;
+        case 'missing-password':
+          passwordError = 'Please enter your password.';
+          break;
+        default:
+          emailError = 'Could not authenticate. Please try again.';
+      }
+      if (emailError != null) {
+        FloatingTooltip.show(
+          context: context,
+          targetKey: _emailFieldKey,
+          message: emailError,
+        );
+      }
+      if (passwordError != null) {
+        FloatingTooltip.show(
+          context: context,
+          targetKey: _passwordFieldKey,
+          message: passwordError,
+        );
+      }
     } finally {
       _borderAnimController.stop();
       setState(() => _isSubmitting = false);
@@ -88,6 +131,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                   //add top padding
                   const SizedBox(height: 95), // Added padding
                   Container(
+                    key: _emailFieldKey,
                     margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
@@ -122,6 +166,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                   ),
                   // Password TextField
                   Container(
+                    key: _passwordFieldKey,
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
