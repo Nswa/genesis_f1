@@ -33,7 +33,7 @@ class _AuthScreenState extends State<AuthScreen> {
     return Scaffold(
       body: AuthBackground(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: ConstrainedBox(
             constraints: BoxConstraints(
               minHeight: MediaQuery.of(context).size.height,
@@ -60,14 +60,32 @@ class _AuthScreenState extends State<AuthScreen> {
                     decoration: const InputDecoration(labelText: 'Password'),
                   ),
                   const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: submit,
-                    child: Text(isLogin ? 'Login' : 'Register'),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFB39DDB), // Softer purple shade
+                        foregroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 13),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(100), // More rounded
+                        ),
+                        elevation: 0,
+                      ),
+                      onPressed: submit,
+                      child: Text(
+                        isLogin ? 'Login' : 'Register',
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () => setState(() => isLogin = !isLogin),
                     child: Text(
-                      isLogin ? 'Switch to Register' : 'Switch to Login',
+                      isLogin
+                          ? "Don't have an account? Sign up"
+                          : 'Already have an account? Login',
+                      style: const TextStyle(fontSize: 15),
                     ),
                   ),
                 ],
