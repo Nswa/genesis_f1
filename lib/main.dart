@@ -108,7 +108,7 @@ class JournalApp extends StatelessWidget {
         builder: (ctx, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
+              body: SizedBox.shrink(), // Replaced CircularProgressIndicator
             );
           }
           return snapshot.hasData ? const JournalScreen() : const AuthScreen();

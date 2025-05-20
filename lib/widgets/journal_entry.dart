@@ -1,6 +1,8 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'dart:io'; // Import for File
-import 'package:cached_network_image/cached_network_image.dart'; // Import CachedNetworkImage
+import 'package:shimmer/shimmer.dart';
+import 'package:intl/intl.dart';
 import '../models/entry.dart';
 
 class JournalEntryWidget extends StatelessWidget {
@@ -188,8 +190,23 @@ class JournalEntryWidget extends StatelessWidget {
                                     imageUrl: entry.imageUrl!,
                                     key: ValueKey(entry.imageUrl!),
                                     fit: BoxFit.cover,
-                                    placeholder: (context, url) =>
-                                        CircularProgressIndicator(),
+                                    placeholder: (context, url) {
+                                      final theme = Theme.of(context);
+                                      final isDark = theme.brightness == Brightness.dark;
+                                      final baseColor = isDark ? Colors.grey[900]! : Colors.grey[200]!;
+                                      final highlightColor = isDark ? Colors.grey[850]! : Colors.grey[100]!;
+
+                                      return Shimmer.fromColors(
+                                        baseColor: baseColor,
+                                        highlightColor: highlightColor,
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: baseColor, // Canvas for shimmer
+                                            borderRadius: BorderRadius.circular(4.0), // Match ClipRRect
+                                          ),
+                                        ),
+                                      );
+                                    },
                                     errorWidget: (context, url, error) =>
                                         Icon(Icons.error),
                                   )

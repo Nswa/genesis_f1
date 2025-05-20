@@ -19,47 +19,32 @@ class JournalEntryShimmer extends StatelessWidget {
           // Timestamp shimmer
           Padding(
             padding: const EdgeInsets.only(bottom: 6, left: 4),
-            child: Shimmer.fromColors(
+            child: _ShimmerBox(
+              width: 120,
+              height: 11,
               baseColor: baseColor,
               highlightColor: highlightColor,
-              child: Container(
-                width: 120,
-                height: 11,
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.grey[900] : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
+              borderRadius: BorderRadius.circular(2),
             ),
           ),
           // Image Placeholder Shimmer
           Padding(
             padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-            child: Shimmer.fromColors(
+            child: _ShimmerBox(
+              width: double.infinity,
+              height: 100,
               baseColor: baseColor,
               highlightColor: highlightColor,
-              child: Container(
-                height: 100, // A reasonable shimmer height, less than max 200
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.grey[900] : Colors.grey[200],
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-              ),
+              borderRadius: BorderRadius.circular(4.0),
             ),
           ),
           // Metadata shimmer (mood/tags/word count)
-          Shimmer.fromColors(
+          _ShimmerBox(
+            width: 180,
+            height: 12,
             baseColor: baseColor,
             highlightColor: highlightColor,
-            child: Container(
-              width: 180,
-              height: 12,
-              decoration: BoxDecoration(
-                color: isDark ? Colors.grey[900] : Colors.grey[200],
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
+            borderRadius: BorderRadius.circular(2),
           ),
           const SizedBox(height: 4),
           // Entry text shimmer
@@ -70,64 +55,76 @@ class JournalEntryShimmer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Shimmer.fromColors(
+                    _ShimmerBox(
+                      width: double.infinity,
+                      height: 16,
                       baseColor: baseColor,
                       highlightColor: highlightColor,
-                      child: Container(
-                        width: double.infinity,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.grey[900] : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                     const SizedBox(height: 8),
-                    Shimmer.fromColors(
+                    _ShimmerBox(
+                      width: double.infinity,
+                      height: 16,
                       baseColor: baseColor,
                       highlightColor: highlightColor,
-                      child: Container(
-                        width: double.infinity,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.grey[900] : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                     const SizedBox(height: 8),
-                    Shimmer.fromColors(
+                    _ShimmerBox(
+                      width: 200,
+                      height: 16,
                       baseColor: baseColor,
                       highlightColor: highlightColor,
-                      child: Container(
-                        width: 200,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: isDark ? Colors.grey[900] : Colors.grey[200],
-                          borderRadius: BorderRadius.circular(2),
-                        ),
-                      ),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 12),
               // Favorite star shimmer
-              Shimmer.fromColors(
+              _ShimmerBox(
+                width: 18,
+                height: 18,
                 baseColor: baseColor,
                 highlightColor: highlightColor,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  decoration: BoxDecoration(
-                    color: isDark ? Colors.grey[900] : Colors.grey[200],
-                    borderRadius: BorderRadius.circular(9),
-                  ),
-                ),
+                borderRadius: BorderRadius.circular(9), // For a circle, radius is half of width/height
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _ShimmerBox extends StatelessWidget {
+  final double width;
+  final double height;
+  final Color baseColor;
+  final Color highlightColor;
+  final BorderRadiusGeometry? borderRadius;
+
+  const _ShimmerBox({
+    required this.width,
+    required this.height,
+    required this.baseColor,
+    required this.highlightColor,
+    this.borderRadius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: baseColor,
+      highlightColor: highlightColor,
+      child: Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: baseColor, // This color defines the shape for the shimmer
+          borderRadius: borderRadius,
+        ),
       ),
     );
   }
