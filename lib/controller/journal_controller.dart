@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart'; // For Firebase Storage
-import 'package:image_picker/image_picker.dart'; // For ImagePicker
+import 'package:image_picker/image_picker.dart'; // Added for ImagePicker
 
 import 'package:fuzzy/fuzzy.dart';
 import 'package:path_provider/path_provider.dart';
@@ -40,7 +40,7 @@ class JournalController {
   bool isLoading = false;
   bool isSavingEntry = false;
   File? pickedImageFile;
-  final ImagePicker _picker = ImagePicker();
+  final ImagePicker _picker = ImagePicker(); // Added ImagePicker instance
 
   String _searchTerm = '';
 
@@ -141,8 +141,12 @@ class JournalController {
       onUpdate();
       return;
     }
-    await _syncOfflineEntries();
-    _updateSyncStatus();
+    // If we came online from an offline/error state, try to sync.
+    if (_syncStatus == SyncStatus.offline || _syncStatus == SyncStatus.error) {
+      await _syncOfflineEntries();
+    }
+    // Update status based on pending items regardless of immediate sync outcome
+    _updateSyncStatus(); // Ensures status reflects current DB state
   }
 
   void _updateSyncStatus() {
@@ -429,26 +433,27 @@ class JournalController {
 
       // If entry has a local image path but no imageUrl, upload the image
       if (entry.localImagePath != null &&
+          entry.localImagePath!.isNotEmpty && // Added check for empty path
           (entry.imageUrl == null || entry.imageUrl!.isEmpty)) {
         try {
-          final user = FirebaseAuth.instance.currentUser;
-          if (user != null) {
-            final file = File(entry.localImagePath!);
-            if (await file.exists()) {
-              final fileName =
-                  '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
-              final storageRef = FirebaseStorage.instance
-                  .ref()
-                  .child('user_images')
-                  .child(user.uid)
-                  .child(fileName);
-              UploadTask uploadTask = storageRef.putFile(file);
-              TaskSnapshot snapshot = await uploadTask;
-              final url = await snapshot.ref.getDownloadURL();
-              entry.imageUrl = url;
-              // Optionally clear localImagePath after upload
-              entry.localImagePath = null;
-            }
+          final file = File(entry.localImagePath!);
+          if (await file.exists()) { // Check if file exists before upload
+            final fileName =
+                '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+            final storageRef = FirebaseStorage.instance
+                .ref()
+                .child('user_images')
+                .child(user.uid)
+                .child(fileName);
+            UploadTask uploadTask = storageRef.putFile(file);
+            TaskSnapshot snapshot = await uploadTask;
+            final url = await snapshot.ref.getDownloadURL();
+            entry.imageUrl = url;
+            entry.localImagePath = null; // Clear local path after successful upload
+          } else {
+            debugPrint("Offline image file not found: ${entry.localImagePath}");
+            // Decide how to handle missing file: clear localImagePath? Mark as error?
+            entry.localImagePath = null; // Example: clear it to prevent re-attempts
           }
         } catch (e) {
           debugPrint("Error uploading offline image for entry $localId: $e");
@@ -504,28 +509,27 @@ class JournalController {
       'imageUrl': entry.imageUrl,
       'isFavorite': entry.isFavorite,
       'isSynced': entry.isSynced,
-      'localImagePath': entry.localImagePath, // Save local image path
+      'localImagePath': entry.localImagePath,
+      // animController is not stored in the database
     };
   }
 
-  Entry _entryFromMap(String key, Map<String, Object?> map) {
+  Entry _entryFromMap(String localId, Map<String, dynamic> data) {
+    final rawDateTime = DateTime.parse(data['timestamp'] as String);
     return Entry(
-      localId: map['localId'] as String? ?? key,
-      firestoreId: map['firestoreId'] as String?,
-      text: map['text'] as String,
-      timestamp: DateFormatter.formatTime(
-        DateTime.parse(map['timestamp'] as String),
-      ),
-      rawDateTime: DateTime.parse(map['timestamp'] as String),
-      animController: AnimationUtils.createDefaultController(vsync)..forward(),
-      mood: map['mood'] as String?,
-      tags: (map['tags'] as List<dynamic>?)?.cast<String>() ?? [],
-      wordCount: map['wordCount'] as int? ?? 0,
-      imageUrl: map['imageUrl'] as String?,
-      isFavorite: map['isFavorite'] as bool? ?? false,
-      isSynced: map['isSynced'] as bool? ?? false,
-      localImagePath:
-          map['localImagePath'] as String?, // Restore local image path
+      localId: localId,
+      firestoreId: data['firestoreId'] as String?,
+      text: data['text'] as String,
+      timestamp: DateFormatter.formatTime(rawDateTime),
+      rawDateTime: rawDateTime,
+      animController: AnimationUtils.createDefaultController(vsync)..forward(), // Created on load
+      mood: data['mood'] as String?,
+      tags: List<String>.from(data['tags'] as List? ?? []),
+      wordCount: data['wordCount'] as int? ?? 0,
+      imageUrl: data['imageUrl'] as String?,
+      isFavorite: data['isFavorite'] as bool? ?? false,
+      isSynced: data['isSynced'] as bool? ?? true, // Default to true, will be accurate after sync
+      localImagePath: data['localImagePath'] as String?,
     );
   }
 
@@ -536,41 +540,67 @@ class JournalController {
       'mood': entry.mood,
       'tags': entry.tags,
       'wordCount': entry.wordCount,
-      'isFavorite': entry.isFavorite,
       'imageUrl': entry.imageUrl,
+      'isFavorite': entry.isFavorite,
+      // localId, isSynced, localImagePath are not part of the Firestore document map directly
     };
   }
 
-  void insertHashtag() {
-    final cursorPos = controller.selection.base.offset;
-    final text = controller.text;
+  Future<void> deleteSelectedEntries() async {
+    if (_db == null || _store == null) return;
 
-    if (cursorPos > 0 && text[cursorPos - 1] == '#') {
-      if (controller.selection.extent.offset != cursorPos) {
-        controller.selection = TextSelection.collapsed(offset: cursorPos);
+    final List<String?> nullableLocalIdsToDelete = selectedEntries.map((e) => e.localId).toList();
+    final List<String> localIdsToDelete = nullableLocalIdsToDelete.whereType<String>().toList();
+
+    if (localIdsToDelete.isEmpty && selectedEntries.any((e) => e.firestoreId == null)) {
+        // Handle cases where entries might only exist in memory before being saved
+        // or if localId was unexpectedly null for a selected entry.
+        selectedEntries.clear();
+        onUpdate();
+        return;
+    }
+
+    for (var entry in selectedEntries) {
+      if (entry.firestoreId != null) {
+        FirebaseFirestore.instance
+            .collection(FirestorePaths.userEntriesPath())
+            .doc(entry.firestoreId)
+            .delete()
+            .catchError((e) {
+          debugPrint("Error deleting entry ${entry.firestoreId} from Firestore: $e");
+        });
       }
-      return;
+      if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty) {
+        try {
+          await FirebaseStorage.instance.refFromURL(entry.imageUrl!).delete();
+        } catch (e) {
+          debugPrint("Error deleting image ${entry.imageUrl} from Storage: $e");
+        }
+      }
     }
-
-    final newText = text.replaceRange(cursorPos, cursorPos, "#");
-    controller.text = newText;
-    controller.selection = TextSelection.collapsed(offset: cursorPos + 1);
-    onUpdate();
-  }
-
-  Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      pickedImageFile = File(image.path);
-      onUpdate();
+    if (localIdsToDelete.isNotEmpty) {
+      await _store!.records(localIdsToDelete).delete(_db!);
     }
-  }
-
-  void clearImage() {
-    pickedImageFile = null;
+    
+    entries.removeWhere((entry) => localIdsToDelete.contains(entry.localId) || selectedEntries.contains(entry));
+    selectedEntries.clear();
     onUpdate();
+    _updateSyncStatus();
   }
 
+  void dispose() {
+    controller.dispose();
+    focusNode.dispose();
+    snapBackController.dispose();
+    handlePulseController.dispose();
+    _connectivitySubscription?.cancel();
+    for (var entry in entries) {
+      entry.dispose(); // Entry model now has a dispose method
+    }
+    _db?.close(); // Close the Sembast database
+  }
+
+  // Drag handlers
   void handleDragUpdate(DragUpdateDetails details) {
     if (isSavingEntry || controller.text.trim().isEmpty) return;
 
@@ -617,145 +647,86 @@ class JournalController {
     onUpdate();
   }
 
-  void selectEntriesByDate(List<Entry> entriesInGroup) {
-    bool changed = false;
-    for (var entry in entriesInGroup) {
-      if (!entry.isSelected) {
-        entry.isSelected = true;
-        selectedEntries.add(entry);
-        changed = true;
-      }
+  void cancelEntry() {
+    controller.clear();
+    pickedImageFile = null;
+    selectedMood = null;
+    showRipple = false;
+    onUpdate();
+  }
+
+  void triggerSave() {
+    if (!hasTriggeredSave) {
+      hasTriggeredSave = true;
+      _saveEntry();
     }
-    if (changed) {
+  }
+
+  // Method to pick an image
+  Future<void> pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      pickedImageFile = File(image.path);
       onUpdate();
     }
   }
 
-  void deselectEntriesByDate(List<Entry> entriesInGroup) {
-    bool changed = false;
-    for (var entry in entriesInGroup) {
-      if (entry.isSelected) {
-        entry.isSelected = false;
-        selectedEntries.remove(entry);
-        changed = true;
-      }
-    }
-    if (changed) {
-      onUpdate();
-    }
+  // Method to clear the picked image
+  void clearImage() {
+    pickedImageFile = null;
+    onUpdate();
   }
 
+  // Method to toggle favorite status
   Future<void> toggleFavorite(Entry entry) async {
     entry.isFavorite = !entry.isFavorite;
-    entry.isSynced = false;
-    _syncStatus = SyncStatus.syncing;
-    onUpdate();
+    onUpdate(); // Update UI immediately
 
-    final String recordKey = entry.localId ?? entry.firestoreId!;
-
-    if (_db != null && _store != null) {
-      await _store!.record(recordKey).update(_db!, {
-        'isFavorite': entry.isFavorite,
-        'isSynced': false,
-      });
-    }
-
-    final connectivityResult = await Connectivity().checkConnectivity();
-    if (connectivityResult != ConnectivityResult.none &&
-        entry.firestoreId != null) {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        _syncStatus = SyncStatus.offline;
-        onUpdate();
-        return;
+    try {
+      if (_db != null && _store != null && entry.localId != null) { // Added null check for localId
+        await _store!.record(entry.localId!).update(_db!, {'isFavorite': entry.isFavorite});
       }
-      try {
+
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult != ConnectivityResult.none && entry.firestoreId != null) {
         await FirebaseFirestore.instance
             .collection(FirestorePaths.userEntriesPath())
             .doc(entry.firestoreId)
             .update({'isFavorite': entry.isFavorite});
-        entry.isSynced = true;
-        if (_db != null && _store != null) {
-          await _store!.record(recordKey).update(_db!, {'isSynced': true});
+      } else if (connectivityResult == ConnectivityResult.none && entry.firestoreId != null) {
+        // If offline but has a firestoreId, it means it was synced before.
+        // The local DB change is already made. It will sync when back online.
+        entry.isSynced = false; // Mark for sync
+         if (_db != null && _store != null && entry.localId != null) { // Added null check for localId
+          await _store!.record(entry.localId!).update(_db!, {'isSynced': false});
         }
-        _syncStatus = SyncStatus.synced;
-      } catch (e) {
-        debugPrint("Error updating favorite status in Firestore: $e");
-        _syncStatus = SyncStatus.error;
       }
-    } else {
-      _syncStatus = SyncStatus.offline;
+       _updateSyncStatus();
+    } catch (e) {
+      debugPrint("Error toggling favorite: $e");
+      // Optionally revert UI change or show error
+      entry.isFavorite = !entry.isFavorite; // Revert
+      onUpdate();
     }
-    _updateSyncStatus();
+  }
+
+  void selectEntriesByDate(List<Entry> entriesInGroup) {
+    for (var entry in entriesInGroup) {
+      if (!entry.isSelected) {
+        entry.isSelected = true;
+        selectedEntries.add(entry);
+      }
+    }
     onUpdate();
   }
 
-  Future<void> deleteSelectedEntries() async {
-    _syncStatus = SyncStatus.syncing;
+  void deselectEntriesByDate(List<Entry> entriesInGroup) {
+    for (var entry in entriesInGroup) {
+      if (entry.isSelected) {
+        entry.isSelected = false;
+        selectedEntries.remove(entry);
+      }
+    }
     onUpdate();
-
-    final entriesToRemove = List<Entry>.from(selectedEntries);
-    final List<String> firestoreIdsToDelete = [];
-
-    for (var entry in entriesToRemove) {
-      final String recordKey = entry.localId ?? entry.firestoreId!;
-      if (_db != null && _store != null) {
-        await _store!.record(recordKey).delete(_db!);
-      }
-      if (entry.firestoreId != null) {
-        firestoreIdsToDelete.add(entry.firestoreId!);
-      }
-      // Animate removal for instant responsiveness illusion
-      entry.animController.reverse();
-      entry.animController.addStatusListener((status) async {
-        if (status == AnimationStatus.dismissed) {
-          entries.remove(entry);
-          entry.animController.dispose();
-          onUpdate();
-        }
-      });
-    }
-
-    final connectivityResult = await Connectivity().checkConnectivity();
-    final user = FirebaseAuth.instance.currentUser;
-    if (connectivityResult != ConnectivityResult.none &&
-        user != null &&
-        firestoreIdsToDelete.isNotEmpty) {
-      final batch = FirebaseFirestore.instance.batch();
-      for (var id in firestoreIdsToDelete) {
-        batch.delete(
-          FirebaseFirestore.instance
-              .collection(FirestorePaths.userEntriesPath())
-              .doc(id),
-        );
-      }
-      try {
-        await batch.commit();
-        _syncStatus = SyncStatus.synced;
-      } catch (e) {
-        debugPrint("Error deleting entries from Firestore: $e");
-        _syncStatus = SyncStatus.error;
-      }
-    } else if (connectivityResult == ConnectivityResult.none || user == null) {
-      _syncStatus = SyncStatus.offline;
-    } else {
-      _syncStatus = SyncStatus.synced;
-    }
-
-    selectedEntries.clear();
-    _updateSyncStatus();
-    onUpdate();
-  }
-
-  void dispose() {
-    for (var e in entries) {
-      e.animController.dispose();
-    }
-    controller.dispose();
-    focusNode.dispose();
-    snapBackController.dispose();
-    handlePulseController.dispose();
-    _connectivitySubscription?.cancel();
-    _db?.close();
   }
 }

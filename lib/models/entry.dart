@@ -32,4 +32,8 @@ class Entry {
     this.isSynced = false, // Added to constructor
     this.localImagePath, // Add to constructor
   });
+
+  void dispose() {
+    animController.dispose();
+  }
 }
