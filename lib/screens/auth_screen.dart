@@ -12,12 +12,39 @@ class AuthScreen extends StatefulWidget {
   State<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateMixin {
   bool isLogin = true;
   String email = '';
   String password = '';
+  bool _isSubmitting = false;
+  late AnimationController _borderAnimController;
+  late Animation<Color?> _borderColorAnim;
 
-  void submit() async {
+  @override
+  void initState() {
+    super.initState();
+    _borderAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    );
+    _borderColorAnim = ColorTween(
+      begin: AppColors.secondaryButtonBorderLight,
+      end: AppColors.secondaryButtonBorderDark,
+    ).animate(CurvedAnimation(
+      parent: _borderAnimController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _borderAnimController.dispose();
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    setState(() => _isSubmitting = true);
+    _borderAnimController.repeat(reverse: true);
     try {
       if (isLogin) {
         await authManager.signIn(email, password);
@@ -26,6 +53,9 @@ class _AuthScreenState extends State<AuthScreen> {
       }
     } catch (e) {
       debugPrint('Auth error: $e');
+    } finally {
+      _borderAnimController.stop();
+      setState(() => _isSubmitting = false);
     }
   }
 
@@ -161,22 +191,46 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   SizedBox(
                     width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.buttonBackgroundDark : AppColors.buttonBackgroundLight,
-                        foregroundColor: isDark ? AppColors.buttonTextDark : AppColors.buttonTextLight,
-                        padding: const EdgeInsets.symmetric(vertical: 13),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(100), // More rounded
-                        ),
-                        elevation: 0,
-                        side: BorderSide(color: isDark ? AppColors.borderDark : AppColors.borderLight, width: 1),
-                      ),
-                      onPressed: submit,
-                      child: Text(
-                        isLogin ? 'Login' : 'Register',
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
+                    child: AnimatedBuilder(
+                      animation: _borderAnimController,
+                      builder: (context, child) {
+                        final borderColor = _isSubmitting
+                            ? _borderColorAnim.value ?? (isDark ? AppColors.secondaryButtonBorderDark : AppColors.secondaryButtonBorderLight)
+                            : (isDark ? AppColors.secondaryButtonBorderDark : AppColors.secondaryButtonBorderLight);
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isDark ? AppColors.buttonBackgroundDark : AppColors.buttonBackgroundLight,
+                            foregroundColor: isDark ? AppColors.buttonTextDark : AppColors.buttonTextLight,
+                            padding: const EdgeInsets.symmetric(vertical: 13),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            elevation: 0,
+                            side: BorderSide(color: borderColor, width: 1.2),
+                          ),
+                          onPressed: _isSubmitting ? null : submit,
+                          child: SizedBox(
+                            height: 28, // Match or slightly exceed the button's normal text height + padding
+                            child: Center(
+                              child: _isSubmitting
+                                  ? SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                                        ),
+                                      ),
+                                    )
+                                  : Text(
+                                      isLogin ? 'Login' : 'Register',
+                                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    ),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(height: 20), // Added padding
