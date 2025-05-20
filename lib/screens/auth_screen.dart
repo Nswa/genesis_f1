@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg
 import 'package:genesis_f1/digital_assets/auth_bg.dart';
 import 'package:genesis_f1/utils/system_ui_helper.dart';
 import '../services/auth_manager.dart';
+import 'package:genesis_f1/constant/colors.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -30,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     updateSystemUiOverlay(context);
     return Scaffold(
       body: AuthBackground(
@@ -54,25 +56,19 @@ class _AuthScreenState extends State<AuthScreen> {
                   const SizedBox(height: 64), // Increased padding from 48 to 64
                   // Email TextField
                   //add top padding
-                  const SizedBox(height: 50), // Added padding
+                  const SizedBox(height: 95), // Added padding
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
                     decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[900]
-                          : Colors.grey[200], // Theme-responsive background
+                      color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.06)
-                            : Colors.black.withOpacity(0.06), // Theme-responsive border
+                        color: isDark ? AppColors.borderDark : AppColors.borderLight,
                         width: 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black.withOpacity(0.3)
-                              : Colors.grey.withOpacity(0.5), // Theme-responsive shadow
+                          color: isDark ? Colors.black.withOpacity(0.15) : Colors.black.withOpacity(0.04),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -81,17 +77,15 @@ class _AuthScreenState extends State<AuthScreen> {
                     child: TextField(
                       onChanged: (val) => email = val,
                       style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black), // Theme-responsive text
-                      cursorColor: Colors.blueAccent,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                      ),
+                      cursorColor: isDark ? AppColors.cursorDark : AppColors.cursorLight,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Added vertical padding
                         hintText: 'Email',
                         hintStyle: TextStyle(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white70
-                                : Colors.black54), // Theme-responsive hint
+                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                        ), // Theme-responsive hint
                         border: InputBorder.none,
                       ),
                     ),
@@ -100,21 +94,15 @@ class _AuthScreenState extends State<AuthScreen> {
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[900]
-                          : Colors.grey[200], // Theme-responsive background
+                      color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.white.withOpacity(0.06)
-                            : Colors.black.withOpacity(0.06), // Theme-responsive border
+                        color: isDark ? AppColors.borderDark : AppColors.borderLight,
                         width: 1,
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.black.withOpacity(0.3)
-                              : Colors.grey.withOpacity(0.5), // Theme-responsive shadow
+                          color: isDark ? Colors.black.withOpacity(0.15) : Colors.black.withOpacity(0.04),
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -124,17 +112,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       onChanged: (val) => password = val,
                       obscureText: true,
                       style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black), // Theme-responsive text
-                      cursorColor: Colors.blueAccent,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                      ),
+                      cursorColor: isDark ? AppColors.cursorDark : AppColors.cursorLight,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Added vertical padding
                         hintText: 'Password',
                         hintStyle: TextStyle(
-                            color: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white70
-                                : Colors.black54), // Theme-responsive hint
+                          color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                        ), // Theme-responsive hint
                         border: InputBorder.none,
                       ),
                     ),
@@ -144,8 +130,8 @@ class _AuthScreenState extends State<AuthScreen> {
                     alignment: Alignment.centerLeft,
                     child: TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.only(left: 20, right: 8, top: 0, bottom: 0),
-                      minimumSize: Size(0, 0),
+                      padding: const EdgeInsets.only(left: 20, right: 8, top: 0, bottom: 0),
+                      minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {
@@ -168,7 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       child: Divider(
                       color: Color.fromARGB(255, 121, 121, 121),
                       height: 1,
-                      thickness: 0.25, // Separator thickness
+                      thickness: 0.15, // Separator thickness
                       indent: 0,      // No indent, full width
                       endIndent: 0,   // No endIndent, full width
                       ),
@@ -177,13 +163,14 @@ class _AuthScreenState extends State<AuthScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB39DDB), // Softer purple shade
-                        foregroundColor: Colors.black,
+                        backgroundColor: isDark ? AppColors.buttonBackgroundDark : AppColors.buttonBackgroundLight,
+                        foregroundColor: isDark ? AppColors.buttonTextDark : AppColors.buttonTextLight,
                         padding: const EdgeInsets.symmetric(vertical: 13),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100), // More rounded
                         ),
                         elevation: 0,
+                        side: BorderSide(color: isDark ? AppColors.borderDark : AppColors.borderLight, width: 1),
                       ),
                       onPressed: submit,
                       child: Text(
@@ -192,20 +179,18 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 26), // Added padding
+                  const SizedBox(height: 20), // Added padding
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
-                          icon: const Text('Login with'), // Moved Text to icon
-                          label: SvgPicture.asset( // Moved SvgPicture to label
+                          icon: const Text('Login with'),
+                          label: SvgPicture.asset(
                             'assets/logo/google_logo.svg',
-                            height: 20.0, 
-                            colorFilter: ColorFilter.mode( 
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                            height: 20.0,
+                            colorFilter: ColorFilter.mode(
+                              isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                               BlendMode.srcIn,
                             ),
                           ),
@@ -213,16 +198,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             // TODO: Implement Google Sign-In
                           },
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Theme.of(context).brightness == Brightness.dark 
-                                ? Colors.white
-                                : Colors.black,
-                            backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                                ? Colors.black
-                                : Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 15), // Increased vertical padding
+                            foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                            backgroundColor: AppColors.secondaryButtonBackground,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
-                              side: BorderSide(color: Colors.grey.shade300),
+                              side: BorderSide(
+                                color: isDark ? AppColors.secondaryButtonBorderDark : AppColors.secondaryButtonBorderLight,
+                                width: 1.2,
+                              ),
                             ),
                             elevation: 0,
                           ),
@@ -231,14 +215,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(width: 15),
                       Expanded(
                         child: ElevatedButton.icon(
-                          icon: const Text('Login with'), // Moved Text to icon
-                          label: SvgPicture.asset( // Moved SvgPicture to label
+                          icon: const Text('Login with'),
+                          label: SvgPicture.asset(
                             'assets/logo/x_logo.svg',
-                            height:19.0,
+                            height: 19.0,
                             colorFilter: ColorFilter.mode(
-                              Theme.of(context).brightness == Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black,
+                              isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                               BlendMode.srcIn,
                             ),
                           ),
@@ -246,16 +228,15 @@ class _AuthScreenState extends State<AuthScreen> {
                             // TODO: Implement X Sign-In
                           },
                           style: ElevatedButton.styleFrom(
-                            foregroundColor: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : Colors.black,
-                            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                                ? Colors.black
-                                : Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 15), // Increased vertical padding
+                            foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                            backgroundColor: AppColors.secondaryButtonBackground,
+                            padding: const EdgeInsets.symmetric(vertical: 15),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(100),
-                              side: BorderSide(color: Colors.grey.shade300),
+                              side: BorderSide(
+                                color: isDark ? AppColors.secondaryButtonBorderDark : AppColors.secondaryButtonBorderLight,
+                                width: 1.2,
+                              ),
                             ),
                             elevation: 0,
                           ),
@@ -265,7 +246,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   const Spacer(), // Added Spacer to push the following to the bottom
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 55.0), // Added padding to lift it from the absolute bottom
+                    padding: const EdgeInsets.only(bottom: 60.0), // Added padding to lift it from the absolute bottom
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -290,7 +271,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary, // Use primary color for emphasis
+                              color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight, // Use primary color for emphasis
                             ),
                           ),
                         ),
