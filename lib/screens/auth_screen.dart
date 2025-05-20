@@ -50,15 +50,90 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
 
                   const SizedBox(height: 48),
-                  TextField(
-                    onChanged: (val) => email = val,
-                    decoration: const InputDecoration(labelText: 'Email'),
+                  // Email TextField
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[900]
+                          : Colors.grey[200], // Theme-responsive background
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.06)
+                            : Colors.black.withOpacity(0.06), // Theme-responsive border
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.grey.withOpacity(0.5), // Theme-responsive shadow
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      onChanged: (val) => email = val,
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black), // Theme-responsive text
+                      cursorColor: Colors.blueAccent,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Added vertical padding
+                        hintText: 'Email',
+                        hintStyle: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white70
+                                : Colors.black54), // Theme-responsive hint
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    onChanged: (val) => password = val,
-                    obscureText: true,
-                    decoration: const InputDecoration(labelText: 'Password'),
+                  // Password TextField
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[900]
+                          : Colors.grey[200], // Theme-responsive background
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white.withOpacity(0.06)
+                            : Colors.black.withOpacity(0.06), // Theme-responsive border
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.black.withOpacity(0.3)
+                              : Colors.grey.withOpacity(0.5), // Theme-responsive shadow
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      onChanged: (val) => password = val,
+                      obscureText: true,
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black), // Theme-responsive text
+                      cursorColor: Colors.blueAccent,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Added vertical padding
+                        hintText: 'Password',
+                        hintStyle: TextStyle(
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white70
+                                : Colors.black54), // Theme-responsive hint
+                        border: InputBorder.none,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 24),
                   SizedBox(
