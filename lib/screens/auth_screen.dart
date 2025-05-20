@@ -43,14 +43,18 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  //add top padding
+                  const SizedBox(height: 190), // Increased padding from 48 to 64
                   Text(
                     'genesis',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
 
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 64), // Increased padding from 48 to 64
                   // Email TextField
+                  //add top padding
+                  const SizedBox(height: 50), // Added padding
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
                     decoration: BoxDecoration(
@@ -94,7 +98,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                   // Password TextField
                   Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
+                    margin: const EdgeInsets.symmetric(vertical: 8),
                     decoration: BoxDecoration(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.grey[900]
@@ -135,7 +139,40 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                    // Forgot Password
+                    Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                      padding: EdgeInsets.only(left: 20, right: 8, top: 0, bottom: 0),
+                      minimumSize: Size(0, 0),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                      // TODO: Implement forgot password logic
+                      },
+                      child: Text(
+                      'Forgot password?',
+                      style: TextStyle(
+                        color: Theme.of(context).hintColor,
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w400, // Decreased text weight
+                      ),
+                      ),
+                    ),
+                    ),
+                    const SizedBox(height: 10),
+                    // add horizontal separator with increased bottom padding
+                    const Padding(
+                      padding: EdgeInsets.only(top:10, bottom: 25.0), // 12 top, 40+12=52 bottom
+                      child: Divider(
+                      color: Color.fromARGB(255, 121, 121, 121),
+                      height: 1,
+                      thickness: 0.25, // Separator thickness
+                      indent: 0,      // No indent, full width
+                      endIndent: 0,   // No endIndent, full width
+                      ),
+                    ),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -226,15 +263,41 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                     ],
                   ),
-                  TextButton(
-                    onPressed: () => setState(() => isLogin = !isLogin),
-                    child: Text(
-                      isLogin
-                          ? "Don't have an account? Sign up"
-                          : 'Already have an account? Login',
-                      style: const TextStyle(fontSize: 15),
+                  const Spacer(), // Added Spacer to push the following to the bottom
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 55.0), // Added padding to lift it from the absolute bottom
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          isLogin
+                              ? "Don't have an account? "
+                              : 'Already have an account? ',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Theme.of(context).hintColor, // Subtler color
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => setState(() => isLogin = !isLogin),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            isLogin ? 'Sign up' : 'Login',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary, // Use primary color for emphasis
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  // Removed the old TextButton for toggling auth mode
                 ],
               ),
             ),
