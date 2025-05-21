@@ -23,7 +23,7 @@ class EntryInsightScreen extends StatefulWidget {
   State<EntryInsightScreen> createState() => _EntryInsightScreenState();
 }
 
-class _EntryInsightScreenState extends State<EntryInsightScreen> {
+class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProviderStateMixin {
   late List<Entry> relatedEntries = [];
   bool isLoading = true;
   String _briefInsight = '';
@@ -34,9 +34,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   static final Map<String, String> _insightCache = {};
   static final Map<String, List<String>> _relatedIdsCache = {};
 
-  // AnimatedList key for related entries
-  final GlobalKey<AnimatedListState> _relatedListKey = GlobalKey<AnimatedListState>();
-
   // For animated headers
   final ValueNotifier<int> _relatedDots = ValueNotifier<int>(0);
   final ValueNotifier<int> _insightDots = ValueNotifier<int>(0);
@@ -45,6 +42,10 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   Timer? _relatedTimer;
   Timer? _insightTimer;
   final ScrollController _scrollController = ScrollController();
+
+  // For cascading animation controllers
+  final List<AnimationController> _cascadeControllers = [];
+  final List<Animation<double>> _cascadeAnimations = [];
 
   @override
   void initState() {
@@ -56,6 +57,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   void dispose() {
     _relatedTimer?.cancel();
     _insightTimer?.cancel();
+    for (final c in _cascadeControllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
@@ -68,6 +72,12 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       _fetchingRelated = true;
       _generatingInsight = false;
     });
+    // Dispose old controllers
+    for (final c in _cascadeControllers) {
+      c.dispose();
+    }
+    _cascadeControllers.clear();
+    _cascadeAnimations.clear();
     final entryId = widget.entry.localId;
     final allEntries = widget.journalController.entries;
     // --- Caching logic ---
@@ -93,12 +103,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     });
     // 2. List related entries one by one, with animation
     List<Entry> related = [];
-    if (_relatedListKey.currentState != null) {
-      final len = relatedEntries.length;
-      for (int i = len - 1; i >= 0; i--) {
-        _relatedListKey.currentState!.removeItem(i, (context, animation) => const SizedBox());
-      }
-    }
     if (!forceRefresh && entryId != null && _relatedIdsCache.containsKey(entryId)) {
       for (final id in _relatedIdsCache[entryId]!) {
         final matches = allEntries.where((e) => e.localId == id);
@@ -106,9 +110,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         final match = matches.first;
         related.add(match);
         setState(() { relatedEntries = List.from(related); });
-        if (_relatedListKey.currentState != null) {
-          _relatedListKey.currentState!.insertItem(related.length - 1);
-        }
+        _startCascadeAnimation(related.length - 1);
         await Future.delayed(const Duration(milliseconds: 120));
         _scrollToBottom();
       }
@@ -117,9 +119,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       for (final e in fetched) {
         related.add(e);
         setState(() { relatedEntries = List.from(related); });
-        if (_relatedListKey.currentState != null) {
-          _relatedListKey.currentState!.insertItem(related.length - 1);
-        }
+        _startCascadeAnimation(related.length - 1);
         await Future.delayed(const Duration(milliseconds: 120));
         _scrollToBottom();
       }
@@ -173,6 +173,19 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     await _startPhasedLoading(forceRefresh: true);
   }
 
+  void _startCascadeAnimation(int index) async {
+    final controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    final animation = CurvedAnimation(parent: controller, curve: Curves.easeOutCubic);
+    _cascadeControllers.add(controller);
+    _cascadeAnimations.add(animation);
+    // Staggered start for dramatic cascade
+    await Future.delayed(Duration(milliseconds: 80 * index));
+    controller.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -203,7 +216,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                 children: [
                   _buildMainEntryCard(theme),
                   const SizedBox(height: 24),
-                  // Related Entries Section (always shown)
+                  // Related Entries Section (cascading animated stack)
                   ValueListenableBuilder<int>(
                     valueListenable: _relatedDots,
                     builder: (context, dots, _) {
@@ -219,17 +232,45 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                   const SizedBox(height: 12),
                   relatedEntries.isEmpty
                       ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))
-                      : AnimatedList(
-                          key: _relatedListKey,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          initialItemCount: relatedEntries.length,
-                          itemBuilder: (context, index, animation) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: _buildRelatedEntryCard(relatedEntries[index], theme),
-                            );
-                          },
+                      : SizedBox(
+                          height: 180 + (relatedEntries.length - 1) * 36.0,
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              for (int i = 0; i < relatedEntries.length; i++)
+                                if (i < _cascadeAnimations.length)
+                                  AnimatedBuilder(
+                                    animation: _cascadeAnimations[i],
+                                    builder: (context, child) {
+                                      final anim = _cascadeAnimations[i].value;
+                                      final double opacity = anim.clamp(0.0, 1.0);
+                                      // Dramatic ascend: cards rise up from far below, fade in, and overlap
+                                      final double baseTop = i * 36.0;
+                                      final double offset = (1 - anim) * 180.0; // much larger vertical rise
+                                      final double scale = 0.97 + 0.03 * anim;
+                                      final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1); // subtle tilt
+                                      final double shadowOpacity = 0.10 + 0.10 * anim;
+                                      return Positioned(
+                                        left: 0,
+                                        right: 0,
+                                        top: baseTop + offset,
+                                        child: Opacity(
+                                          opacity: opacity,
+                                          child: _buildRelatedEntryCard(
+                                            relatedEntries[i],
+                                            theme,
+                                            elevation: 10 + i * 2,
+                                            scale: scale,
+                                            rotation: rotation,
+                                            yOffset: 0,
+                                            shadowOpacity: shadowOpacity,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                            ],
+                          ),
                         ),
                   if (!_fetchingRelated) ...[
                     const SizedBox(height: 24),
@@ -409,58 +450,92 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     );
   }
 
-  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EntryInsightScreen(
-                entry: entry,
-                journalController: widget.journalController,
-              ),
+  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18}) {
+    return Transform.translate(
+      offset: Offset(0, yOffset),
+      child: Transform.rotate(
+        angle: rotation,
+        child: Transform.scale(
+          scale: scale,
+          child: Card(
+            elevation: elevation,
+            shadowColor: Colors.black.withOpacity(shadowOpacity),
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+              side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.10), width: 1.2),
             ),
-          );
-        },
-        borderRadius: BorderRadius.circular(10),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Date and relation type
-              Row(
-                children: [
-                  Text(
-                    entry.timestamp,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+            color: theme.cardColor.withOpacity(0.98),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(shadowOpacity),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
                   ),
-                  const Spacer(),
-                  if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
-                    Icon(
-                      Icons.tag,
-                      size: 16,
-                      color: theme.hintColor,
-                    ),
                 ],
               ),
-              const SizedBox(height: 4),
-              
-              // Preview of text (limit length)
-              Text(
-                entry.text.length > 120 
-                    ? '${entry.text.substring(0, 120)}...' 
-                    : entry.text,
-                style: theme.textTheme.bodyMedium,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(18),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EntryInsightScreen(
+                        entry: entry,
+                        journalController: widget.journalController,
+                      ),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            entry.timestamp,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
+                            Icon(
+                              Icons.tag,
+                              size: 18,
+                              color: theme.colorScheme.primary.withOpacity(0.5),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        entry.text.length > 120 ? '${entry.text.substring(0, 120)}...' : entry.text,
+                        style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
+                      ),
+                      if (entry.tags.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Wrap(
+                            spacing: 6,
+                            children: entry.tags.map((tag) => Chip(
+                              label: Text(tag, style: theme.textTheme.bodySmall),
+                              backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            )).toList(),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),
