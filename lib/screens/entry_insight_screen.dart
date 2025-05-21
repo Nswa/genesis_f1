@@ -46,6 +46,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
   // For cascading animation controllers
   final List<AnimationController> _cascadeControllers = [];
   final List<Animation<double>> _cascadeAnimations = [];
+  int? _expandedRelatedIndex; // Track which related card is expanded
 
   @override
   void initState() {
@@ -233,7 +234,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                   relatedEntries.isEmpty
                       ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))
                       : SizedBox(
-                          height: 180 + (relatedEntries.length - 1) * 36.0,
+                          height: _expandedRelatedIndex == null
+                              ? 180 + (relatedEntries.length - 1) * 36.0
+                              : 180 + (relatedEntries.length - 1) * 36.0 + 180, // extra space for expanded
                           child: Stack(
                             clipBehavior: Clip.none,
                             children: [
@@ -250,10 +253,25 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                                       final double scale = 0.97 + 0.03 * anim;
                                       final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1); // subtle tilt
                                       final double shadowOpacity = 0.10 + 0.10 * anim;
-                                      return Positioned(
+
+                                      // Uncascade logic
+                                      double animatedTop = baseTop + offset;
+                                      if (_expandedRelatedIndex != null) {
+                                        if (i < _expandedRelatedIndex!) {
+                                          animatedTop = i * 36.0;
+                                        } else if (i == _expandedRelatedIndex) {
+                                          animatedTop = i * 36.0;
+                                        } else {
+                                          animatedTop = i * 36.0 + 180; // move down by expanded height
+                                        }
+                                      }
+
+                                      return AnimatedPositioned(
+                                        duration: const Duration(milliseconds: 400),
+                                        curve: Curves.easeInOut,
                                         left: 0,
                                         right: 0,
-                                        top: baseTop + offset,
+                                        top: animatedTop,
                                         child: Opacity(
                                           opacity: opacity,
                                           child: _buildRelatedEntryCard(
@@ -264,6 +282,16 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                                             rotation: rotation,
                                             yOffset: 0,
                                             shadowOpacity: shadowOpacity,
+                                            expanded: _expandedRelatedIndex == i,
+                                            onTap: () {
+                                              setState(() {
+                                                if (_expandedRelatedIndex == i) {
+                                                  _expandedRelatedIndex = null;
+                                                } else {
+                                                  _expandedRelatedIndex = i;
+                                                }
+                                              });
+                                            },
                                           ),
                                         ),
                                       );
@@ -450,88 +478,99 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
     );
   }
 
-  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18}) {
+  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, bool expanded = false, VoidCallback? onTap}) {
     return Transform.translate(
       offset: Offset(0, yOffset),
       child: Transform.rotate(
         angle: rotation,
         child: Transform.scale(
           scale: scale,
-          child: Card(
-            elevation: elevation,
-            shadowColor: Colors.black.withOpacity(shadowOpacity),
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-              side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.10), width: 1.2),
-            ),
-            color: theme.cardColor.withOpacity(0.98),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(shadowOpacity),
-                    blurRadius: 18,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+          child: GestureDetector(
+            onTap: onTap,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+              constraints: BoxConstraints(
+                minHeight: expanded ? 220 : 100,
+                maxHeight: expanded ? 220 : 100,
               ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(18),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EntryInsightScreen(
-                        entry: entry,
-                        journalController: widget.journalController,
+              child: Card(
+                elevation: elevation,
+                shadowColor: Colors.black.withOpacity(shadowOpacity),
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.10), width: 1.2),
+                ),
+                color: theme.cardColor.withOpacity(0.98),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(shadowOpacity),
+                        blurRadius: 18,
+                        offset: const Offset(0, 8),
                       ),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                    ],
+                  ),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: onTap,
+                    child: Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            entry.timestamp,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: theme.colorScheme.primary,
+                          Row(
+                            children: [
+                              Text(
+                                entry.timestamp,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: theme.colorScheme.primary,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
+                                Icon(
+                                  Icons.tag,
+                                  size: 18,
+                                  color: theme.colorScheme.primary.withOpacity(0.5),
+                                ),
+                            ],
+                          ),
+                          const SizedBox(height: 6),
+                          AnimatedCrossFade(
+                            duration: const Duration(milliseconds: 400),
+                            crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                            firstChild: Text(
+                              entry.text.length > 60 ? '${entry.text.substring(0, 60)}...' : entry.text,
+                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            secondChild: Text(
+                              entry.text.length > 240 ? '${entry.text.substring(0, 240)}...' : entry.text,
+                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
                             ),
                           ),
-                          const Spacer(),
-                          if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
-                            Icon(
-                              Icons.tag,
-                              size: 18,
-                              color: theme.colorScheme.primary.withOpacity(0.5),
+                          if (entry.tags.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Wrap(
+                                spacing: 6,
+                                children: entry.tags.map((tag) => Chip(
+                                  label: Text(tag, style: theme.textTheme.bodySmall),
+                                  backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+                                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                )).toList(),
+                              ),
                             ),
                         ],
                       ),
-                      const SizedBox(height: 6),
-                      Text(
-                        entry.text.length > 120 ? '${entry.text.substring(0, 120)}...' : entry.text,
-                        style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                      ),
-                      if (entry.tags.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Wrap(
-                            spacing: 6,
-                            children: entry.tags.map((tag) => Chip(
-                              label: Text(tag, style: theme.textTheme.bodySmall),
-                              backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
-                              padding: const EdgeInsets.symmetric(horizontal: 6),
-                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            )).toList(),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ),
               ),
