@@ -6,6 +6,7 @@ import '../services/auth_manager.dart';
 import 'package:genesis_f1/constant/colors.dart';
 import 'package:genesis_f1/widgets/floating_tooltip.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:genesis_f1/screens/journal_screen.dart'; // Import JournalScreen
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -100,6 +101,12 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
       _borderAnimController.stop();
       setState(() => _isSubmitting = false);
     }
+  }
+
+  void goToJournalScreen(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => JournalScreen()),
+    );
   }
 
   @override
@@ -305,6 +312,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                         targetKey: _emailFieldKey,
                                         message: 'Google sign-in cancelled.',
                                       );
+                                    } else {
+                                      goToJournalScreen(context);
                                     }
                                   } on FirebaseAuthException catch (e) {
                                     FloatingTooltip.show(
@@ -355,6 +364,8 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                                         targetKey: _emailFieldKey,
                                         message: 'Twitter sign-in cancelled or failed.',
                                       );
+                                    } else {
+                                      goToJournalScreen(context);
                                     }
                                   } on FirebaseAuthException catch (e) {
                                     FloatingTooltip.show(
