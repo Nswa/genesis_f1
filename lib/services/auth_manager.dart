@@ -39,6 +39,25 @@ class AuthManager {
     );
     return await _auth.signInWithCredential(credential);
   }
+
+  /// Sign in with Twitter/X using Firebase OAuthProvider (recommended for Android)
+  Future<UserCredential?> signInWithTwitter() async {
+    try {
+      print('[DEBUG] Starting Twitter sign-in');
+      final provider = OAuthProvider('twitter.com');
+      // Optionally add custom parameters, e.g. provider.addCustomParameter('lang', 'en');
+      final userCredential = await _auth.signInWithProvider(provider);
+      print('[DEBUG] Twitter sign-in successful: \\${userCredential.user?.uid}');
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      print('[DEBUG] FirebaseAuthException during Twitter sign-in: \\${e.code} - \\${e.message}');
+      rethrow;
+    } catch (e, stack) {
+      print('[DEBUG] Unexpected error during Twitter sign-in: \\${e.toString()}');
+      print(stack);
+      rethrow;
+    }
+  }
 }
 
 // Global instance

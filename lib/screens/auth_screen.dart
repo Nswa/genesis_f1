@@ -343,9 +343,35 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                               BlendMode.srcIn,
                             ),
                           ),
-                          onPressed: () {
-                            // TODO: Implement X Sign-In
-                          },
+                          onPressed: _isSubmitting
+                              ? null
+                              : () async {
+                                  setState(() => _isSubmitting = true);
+                                  try {
+                                    final credential = await authManager.signInWithTwitter();
+                                    if (credential == null) {
+                                      FloatingTooltip.show(
+                                        context: context,
+                                        targetKey: _emailFieldKey,
+                                        message: 'Twitter sign-in cancelled or failed.',
+                                      );
+                                    }
+                                  } on FirebaseAuthException catch (e) {
+                                    FloatingTooltip.show(
+                                      context: context,
+                                      targetKey: _emailFieldKey,
+                                      message: e.message ?? 'Twitter sign-in failed.',
+                                    );
+                                  } catch (e) {
+                                    FloatingTooltip.show(
+                                      context: context,
+                                      targetKey: _emailFieldKey,
+                                      message: 'An unexpected error occurred during Twitter sign-in.',
+                                    );
+                                  } finally {
+                                    if (mounted) setState(() => _isSubmitting = false);
+                                  }
+                                },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                             backgroundColor: AppColors.secondaryButtonBackground,

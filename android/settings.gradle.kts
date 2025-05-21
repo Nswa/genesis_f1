@@ -26,3 +26,5 @@ plugins {
 }
 
 include(":app")
+include(":twitter_login")
+project(":twitter_login").projectDir = file("../local_plugins/twitter_login/android")
