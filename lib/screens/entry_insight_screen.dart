@@ -68,14 +68,30 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       _fetchingRelated = true;
       _generatingInsight = false;
     });
+    final entryId = widget.entry.localId;
+    final allEntries = widget.journalController.entries;
+    // --- Caching logic ---
+    if (!forceRefresh && entryId != null && _insightCache.containsKey(entryId) && _relatedIdsCache.containsKey(entryId)) {
+      // Use cached related entries
+      final related = allEntries.where((e) => _relatedIdsCache[entryId]!.contains(e.localId)).toList();
+      setState(() {
+        relatedEntries = related;
+        _briefInsight = _insightCache[entryId]!;
+        _loadingInsight = false;
+        _fetchingRelated = false;
+        _generatingInsight = false;
+      });
+      // Scroll to bottom after build
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+      return;
+    }
+    // --- Animated header for related entries ---
     _relatedDots.value = 0;
     _relatedTimer?.cancel();
     _relatedTimer = Timer.periodic(const Duration(milliseconds: 400), (_) {
       if (_fetchingRelated) _relatedDots.value = (_relatedDots.value + 1) % 4;
     });
     // 2. List related entries one by one, with animation
-    final entryId = widget.entry.localId;
-    final allEntries = widget.journalController.entries;
     List<Entry> related = [];
     if (_relatedListKey.currentState != null) {
       final len = relatedEntries.length;
@@ -84,7 +100,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       }
     }
     if (!forceRefresh && entryId != null && _relatedIdsCache.containsKey(entryId)) {
-      // Use cached related IDs
       for (final id in _relatedIdsCache[entryId]!) {
         final matches = allEntries.where((e) => e.localId == id);
         if (matches.isEmpty) continue;
@@ -98,7 +113,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         _scrollToBottom();
       }
     } else {
-      // Fetch related entries from Deepseek (simulate streaming)
       final fetched = await _deepseekService.fetchRelatedEntriesFromDeepseek(widget.entry, allEntries);
       for (final e in fetched) {
         related.add(e);
@@ -124,13 +138,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     });
     await Future.delayed(const Duration(milliseconds: 600));
     // 4. Stream insight generation
-    bool firstChunk = true;
     await for (final chunk in _streamInsight(widget.entry, related)) {
       setState(() { _briefInsight += chunk; });
-      if (firstChunk) {
-        _scrollToBottom();
-        firstChunk = false;
-      }
+      _scrollToBottom(); // Always scroll on new chunk
       await Future.delayed(const Duration(milliseconds: 30));
     }
     setState(() { _loadingInsight = false; _generatingInsight = false; });
