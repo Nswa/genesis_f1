@@ -44,6 +44,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   bool _generatingInsight = false;
   Timer? _relatedTimer;
   Timer? _insightTimer;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -94,6 +95,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           _relatedListKey.currentState!.insertItem(related.length - 1);
         }
         await Future.delayed(const Duration(milliseconds: 120));
+        _scrollToBottom();
       }
     } else {
       // Fetch related entries from Deepseek (simulate streaming)
@@ -105,6 +107,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           _relatedListKey.currentState!.insertItem(related.length - 1);
         }
         await Future.delayed(const Duration(milliseconds: 120));
+        _scrollToBottom();
       }
       if (entryId != null) {
         _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
@@ -121,8 +124,13 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     });
     await Future.delayed(const Duration(milliseconds: 600));
     // 4. Stream insight generation
+    bool firstChunk = true;
     await for (final chunk in _streamInsight(widget.entry, related)) {
       setState(() { _briefInsight += chunk; });
+      if (firstChunk) {
+        _scrollToBottom();
+        firstChunk = false;
+      }
       await Future.delayed(const Duration(milliseconds: 30));
     }
     setState(() { _loadingInsight = false; _generatingInsight = false; });
@@ -130,6 +138,18 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     if (entryId != null) {
       _insightCache[entryId] = _briefInsight;
     }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 350),
+          curve: Curves.easeOut,
+        );
+      }
+    });
   }
 
   // Use true streaming from DeepSeek
@@ -166,6 +186,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
               ),
             )
           : SingleChildScrollView(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,50 +221,52 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                             );
                           },
                         ),
-                  const SizedBox(height: 24),
-                  // Insight Section
-                  ValueListenableBuilder<int>(
-                    valueListenable: _insightDots,
-                    builder: (context, dots, _) {
-                      String header;
-                      if (_generatingInsight && _briefInsight.isEmpty) {
-                        header = 'Generating insight' + '.' * dots;
-                      } else {
-                        header = 'Insight';
-                      }
-                      return Text(header, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                  Card(
-                    elevation: 1,
-                    color: theme.colorScheme.primary.withOpacity(0.05),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: _briefInsight.isEmpty && _loadingInsight
-                          ? const SizedBox(height: 24) // Empty space while waiting for stream
-                          : Stack(
-                              children: [
-                                MarkdownBody(
-                                  data: _briefInsight,
-                                  styleSheet: MarkdownStyleSheet(
-                                    p: theme.textTheme.bodySmall?.copyWith(
-                                      fontFamily: 'IBMPlexSans',
-                                      fontSize: 16,
+                  if (!_fetchingRelated) ...[
+                    const SizedBox(height: 24),
+                    // Insight Section
+                    ValueListenableBuilder<int>(
+                      valueListenable: _insightDots,
+                      builder: (context, dots, _) {
+                        String header;
+                        if (_generatingInsight && _briefInsight.isEmpty) {
+                          header = 'Generating insight' + '.' * dots;
+                        } else {
+                          header = 'Insight';
+                        }
+                        return Text(header, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Card(
+                      elevation: 1,
+                      color: theme.colorScheme.primary.withOpacity(0.05),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: _briefInsight.isEmpty && _loadingInsight
+                            ? const SizedBox(height: 24) // Empty space while waiting for stream
+                            : Stack(
+                                children: [
+                                  MarkdownBody(
+                                    data: _briefInsight,
+                                    styleSheet: MarkdownStyleSheet(
+                                      p: theme.textTheme.bodySmall?.copyWith(
+                                        fontFamily: 'IBMPlexSans',
+                                        fontSize: 16,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                if (showCursor)
-                                  Positioned(
-                                    left: _calculateCursorOffset(_briefInsight, theme),
-                                    bottom: 8,
-                                    child: _BlinkingCursor(),
-                                  ),
-                              ],
-                            ),
+                                  if (showCursor)
+                                    Positioned(
+                                      left: _calculateCursorOffset(_briefInsight, theme),
+                                      bottom: 8,
+                                      child: _BlinkingCursor(),
+                                    ),
+                                ],
+                              ),
+                      ),
                     ),
-                  ),
+                  ],
                 ],
               ),
             ),
