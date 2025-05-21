@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/entry.dart';
 import '../controller/journal_controller.dart';
+import '../services/deepseek_service.dart';
 
 class EntryInsightScreen extends StatefulWidget {
   final Entry entry;
@@ -22,7 +23,15 @@ class EntryInsightScreen extends StatefulWidget {
 class _EntryInsightScreenState extends State<EntryInsightScreen> {
   late List<Entry> relatedEntries = [];
   bool isLoading = true;
-
+  
+  // For storing API-generated insights
+  String _entryContextInsight = '';
+  String _overallInsight = '';
+  bool _loadingEntryInsight = true;
+  bool _loadingOverallInsight = true;
+    // DeepSeek service initialized with embedded API key
+  final DeepseekService _deepseekService = DeepseekService();
+  
   @override
   void initState() {
     super.initState();
@@ -33,6 +42,8 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     // Start with loading state
     setState(() {
       isLoading = true;
+      _loadingEntryInsight = true;
+      _loadingOverallInsight = true;
     });
 
     // Find related entries based on tags, dates, or content similarity
@@ -47,11 +58,60 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
 
     // Sort by relevance or date
     allRelated.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
+    
+    // Limit to top 5 most relevant
+    final limitedRelated = allRelated.take(5).toList();
 
     setState(() {
-      relatedEntries = allRelated.take(5).toList(); // Limit to top 5 most relevant
+      relatedEntries = limitedRelated;
       isLoading = false;
     });
+    
+    // Once we have related entries, fetch AI insights
+    if (limitedRelated.isNotEmpty) {
+      // Get entry context insight
+      try {
+        final contextInsight = await _deepseekService.analyzeEntryContext(
+          widget.entry,
+          limitedRelated,
+        );
+        
+        setState(() {
+          _entryContextInsight = contextInsight;
+          _loadingEntryInsight = false;
+        });
+      } catch (e) {
+        setState(() {
+          _entryContextInsight = "Unable to generate insights at this time.";
+          _loadingEntryInsight = false;
+        });
+      }
+      
+      // Get overall insight about all entries together
+      try {
+        final overallInsight = await _deepseekService.generateOverallInsights(
+          widget.entry,
+          limitedRelated,
+        );
+        
+        setState(() {
+          _overallInsight = overallInsight;
+          _loadingOverallInsight = false;
+        });
+      } catch (e) {
+        setState(() {
+          _overallInsight = "Unable to generate overall insights at this time.";
+          _loadingOverallInsight = false;
+        });
+      }
+    } else {
+      setState(() {
+        _entryContextInsight = "No related entries found to analyze.";
+        _overallInsight = "";
+        _loadingEntryInsight = false;
+        _loadingOverallInsight = false;
+      });
+    }
   }
 
   Set<Entry> _findRelatedByTags() {
@@ -129,8 +189,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          crossAxisAlignment: CrossAxisAlignment.start,          children: [
             // Main Entry Section
             _buildMainEntryCard(theme),
             
@@ -169,6 +228,14 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                             .map((entry) => _buildRelatedEntryCard(entry, theme))
                             .toList(),
                       ),
+            
+            // Only show overall insights if we have related entries
+            if (relatedEntries.isNotEmpty) ...[
+              const SizedBox(height: 32),
+              
+              // Overall Insights Section
+              _buildOverallInsightsSection(theme),
+            ],
           ],
         ),
       ),
@@ -293,16 +360,12 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       ),
     );
   }
-
   Widget _buildInsightSection(ThemeData theme) {
-    // Generate insights based on entry content, mood, tags
-    String insightText = _generateInsights();
-    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Insights',
+          'Entry Context',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -316,23 +379,72 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(
-              insightText,
-              style: theme.textTheme.bodyMedium,
-            ),
+            child: _loadingEntryInsight
+                ? Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Analyzing entry...',
+                          style: TextStyle(color: theme.hintColor),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Basic entry information
+                      _buildBasicInsights(theme),
+                      
+                      if (_entryContextInsight.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        const Divider(),
+                        const SizedBox(height: 8),
+                        
+                        // AI-generated insights
+                        Text(
+                          _entryContextInsight,
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ],
+                    ],
+                  ),
           ),
         ),
       ],
     );
   }
 
-  String _generateInsights() {
-    // This is a simple example - in a real app, you might use more sophisticated analysis
-    final List<String> insights = [];
+  Widget _buildBasicInsights(ThemeData theme) {
+    final List<Widget> insights = [];
     
     // Mood insight
     if (widget.entry.mood != null && widget.entry.mood!.isNotEmpty) {
-      insights.add("Your mood was '${widget.entry.mood}' in this entry.");
+      insights.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.mood,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Mood: ${widget.entry.mood}",
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      );
     }
     
     // Word count insight
@@ -342,24 +454,55 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           : widget.entry.wordCount > 50 
               ? 'moderate-length' 
               : 'brief';
-      insights.add("This is a $lengthDescription entry with ${widget.entry.wordCount} words.");
+              
+      insights.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.text_fields,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "$lengthDescription entry (${widget.entry.wordCount} words)",
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      );
     }
     
-    // Tags insight
-    if (widget.entry.tags.isNotEmpty) {
-      insights.add("You tagged this entry with: ${widget.entry.tags.join(', ')}.");
-    }
-    
-    // Related entries insight
+    // Related entries count
     if (relatedEntries.isNotEmpty) {
-      insights.add("Found ${relatedEntries.length} related entries that might provide more context.");
+      insights.add(
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.connecting_airports,
+                size: 16,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                "Found ${relatedEntries.length} related entries",
+                style: theme.textTheme.bodyMedium,
+              ),
+            ],
+          ),
+        ),
+      );
     }
     
-    if (insights.isEmpty) {
-      return "Tap on related entries below to see the broader context of this journal entry.";
-    }
-    
-    return insights.join('\n\n');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: insights,
+    );
   }
 
   Widget _buildRelatedEntryCard(Entry entry, ThemeData theme) {
@@ -417,6 +560,52 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildOverallInsightsSection(ThemeData theme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Overall Insights',
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          elevation: 1,
+          color: theme.colorScheme.primary.withOpacity(0.075),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _loadingOverallInsight
+                ? Center(
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Analyzing patterns across entries...',
+                          style: TextStyle(color: theme.hintColor),
+                        ),
+                      ],
+                    ),
+                  )
+                : Text(
+                    _overallInsight,
+                    style: theme.textTheme.bodyMedium,
+                  ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -40,10 +40,10 @@ dependencies:
   # Media
   image_picker: ^1.1.2
   cached_network_image: ^3.4.1
-
   # Utilities
   connectivity_plus: ^5.0.2
   fuzzy: ^0.5.1
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
