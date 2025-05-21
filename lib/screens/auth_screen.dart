@@ -293,9 +293,29 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                               BlendMode.srcIn,
                             ),
                           ),
-                          onPressed: () {
-                            // TODO: Implement Google Sign-In
-                          },
+                          onPressed: _isSubmitting
+                              ? null
+                              : () async {
+                                  setState(() => _isSubmitting = true);
+                                  try {
+                                    final credential = await authManager.signInWithGoogle();
+                                    if (credential == null) {
+                                      FloatingTooltip.show(
+                                        context: context,
+                                        targetKey: _emailFieldKey,
+                                        message: 'Google sign-in cancelled.',
+                                      );
+                                    }
+                                  } on FirebaseAuthException catch (e) {
+                                    FloatingTooltip.show(
+                                      context: context,
+                                      targetKey: _emailFieldKey,
+                                      message: e.message ?? 'Google sign-in failed.',
+                                    );
+                                  } finally {
+                                    setState(() => _isSubmitting = false);
+                                  }
+                                },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
                             backgroundColor: AppColors.secondaryButtonBackground,

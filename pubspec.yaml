@@ -51,6 +51,7 @@ dependencies:
   path_provider: ^2.0.0
   connectivity_plus: ^5.0.2 # Added for network connectivity
   cached_network_image: ^3.4.1
+  google_sign_in: ^6.3.0
 
 dev_dependencies:
   flutter_test:
