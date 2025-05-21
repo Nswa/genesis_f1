@@ -55,8 +55,10 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     try {
       if (isLogin) {
         await authManager.signIn(email, password);
+        goToJournalScreen(context); // Force navigation after email/password login
       } else {
         await authManager.signUp(email, password);
+        goToJournalScreen(context); // Force navigation after registration
       }
     } on FirebaseAuthException catch (e) {
       String? emailError;
