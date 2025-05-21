@@ -36,48 +36,69 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchInsightAndRelated();
+    _startPhasedLoading();
   }
 
-  Future<void> _fetchInsightAndRelated({bool forceRefresh = false}) async {
-    final entryId = widget.entry.localId;
-    if (!forceRefresh && entryId != null && _insightCache.containsKey(entryId) && _relatedIdsCache.containsKey(entryId)) {
-      // Use cache
-      final allEntries = widget.journalController.entries;
-      final related = allEntries.where((e) => _relatedIdsCache[entryId]!.contains(e.localId)).toList();
-      setState(() {
-        relatedEntries = related;
-        _briefInsight = _insightCache[entryId]!;
-        isLoading = false;
-        _loadingInsight = false;
-      });
-      return;
-    }
+  Future<void> _startPhasedLoading({bool forceRefresh = false}) async {
+    // 1. Show main entry immediately (already in build)
     setState(() {
-      isLoading = true;
+      isLoading = false;
+      relatedEntries = [];
+      _briefInsight = '';
       _loadingInsight = true;
     });
-    // Fetch related entries using Deepseek API (fallback to local if needed)
+    // 2. List related entries one by one
+    final entryId = widget.entry.localId;
     final allEntries = widget.journalController.entries;
-    final related = await _deepseekService.fetchRelatedEntriesFromDeepseek(widget.entry, allEntries);
-    // Generate brief insight
-    final insight = await _deepseekService.generateBriefInsight(widget.entry, related);
-    if (mounted) {
-      setState(() {
-        relatedEntries = related;
-        _briefInsight = insight;
-        isLoading = false;
-        _loadingInsight = false;
-      });
+    List<Entry> related = [];
+    if (!forceRefresh && entryId != null && _relatedIdsCache.containsKey(entryId)) {
+      // Use cached related IDs
+      for (final id in _relatedIdsCache[entryId]!) {
+        final matches = allEntries.where((e) => e.localId == id);
+        if (matches.isEmpty) continue;
+        final match = matches.first;
+        related.add(match);
+        setState(() { relatedEntries = List.from(related); });
+        await Future.delayed(const Duration(milliseconds: 120));
+      }
+    } else {
+      // Fetch related entries from Deepseek (simulate streaming)
+      final fetched = await _deepseekService.fetchRelatedEntriesFromDeepseek(widget.entry, allEntries);
+      for (final e in fetched) {
+        related.add(e);
+        setState(() { relatedEntries = List.from(related); });
+        await Future.delayed(const Duration(milliseconds: 120));
+      }
       if (entryId != null) {
-        _insightCache[entryId] = insight;
         _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
       }
+    }
+    // 3. Stream insight generation
+    _briefInsight = '';
+    setState(() { _loadingInsight = true; });
+    await for (final chunk in _streamInsight(widget.entry, related)) {
+      setState(() { _briefInsight += chunk; });
+      await Future.delayed(const Duration(milliseconds: 30));
+    }
+    setState(() { _loadingInsight = false; });
+    if (entryId != null) {
+      _insightCache[entryId] = _briefInsight;
+    }
+  }
+
+  // Simulate streaming by splitting the generated insight into chunks
+  Stream<String> _streamInsight(Entry entry, List<Entry> related) async* {
+    final insight = await _deepseekService.generateBriefInsight(entry, related);
+    // Split by sentences or every N chars for streaming effect
+    final regex = RegExp(r'(?<=[.!?])\s+');
+    final parts = insight.split(regex);
+    for (final part in parts) {
+      if (part.trim().isNotEmpty) yield part + ' ';
     }
   }
 
   Future<void> _refresh() async {
-    await _fetchInsightAndRelated(forceRefresh: true);
+    await _startPhasedLoading(forceRefresh: true);
   }
 
   @override
