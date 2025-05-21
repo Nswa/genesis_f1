@@ -29,13 +29,30 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   bool _loadingInsight = true;
   final DeepseekService _deepseekService = DeepseekService();
 
+  // Static cache for insights and related entry IDs
+  static final Map<String, String> _insightCache = {};
+  static final Map<String, List<String>> _relatedIdsCache = {};
+
   @override
   void initState() {
     super.initState();
     _fetchInsightAndRelated();
   }
 
-  Future<void> _fetchInsightAndRelated() async {
+  Future<void> _fetchInsightAndRelated({bool forceRefresh = false}) async {
+    final entryId = widget.entry.localId;
+    if (!forceRefresh && entryId != null && _insightCache.containsKey(entryId) && _relatedIdsCache.containsKey(entryId)) {
+      // Use cache
+      final allEntries = widget.journalController.entries;
+      final related = allEntries.where((e) => _relatedIdsCache[entryId]!.contains(e.localId)).toList();
+      setState(() {
+        relatedEntries = related;
+        _briefInsight = _insightCache[entryId]!;
+        isLoading = false;
+        _loadingInsight = false;
+      });
+      return;
+    }
     setState(() {
       isLoading = true;
       _loadingInsight = true;
@@ -52,11 +69,15 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         isLoading = false;
         _loadingInsight = false;
       });
+      if (entryId != null) {
+        _insightCache[entryId] = insight;
+        _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
+      }
     }
   }
 
   Future<void> _refresh() async {
-    await _fetchInsightAndRelated();
+    await _fetchInsightAndRelated(forceRefresh: true);
   }
 
   @override
