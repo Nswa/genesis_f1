@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
@@ -36,19 +37,40 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   // AnimatedList key for related entries
   final GlobalKey<AnimatedListState> _relatedListKey = GlobalKey<AnimatedListState>();
 
+  // For animated headers
+  final ValueNotifier<int> _relatedDots = ValueNotifier<int>(0);
+  final ValueNotifier<int> _insightDots = ValueNotifier<int>(0);
+  bool _fetchingRelated = false;
+  bool _generatingInsight = false;
+  Timer? _relatedTimer;
+  Timer? _insightTimer;
+
   @override
   void initState() {
     super.initState();
     _startPhasedLoading();
   }
 
+  @override
+  void dispose() {
+    _relatedTimer?.cancel();
+    _insightTimer?.cancel();
+    super.dispose();
+  }
+
   Future<void> _startPhasedLoading({bool forceRefresh = false}) async {
-    // 1. Show main entry immediately (already in build)
     setState(() {
       isLoading = false;
       relatedEntries = [];
       _briefInsight = '';
       _loadingInsight = true;
+      _fetchingRelated = true;
+      _generatingInsight = false;
+    });
+    _relatedDots.value = 0;
+    _relatedTimer?.cancel();
+    _relatedTimer = Timer.periodic(const Duration(milliseconds: 400), (_) {
+      if (_fetchingRelated) _relatedDots.value = (_relatedDots.value + 1) % 4;
     });
     // 2. List related entries one by one, with animation
     final entryId = widget.entry.localId;
@@ -88,15 +110,23 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
       }
     }
-    // 3. Show progress animation before streaming insight
-    setState(() { _briefInsight = ''; _loadingInsight = true; });
+    setState(() { _fetchingRelated = false; });
+    _relatedTimer?.cancel();
+    // 3. Show animated header before streaming insight
+    setState(() { _briefInsight = ''; _loadingInsight = true; _generatingInsight = true; });
+    _insightDots.value = 0;
+    _insightTimer?.cancel();
+    _insightTimer = Timer.periodic(const Duration(milliseconds: 400), (_) {
+      if (_generatingInsight) _insightDots.value = (_insightDots.value + 1) % 4;
+    });
     await Future.delayed(const Duration(milliseconds: 600));
     // 4. Stream insight generation
     await for (final chunk in _streamInsight(widget.entry, related)) {
       setState(() { _briefInsight += chunk; });
       await Future.delayed(const Duration(milliseconds: 30));
     }
-    setState(() { _loadingInsight = false; });
+    setState(() { _loadingInsight = false; _generatingInsight = false; });
+    _insightTimer?.cancel();
     if (entryId != null) {
       _insightCache[entryId] = _briefInsight;
     }
@@ -142,7 +172,48 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                 children: [
                   _buildMainEntryCard(theme),
                   const SizedBox(height: 24),
-                  Text('Insight', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+                  // Related Entries Section (always shown)
+                  ValueListenableBuilder<int>(
+                    valueListenable: _relatedDots,
+                    builder: (context, dots, _) {
+                      String header;
+                      if (_fetchingRelated) {
+                        header = 'Fetching related entries' + '.' * dots;
+                      } else {
+                        header = 'Related Entries';
+                      }
+                      return Text(header, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  relatedEntries.isEmpty
+                      ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))
+                      : AnimatedList(
+                          key: _relatedListKey,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          initialItemCount: relatedEntries.length,
+                          itemBuilder: (context, index, animation) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: _buildRelatedEntryCard(relatedEntries[index], theme),
+                            );
+                          },
+                        ),
+                  const SizedBox(height: 24),
+                  // Insight Section
+                  ValueListenableBuilder<int>(
+                    valueListenable: _insightDots,
+                    builder: (context, dots, _) {
+                      String header;
+                      if (_generatingInsight && _briefInsight.isEmpty) {
+                        header = 'Generating insight' + '.' * dots;
+                      } else {
+                        header = 'Insight';
+                      }
+                      return Text(header, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
+                    },
+                  ),
                   const SizedBox(height: 8),
                   Card(
                     elevation: 1,
@@ -151,7 +222,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: _briefInsight.isEmpty && _loadingInsight
-                          ? IndeterminateProgressBar(color: theme.colorScheme.primary)
+                          ? const SizedBox(height: 24) // Empty space while waiting for stream
                           : Stack(
                               children: [
                                 MarkdownBody(
@@ -173,23 +244,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                             ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  Text('Related Entries', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 12),
-                  relatedEntries.isEmpty
-                      ? Text('No related entries found', style: TextStyle(color: theme.hintColor))
-                      : AnimatedList(
-                          key: _relatedListKey,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          initialItemCount: relatedEntries.length,
-                          itemBuilder: (context, index, animation) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: _buildRelatedEntryCard(relatedEntries[index], theme),
-                            );
-                          },
-                        ),
                 ],
               ),
             ),
