@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
 import 'favorites_screen.dart'; // Import the new screen
+import 'entry_insight_screen.dart'; // Import the insight screen
 // import 'package:shimmer/shimmer.dart'; // No longer needed here
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
@@ -183,11 +184,9 @@ class _JournalScreenState extends State<JournalScreen>
                                   itemBuilder: (context, index, animation) {
                                     return SizeTransition(
                                       sizeFactor: animation,
-                                      axisAlignment: 0.0,
-                                      child: JournalEntryWidget(
+                                      axisAlignment: 0.0,                                      child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
-                                        onToggleFavorite:
-                                            jc.toggleFavorite, // Pass the controller's method
+                                        onToggleFavorite: jc.toggleFavorite,
                                         onTap: () {
                                           if (jc.isSelectionMode) {
                                             setState(
@@ -196,7 +195,16 @@ class _JournalScreenState extends State<JournalScreen>
                                               ),
                                             );
                                           } else {
-                                            // Optional: Handle tap when not in selection mode
+                                            // Navigate to insight screen when tapped
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => EntryInsightScreen(
+                                                  entry: entryGroup.value[index],
+                                                  journalController: jc,
+                                                ),
+                                              ),
+                                            );
                                           }
                                         },
                                         onLongPress: () {
