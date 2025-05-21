@@ -86,14 +86,10 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
     }
   }
 
-  // Simulate streaming by splitting the generated insight into chunks
+  // Use true streaming from DeepSeek
   Stream<String> _streamInsight(Entry entry, List<Entry> related) async* {
-    final insight = await _deepseekService.generateBriefInsight(entry, related);
-    // Split by sentences or every N chars for streaming effect
-    final regex = RegExp(r'(?<=[.!?])\s+');
-    final parts = insight.split(regex);
-    for (final part in parts) {
-      if (part.trim().isNotEmpty) yield part + ' ';
+    await for (final chunk in _deepseekService.streamBriefInsight(entry, related)) {
+      yield chunk;
     }
   }
 
@@ -104,6 +100,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final showCursor = _loadingInsight;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Entry Insight'),
@@ -137,17 +134,25 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: _loadingInsight
-                          ? IndeterminateProgressBar(color: theme.colorScheme.primary)
-                          : MarkdownBody(
-                              data: _briefInsight,
-                              styleSheet: MarkdownStyleSheet(
-                                p: theme.textTheme.bodySmall?.copyWith(
-                                  fontFamily: 'IBMPlexSans',
-                                  fontSize: 16,
-                                ),
+                      child: Stack(
+                        children: [
+                          MarkdownBody(
+                            data: _briefInsight,
+                            styleSheet: MarkdownStyleSheet(
+                              p: theme.textTheme.bodySmall?.copyWith(
+                                fontFamily: 'IBMPlexSans',
+                                fontSize: 16,
                               ),
                             ),
+                          ),
+                          if (showCursor)
+                            Positioned(
+                              left: _calculateCursorOffset(_briefInsight, theme),
+                              bottom: 8,
+                              child: _BlinkingCursor(),
+                            ),
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -162,6 +167,13 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
               ),
             ),
     );
+  }
+
+  // Helper to estimate cursor offset (optional, can be improved for perfect placement)
+  double _calculateCursorOffset(String text, ThemeData theme) {
+    // This is a rough estimate; for perfect placement, use a TextPainter
+    final avgCharWidth = 8.0;
+    return (text.length * avgCharWidth) % 400;
   }
 
   Widget _buildMainEntryCard(ThemeData theme) {
@@ -338,6 +350,38 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _BlinkingCursor extends StatefulWidget {
+  @override
+  State<_BlinkingCursor> createState() => _BlinkingCursorState();
+}
+
+class _BlinkingCursorState extends State<_BlinkingCursor> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _controller,
+      child: Text('|', style: TextStyle(fontSize: 16, fontFamily: 'IBMPlexSans', color: Theme.of(context).colorScheme.primary)),
     );
   }
 }

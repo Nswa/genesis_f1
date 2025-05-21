@@ -180,6 +180,56 @@ class DeepseekService {
     }
   }
 
+  /// Stream a brief insight for the main entry and its related entries (true streaming)
+  Stream<String> streamBriefInsight(Entry mainEntry, List<Entry> relatedEntries) async* {
+    final client = http.Client();
+    final request = http.Request(
+      'POST',
+      Uri.parse('$_baseUrl/chat/completions'),
+    );
+    request.headers.addAll({
+      'Authorization': 'Bearer $_apiKey',
+      'Content-Type': 'application/json',
+    });
+    request.body = jsonEncode({
+      'model': 'deepseek-chat',
+      'stream': true,
+      'messages': [
+        {
+          'role': 'system',
+          'content': 'You are a journaling assistant. Given a main entry and a few related entries, write a single concise paragraph summarizing the main entry in the context of the related entries. Be specific, avoid generic advice.'
+        },
+        {
+          'role': 'user',
+          'content': _formatMainAndRelatedForInsight(mainEntry, relatedEntries)
+        }
+      ],
+      'max_tokens': 180,
+      'temperature': 0.5,
+    });
+    try {
+      final response = await client.send(request);
+      await for (final line in response.stream.transform(utf8.decoder).transform(const LineSplitter())) {
+        if (line.startsWith('data: ')) {
+          final data = line.substring(6).trim();
+          if (data == '[DONE]') break;
+          final jsonChunk = jsonDecode(data);
+          final delta = jsonChunk['choices'][0]['delta'];
+          if (delta != null && delta['content'] != null) {
+            yield delta['content'];
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('DeepSeek streaming error: $e');
+      // fallback: yield the whole thing at once
+      final fallback = await generateBriefInsight(mainEntry, relatedEntries);
+      yield fallback;
+    } finally {
+      client.close();
+    }
+  }
+
   /// Format entries for analyzing contextual relationship (legacy)
   @deprecated
   String _formatEntriesForAnalysis(Entry mainEntry, List<Entry> relatedEntries) {
