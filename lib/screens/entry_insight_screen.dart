@@ -232,73 +232,102 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                   ),
                   const SizedBox(height: 12),
                   relatedEntries.isEmpty
-                      ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))
-                      : SizedBox(
-                          height: _expandedRelatedIndex == null
-                              ? 180 + (relatedEntries.length - 1) * 36.0
-                              : 180 + (relatedEntries.length - 1) * 36.0 + 180, // extra space for expanded
-                          child: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              for (int i = 0; i < relatedEntries.length; i++)
-                                if (i < _cascadeAnimations.length)
-                                  AnimatedBuilder(
-                                    animation: _cascadeAnimations[i],
-                                    builder: (context, child) {
-                                      final anim = _cascadeAnimations[i].value;
-                                      final double opacity = anim.clamp(0.0, 1.0);
-                                      // Dramatic ascend: cards rise up from far below, fade in, and overlap
-                                      final double baseTop = i * 36.0;
-                                      final double offset = (1 - anim) * 180.0; // much larger vertical rise
-                                      final double scale = 0.97 + 0.03 * anim;
-                                      final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1); // subtle tilt
-                                      final double shadowOpacity = 0.10 + 0.10 * anim;
+                      ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))                      : LayoutBuilder(
+                          builder: (context, constraints) {
+                            const double collapsedHeight = 100;
+                            const double expandedHeight = 250;
+                            const double overlap = 36.0;
+                            double totalHeight = 0;
+                            int expandedCount = 0;
+                            for (int i = 0; i < relatedEntries.length; i++) {
+                              if (_expandedRelatedIndex == null && i == relatedEntries.length - 1) {
+                                // Last card is always expanded by default
+                                expandedCount++;
+                              } else if (_expandedRelatedIndex == i) {
+                                expandedCount++;
+                              }
+                            }
+                            totalHeight = collapsedHeight + (relatedEntries.length - 1) * overlap + expandedCount * (expandedHeight - collapsedHeight);
+                            return SizedBox(
+                              height: totalHeight,
+                              child: Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  for (int i = 0; i < relatedEntries.length; i++)
+                                    if (i < _cascadeAnimations.length)
+                                      AnimatedBuilder(
+                                        animation: _cascadeAnimations[i],
+                                        builder: (context, child) {
+                                          final anim = _cascadeAnimations[i].value;
+                                          final double opacity = anim.clamp(0.0, 1.0);
+                                          final double baseTop = i * overlap;
+                                          final double offset = (1 - anim) * collapsedHeight;
+                                          final double scale = 0.97 + 0.03 * anim;
+                                          final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1);
+                                          final double shadowOpacity = 0.10 + 0.10 * anim;
 
-                                      // Uncascade logic
-                                      double animatedTop = baseTop + offset;
-                                      if (_expandedRelatedIndex != null) {
-                                        if (i < _expandedRelatedIndex!) {
-                                          animatedTop = i * 36.0;
-                                        } else if (i == _expandedRelatedIndex) {
-                                          animatedTop = i * 36.0;
-                                        } else {
-                                          animatedTop = i * 36.0 + 180; // move down by expanded height
-                                        }
-                                      }
+                                          // Uncascade logic
+                                          double animatedTop = baseTop + offset;
+                                          bool expanded = false;
+                                          if (_expandedRelatedIndex == null) {
+                                            // Last card is always expanded by default
+                                            expanded = (i == relatedEntries.length - 1);
+                                            if (expanded) {
+                                              animatedTop = i * overlap;
+                                            } else if (i < relatedEntries.length - 1) {
+                                              animatedTop = i * overlap;
+                                            }
+                                            if (i > relatedEntries.length - 1) {
+                                              animatedTop = i * overlap + (expandedHeight - collapsedHeight);
+                                            }
+                                          } else {
+                                            expanded = (_expandedRelatedIndex == i);
+                                            if (i < _expandedRelatedIndex!) {
+                                              animatedTop = i * overlap;
+                                            } else if (i == _expandedRelatedIndex) {
+                                              animatedTop = i * overlap;
+                                            } else {
+                                              animatedTop = i * overlap + (expandedHeight - collapsedHeight);
+                                            }
+                                          }
 
-                                      return AnimatedPositioned(
-                                        duration: const Duration(milliseconds: 400),
-                                        curve: Curves.easeInOut,
-                                        left: 0,
-                                        right: 0,
-                                        top: animatedTop,
-                                        child: Opacity(
-                                          opacity: opacity,
-                                          child: _buildRelatedEntryCard(
-                                            relatedEntries[i],
-                                            theme,
-                                            elevation: 10 + i * 2,
-                                            scale: scale,
-                                            rotation: rotation,
-                                            yOffset: 0,
-                                            shadowOpacity: shadowOpacity,
-                                            expanded: _expandedRelatedIndex == i,
-                                            onTap: () {
-                                              setState(() {
-                                                if (_expandedRelatedIndex == i) {
-                                                  _expandedRelatedIndex = null;
-                                                } else {
-                                                  _expandedRelatedIndex = i;
-                                                }
-                                              });
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                            ],
-                          ),
+                                          return AnimatedPositioned(
+                                            duration: const Duration(milliseconds: 400),
+                                            curve: Curves.easeInOut,
+                                            left: 0,
+                                            right: 0,
+                                            top: animatedTop,
+                                            child: Opacity(
+                                              opacity: opacity,
+                                              child: _buildRelatedEntryCard(
+                                                relatedEntries[i],
+                                                theme,
+                                                elevation: 10 + i * 2,
+                                                scale: scale,
+                                                rotation: rotation,
+                                                yOffset: 0,
+                                                shadowOpacity: shadowOpacity,
+                                                expanded: expanded,
+                                                onTap: () {
+                                                  setState(() {
+                                                    if (_expandedRelatedIndex == i) {
+                                                      _expandedRelatedIndex = null;
+                                                    } else {
+                                                      _expandedRelatedIndex = i;
+                                                    }
+                                                  });
+                                                },
+                                                collapsedHeight: collapsedHeight,
+                                                expandedHeight: expandedHeight,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                   if (!_fetchingRelated) ...[
                     const SizedBox(height: 24),
@@ -478,7 +507,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
     );
   }
 
-  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, bool expanded = false, VoidCallback? onTap}) {
+  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, bool expanded = false, VoidCallback? onTap, double collapsedHeight = 100, double expandedHeight = 250}) {
     return Transform.translate(
       offset: Offset(0, yOffset),
       child: Transform.rotate(
@@ -491,8 +520,8 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
               duration: const Duration(milliseconds: 400),
               curve: Curves.easeInOut,
               constraints: BoxConstraints(
-                minHeight: expanded ? 220 : 100,
-                maxHeight: expanded ? 220 : 100,
+                minHeight: expanded ? expandedHeight : collapsedHeight,
+                maxHeight: expanded ? expandedHeight : collapsedHeight,
               ),
               child: Card(
                 elevation: elevation,
@@ -514,61 +543,70 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                       ),
                     ],
                   ),
-                  child: InkWell(
+                  child: ClipRRect(
                     borderRadius: BorderRadius.circular(18),
-                    onTap: onTap,
-                    child: Padding(
-                      padding: const EdgeInsets.all(18.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(18),
+                      onTap: onTap,
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: SingleChildScrollView(
+                          physics: expanded ? const ClampingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(
-                                entry.timestamp,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: theme.colorScheme.primary,
+                              Row(
+                                children: [
+                                  Text(
+                                    entry.timestamp,
+                                    style: theme.textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
+                                    Icon(
+                                      Icons.tag,
+                                      size: 18,
+                                      color: theme.colorScheme.primary.withOpacity(0.5),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              AnimatedCrossFade(
+                                duration: const Duration(milliseconds: 400),
+                                crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+                                firstChild: Text(
+                                  entry.text.length > 60 ? '${entry.text.substring(0, 60)}...' : entry.text,
+                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                secondChild: Text(
+                                  entry.text.length > 240 ? '${entry.text.substring(0, 240)}...' : entry.text,
+                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
                                 ),
                               ),
-                              const Spacer(),
-                              if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
-                                Icon(
-                                  Icons.tag,
-                                  size: 18,
-                                  color: theme.colorScheme.primary.withOpacity(0.5),
+                              if (entry.tags.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Wrap(
+                                    spacing: 6,
+                                    runSpacing: 4,
+                                    children: entry.tags.map((tag) => Chip(
+                                      visualDensity: VisualDensity.compact,
+                                      label: Text(tag, style: theme.textTheme.bodySmall),
+                                      backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+                                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    )).toList(),
+                                  ),
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 6),
-                          AnimatedCrossFade(
-                            duration: const Duration(milliseconds: 400),
-                            crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                            firstChild: Text(
-                              entry.text.length > 60 ? '${entry.text.substring(0, 60)}...' : entry.text,
-                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            secondChild: Text(
-                              entry.text.length > 240 ? '${entry.text.substring(0, 240)}...' : entry.text,
-                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                            ),
-                          ),
-                          if (entry.tags.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Wrap(
-                                spacing: 6,
-                                children: entry.tags.map((tag) => Chip(
-                                  label: Text(tag, style: theme.textTheme.bodySmall),
-                                  backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
-                                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                )).toList(),
-                              ),
-                            ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
