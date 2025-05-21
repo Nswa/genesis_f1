@@ -33,6 +33,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   static final Map<String, String> _insightCache = {};
   static final Map<String, List<String>> _relatedIdsCache = {};
 
+  // AnimatedList key for related entries
+  final GlobalKey<AnimatedListState> _relatedListKey = GlobalKey<AnimatedListState>();
+
   @override
   void initState() {
     super.initState();
@@ -47,10 +50,16 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       _briefInsight = '';
       _loadingInsight = true;
     });
-    // 2. List related entries one by one
+    // 2. List related entries one by one, with animation
     final entryId = widget.entry.localId;
     final allEntries = widget.journalController.entries;
     List<Entry> related = [];
+    if (_relatedListKey.currentState != null) {
+      final len = relatedEntries.length;
+      for (int i = len - 1; i >= 0; i--) {
+        _relatedListKey.currentState!.removeItem(i, (context, animation) => const SizedBox());
+      }
+    }
     if (!forceRefresh && entryId != null && _relatedIdsCache.containsKey(entryId)) {
       // Use cached related IDs
       for (final id in _relatedIdsCache[entryId]!) {
@@ -59,6 +68,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         final match = matches.first;
         related.add(match);
         setState(() { relatedEntries = List.from(related); });
+        if (_relatedListKey.currentState != null) {
+          _relatedListKey.currentState!.insertItem(related.length - 1);
+        }
         await Future.delayed(const Duration(milliseconds: 120));
       }
     } else {
@@ -67,15 +79,19 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
       for (final e in fetched) {
         related.add(e);
         setState(() { relatedEntries = List.from(related); });
+        if (_relatedListKey.currentState != null) {
+          _relatedListKey.currentState!.insertItem(related.length - 1);
+        }
         await Future.delayed(const Duration(milliseconds: 120));
       }
       if (entryId != null) {
         _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
       }
     }
-    // 3. Stream insight generation
-    _briefInsight = '';
-    setState(() { _loadingInsight = true; });
+    // 3. Show progress animation before streaming insight
+    setState(() { _briefInsight = ''; _loadingInsight = true; });
+    await Future.delayed(const Duration(milliseconds: 600));
+    // 4. Stream insight generation
     await for (final chunk in _streamInsight(widget.entry, related)) {
       setState(() { _briefInsight += chunk; });
       await Future.delayed(const Duration(milliseconds: 30));
@@ -100,7 +116,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final showCursor = _loadingInsight;
+    final showCursor = _loadingInsight && _briefInsight.isNotEmpty;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Entry Insight'),
@@ -134,25 +150,27 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Stack(
-                        children: [
-                          MarkdownBody(
-                            data: _briefInsight,
-                            styleSheet: MarkdownStyleSheet(
-                              p: theme.textTheme.bodySmall?.copyWith(
-                                fontFamily: 'IBMPlexSans',
-                                fontSize: 16,
-                              ),
+                      child: _briefInsight.isEmpty && _loadingInsight
+                          ? IndeterminateProgressBar(color: theme.colorScheme.primary)
+                          : Stack(
+                              children: [
+                                MarkdownBody(
+                                  data: _briefInsight,
+                                  styleSheet: MarkdownStyleSheet(
+                                    p: theme.textTheme.bodySmall?.copyWith(
+                                      fontFamily: 'IBMPlexSans',
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                if (showCursor)
+                                  Positioned(
+                                    left: _calculateCursorOffset(_briefInsight, theme),
+                                    bottom: 8,
+                                    child: _BlinkingCursor(),
+                                  ),
+                              ],
                             ),
-                          ),
-                          if (showCursor)
-                            Positioned(
-                              left: _calculateCursorOffset(_briefInsight, theme),
-                              bottom: 8,
-                              child: _BlinkingCursor(),
-                            ),
-                        ],
-                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
@@ -160,8 +178,17 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                   const SizedBox(height: 12),
                   relatedEntries.isEmpty
                       ? Text('No related entries found', style: TextStyle(color: theme.hintColor))
-                      : Column(
-                          children: relatedEntries.map((entry) => _buildRelatedEntryCard(entry, theme)).toList(),
+                      : AnimatedList(
+                          key: _relatedListKey,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          initialItemCount: relatedEntries.length,
+                          itemBuilder: (context, index, animation) {
+                            return FadeTransition(
+                              opacity: animation,
+                              child: _buildRelatedEntryCard(relatedEntries[index], theme),
+                            );
+                          },
                         ),
                 ],
               ),
