@@ -13,7 +13,8 @@ class DeepseekService {
   /// Create a new DeepseekService instance
   DeepseekService() : _apiKey = ApiKeyService.getDeepseekApiKey();
 
-  /// Analyze the contextual relationship between entries
+  /// Analyze the contextual relationship between entries (legacy)
+  @deprecated
   Future<String> analyzeEntryContext(Entry mainEntry, List<Entry> relatedEntries) async {
     try {
       final response = await http.post(
@@ -55,7 +56,8 @@ class DeepseekService {
     }
   }
 
-  /// Generate overall insights across multiple entries
+  /// Generate overall insights across multiple entries (legacy)
+  @deprecated
   Future<String> generateOverallInsights(Entry mainEntry, List<Entry> relatedEntries) async {
     try {
       final response = await http.post(
@@ -98,7 +100,88 @@ class DeepseekService {
     }
   }
 
-  /// Format entries for analyzing contextual relationship
+  /// Fetch related entries for a main entry using Deepseek API (concise prompt)
+  Future<List<Entry>> fetchRelatedEntriesFromDeepseek(Entry mainEntry, List<Entry> allEntries) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/chat/completions'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_apiKey',
+        },
+        body: jsonEncode({
+          'model': 'deepseek-chat',
+          'messages': [
+            {
+              'role': 'system',
+              'content': 'You are a journaling assistant. Given a main journal entry and a list of other entries, select the 3-5 most contextually relevant related entries. Return only their localId as a JSON array.'
+            },
+            {
+              'role': 'user',
+              'content': _formatMainAndAllEntriesForRelated(mainEntry, allEntries)
+            }
+          ],
+          'max_tokens': 200,
+          'temperature': 0.2,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final content = data['choices'][0]['message']['content'];
+        // Expecting a JSON array of localIds
+        final List<dynamic> idList = jsonDecode(content);
+        return allEntries.where((e) => idList.contains(e.localId)).toList();
+      } else {
+        debugPrint('DeepSeek API error (related): \\${response.statusCode}, \\${response.body}');
+        // fallback: use local heuristics (old method)
+        return _findRelatedLocally(mainEntry, allEntries);
+      }
+    } catch (e) {
+      debugPrint('Failed to connect to DeepSeek API (related): $e');
+      return _findRelatedLocally(mainEntry, allEntries);
+    }
+  }
+
+  /// Generate a brief insight for the main entry and its related entries (concise prompt)
+  Future<String> generateBriefInsight(Entry mainEntry, List<Entry> relatedEntries) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/chat/completions'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_apiKey',
+        },
+        body: jsonEncode({
+          'model': 'deepseek-chat',
+          'messages': [
+            {
+              'role': 'system',
+              'content': 'You are a journaling assistant. Given a main entry and a few related entries, write a single concise paragraph summarizing the main entry in the context of the related entries. Be specific, avoid generic advice.'
+            },
+            {
+              'role': 'user',
+              'content': _formatMainAndRelatedForInsight(mainEntry, relatedEntries)
+            }
+          ],
+          'max_tokens': 180,
+          'temperature': 0.5,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['choices'][0]['message']['content'];
+      } else {
+        debugPrint('DeepSeek API error (insight): \\${response.statusCode}, \\${response.body}');
+        return _generateFallbackEntryContext(mainEntry, relatedEntries);
+      }
+    } catch (e) {
+      debugPrint('Failed to connect to DeepSeek API (insight): $e');
+      return _generateFallbackEntryContext(mainEntry, relatedEntries);
+    }
+  }
+
+  /// Format entries for analyzing contextual relationship (legacy)
+  @deprecated
   String _formatEntriesForAnalysis(Entry mainEntry, List<Entry> relatedEntries) {
     final buffer = StringBuffer();
 
@@ -136,7 +219,8 @@ class DeepseekService {
     return buffer.toString();
   }
 
-  /// Format entries for overall insights analysis
+  /// Format entries for overall insights analysis (legacy)
+  @deprecated
   String _formatEntriesForOverallInsight(Entry mainEntry, List<Entry> relatedEntries) {
     final buffer = StringBuffer();
     final allEntries = [mainEntry, ...relatedEntries];
@@ -165,6 +249,37 @@ class DeepseekService {
     buffer.writeln('3. Potential growth opportunities or areas of focus');
     buffer.writeln('4. Any other notable patterns or connections between these entries');
     
+    return buffer.toString();
+  }
+
+  /// Helper: format for related entries selection
+  String _formatMainAndAllEntriesForRelated(Entry main, List<Entry> all) {
+    final buffer = StringBuffer();
+    buffer.writeln('Main Entry:');
+    buffer.writeln('ID: \\${main.localId}');
+    buffer.writeln(main.text);
+    buffer.writeln('---');
+    buffer.writeln('Other Entries:');
+    for (final e in all) {
+      if (e.localId == main.localId) continue;
+      buffer.writeln('ID: \\${e.localId}');
+      buffer.writeln(e.text);
+      buffer.writeln('---');
+    }
+    return buffer.toString();
+  }
+
+  /// Helper: format for brief insight
+  String _formatMainAndRelatedForInsight(Entry main, List<Entry> related) {
+    final buffer = StringBuffer();
+    buffer.writeln('Main Entry:');
+    buffer.writeln(main.text);
+    buffer.writeln('---');
+    buffer.writeln('Related Entries:');
+    for (final e in related) {
+      buffer.writeln(e.text);
+      buffer.writeln('---');
+    }
     return buffer.toString();
   }
 
@@ -283,6 +398,26 @@ class DeepseekService {
     return insights.join(' ');
   }
   
+  /// Local fallback for related entries (old logic)
+  List<Entry> _findRelatedLocally(Entry main, List<Entry> all) {
+    // Use your previous heuristics, e.g. tags, date, content
+    final Set<Entry> byTags = all.where((e) => e.localId != main.localId && e.tags.any((tag) => main.tags.contains(tag))).toSet();
+    final Set<Entry> byDate = all.where((e) {
+      final entryDate = DateTime(e.rawDateTime.year, e.rawDateTime.month, e.rawDateTime.day);
+      final mainDate = DateTime(main.rawDateTime.year, main.rawDateTime.month, main.rawDateTime.day);
+      return e.localId != main.localId && (entryDate.isAtSameMomentAs(mainDate) || entryDate.isAtSameMomentAs(mainDate.subtract(const Duration(days: 1))) || entryDate.isAtSameMomentAs(mainDate.add(const Duration(days: 1))));
+    }).toSet();
+    final Set<Entry> byContent = all.where((e) {
+      if (e.localId == main.localId) return false;
+      final mainWords = main.text.toLowerCase().split(RegExp(r'\W+')).where((w) => w.length > 4).toSet();
+      final otherWords = e.text.toLowerCase().split(RegExp(r'\W+')).where((w) => w.length > 4).toSet();
+      return mainWords.intersection(otherWords).length >= 3;
+    }).toSet();
+    final allRelated = {...byTags, ...byDate, ...byContent}.toList();
+    allRelated.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
+    return allRelated.take(5).toList();
+  }
+
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
