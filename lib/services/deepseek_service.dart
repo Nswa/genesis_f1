@@ -100,7 +100,7 @@ class DeepseekService {
     }
   }
 
-  /// Fetch related entries for a main entry using Deepseek API (concise prompt)
+  /// Fetch related entries for a main entry using Deepseek API (context-aware, improved)
   Future<List<Entry>> fetchRelatedEntriesFromDeepseek(Entry mainEntry, List<Entry> allEntries) async {
     try {
       final response = await http.post(
@@ -114,11 +114,12 @@ class DeepseekService {
           'messages': [
             {
               'role': 'system',
-              'content': 'You are a journaling assistant. Given a main journal entry and a list of other entries, select the 3-5 most contextually relevant related entries. Return only their localId as a JSON array.'
+              'content':
+                  'You are an intelligent journaling assistant. Given a main journal entry and a list of other entries, select the 3-5 most contextually relevant related entries. Consider not just superficial similarity (tags, date, or word overlap), but also emotional tone, narrative continuity, and deeper themes. Use the provided metadata (mood, tags, date) for each entry. Avoid picking entries that are only superficially similar. Return only their localId as a JSON array.'
             },
             {
               'role': 'user',
-              'content': _formatMainAndAllEntriesForRelated(mainEntry, allEntries)
+              'content': _formatMainAndAllEntriesForRelatedContextAware(mainEntry, allEntries)
             }
           ],
           'max_tokens': 200,
@@ -127,10 +128,26 @@ class DeepseekService {
       );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final content = data['choices'][0]['message']['content'];
-        // Expecting a JSON array of localIds
+        var content = data['choices'][0]['message']['content'] as String;
+        // Remove code block markers if present
+        content = content.trim();
+        if (content.startsWith('```')) {
+          final firstNewline = content.indexOf('\n');
+          if (firstNewline != -1) {
+            content = content.substring(firstNewline + 1);
+          }
+          if (content.endsWith('```')) {
+            content = content.substring(0, content.length - 3);
+          }
+          content = content.trim();
+        }
+        // Now parse as JSON array
         final List<dynamic> idList = jsonDecode(content);
-        return allEntries.where((e) => idList.contains(e.localId)).toList();
+        // Post-process: filter for minimum content/metadata overlap and context relevance
+        final List<Entry> candidates = allEntries.where((e) => idList.contains(e.localId)).toList();
+        final List<Entry> filtered = _filterContextuallyRelevantEntries(mainEntry, candidates);
+        // If not enough, fallback to original candidates
+        return filtered.length >= 3 ? filtered : candidates;
       } else {
         debugPrint('DeepSeek API error (related): \\${response.statusCode}, \\${response.body}');
         // fallback: use local heuristics (old method)
@@ -302,17 +319,23 @@ class DeepseekService {
     return buffer.toString();
   }
 
-  /// Helper: format for related entries selection
-  String _formatMainAndAllEntriesForRelated(Entry main, List<Entry> all) {
+  /// Helper: format for related entries selection (context-aware, with metadata)
+  String _formatMainAndAllEntriesForRelatedContextAware(Entry main, List<Entry> all) {
     final buffer = StringBuffer();
     buffer.writeln('Main Entry:');
     buffer.writeln('ID: \\${main.localId}');
+    buffer.writeln('Date: \\${main.timestamp}');
+    if (main.mood != null && main.mood!.isNotEmpty) buffer.writeln('Mood: \\${main.mood}');
+    if (main.tags.isNotEmpty) buffer.writeln('Tags: \\${main.tags.join(", ")}');
     buffer.writeln(main.text);
     buffer.writeln('---');
     buffer.writeln('Other Entries:');
     for (final e in all) {
       if (e.localId == main.localId) continue;
       buffer.writeln('ID: \\${e.localId}');
+      buffer.writeln('Date: \\${e.timestamp}');
+      if (e.mood != null && e.mood!.isNotEmpty) buffer.writeln('Mood: \\${e.mood}');
+      if (e.tags.isNotEmpty) buffer.writeln('Tags: \\${e.tags.join(", ")}');
       buffer.writeln(e.text);
       buffer.writeln('---');
     }
@@ -471,4 +494,39 @@ class DeepseekService {
   bool _isSameDay(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
+  // Context-aware post-processing filter for related entries
+  List<Entry> _filterContextuallyRelevantEntries(Entry main, List<Entry> candidates) {
+    // Score by: mood match, tag overlap, content overlap, date proximity, narrative continuity
+    List<_EntryScore> scored = candidates.map((e) {
+      int score = 0;
+      // Mood match
+      if (main.mood != null && e.mood != null && main.mood == e.mood) score += 2;
+      // Tag overlap
+      final tagOverlap = main.tags.toSet().intersection(e.tags.toSet()).length;
+      score += tagOverlap;
+      // Content overlap (words > 4 chars)
+      final mainWords = main.text.toLowerCase().split(RegExp(r'\W+')).where((w) => w.length > 4).toSet();
+      final otherWords = e.text.toLowerCase().split(RegExp(r'\W+')).where((w) => w.length > 4).toSet();
+      score += mainWords.intersection(otherWords).length;
+      // Date proximity (within 2 days)
+      final diff = (main.rawDateTime.difference(e.rawDateTime).inDays).abs();
+      if (diff <= 2) score += 1;
+      // Narrative continuity: if entry is before or after main entry
+      if (e.rawDateTime.isBefore(main.rawDateTime)) score += 1;
+      return _EntryScore(e, score);
+    }).toList();
+    scored.sort((a, b) => b.score.compareTo(a.score));
+    // Only keep those with score >= median or at least 3
+    int median = scored.isNotEmpty ? scored[scored.length ~/ 2].score : 0;
+    int threshold = median > 2 ? median : 3;
+    return scored.where((s) => s.score >= threshold).map((s) => s.entry).toList();
+  }
+}
+
+// Helper class for scoring related entries
+class _EntryScore {
+  final Entry entry;
+  final int score;
+  _EntryScore(this.entry, this.score);
 }
