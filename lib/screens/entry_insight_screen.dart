@@ -123,7 +123,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                               styleSheet: MarkdownStyleSheet(
                                 p: theme.textTheme.bodySmall?.copyWith(
                                   fontFamily: 'IBMPlexSans',
-                                  fontSize: 13,
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
