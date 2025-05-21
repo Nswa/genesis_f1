@@ -46,7 +46,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
   // For cascading animation controllers
   final List<AnimationController> _cascadeControllers = [];
   final List<Animation<double>> _cascadeAnimations = [];
-  int? _expandedRelatedIndex; // Track which related card is expanded
 
   @override
   void initState() {
@@ -232,102 +231,58 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                   ),
                   const SizedBox(height: 12),
                   relatedEntries.isEmpty
-                      ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))                      : LayoutBuilder(
-                          builder: (context, constraints) {
-                            const double collapsedHeight = 100;
-                            const double expandedHeight = 250;
-                            const double overlap = 36.0;
-                            double totalHeight = 0;
-                            int expandedCount = 0;
-                            for (int i = 0; i < relatedEntries.length; i++) {
-                              if (_expandedRelatedIndex == null && i == relatedEntries.length - 1) {
-                                // Last card is always expanded by default
-                                expandedCount++;
-                              } else if (_expandedRelatedIndex == i) {
-                                expandedCount++;
-                              }
-                            }
-                            totalHeight = collapsedHeight + (relatedEntries.length - 1) * overlap + expandedCount * (expandedHeight - collapsedHeight);
-                            return SizedBox(
-                              height: totalHeight,
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  for (int i = 0; i < relatedEntries.length; i++)
-                                    if (i < _cascadeAnimations.length)
-                                      AnimatedBuilder(
-                                        animation: _cascadeAnimations[i],
-                                        builder: (context, child) {
-                                          final anim = _cascadeAnimations[i].value;
-                                          final double opacity = anim.clamp(0.0, 1.0);
-                                          final double baseTop = i * overlap;
-                                          final double offset = (1 - anim) * collapsedHeight;
-                                          final double scale = 0.97 + 0.03 * anim;
-                                          final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1);
-                                          final double shadowOpacity = 0.10 + 0.10 * anim;
-
-                                          // Uncascade logic
-                                          double animatedTop = baseTop + offset;
-                                          bool expanded = false;
-                                          if (_expandedRelatedIndex == null) {
-                                            // Last card is always expanded by default
-                                            expanded = (i == relatedEntries.length - 1);
-                                            if (expanded) {
-                                              animatedTop = i * overlap;
-                                            } else if (i < relatedEntries.length - 1) {
-                                              animatedTop = i * overlap;
-                                            }
-                                            if (i > relatedEntries.length - 1) {
-                                              animatedTop = i * overlap + (expandedHeight - collapsedHeight);
-                                            }
-                                          } else {
-                                            expanded = (_expandedRelatedIndex == i);
-                                            if (i < _expandedRelatedIndex!) {
-                                              animatedTop = i * overlap;
-                                            } else if (i == _expandedRelatedIndex) {
-                                              animatedTop = i * overlap;
-                                            } else {
-                                              animatedTop = i * overlap + (expandedHeight - collapsedHeight);
-                                            }
-                                          }
-
-                                          return AnimatedPositioned(
-                                            duration: const Duration(milliseconds: 400),
-                                            curve: Curves.easeInOut,
-                                            left: 0,
-                                            right: 0,
-                                            top: animatedTop,
-                                            child: Opacity(
-                                              opacity: opacity,
+                      ? Text(_fetchingRelated ? '' : 'No related entries found', style: TextStyle(color: theme.hintColor))
+                      : Column(
+                          children: [
+                            for (int i = 0; i < relatedEntries.length; i++)
+                              if (i < _cascadeAnimations.length)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0), // Added thin gap
+                                  child: AnimatedBuilder(
+                                    animation: _cascadeAnimations[i],
+                                    builder: (context, child) {
+                                      final anim = _cascadeAnimations[i].value;
+                                      final double opacity = anim.clamp(0.0, 1.0);
+                                      final double scale = 0.97 + 0.03 * anim;
+                                      final double rotation = (1 - anim) * 0.04 * (i.isEven ? 1 : -1);
+                                      final double shadowOpacity = 0.10 + 0.10 * anim;
+                                      return Opacity(
+                                        opacity: opacity,
+                                        child: Transform.translate(
+                                          offset: Offset(0, 0),
+                                          child: Transform.rotate(
+                                            angle: rotation,
+                                            child: Transform.scale(
+                                              scale: scale,
                                               child: _buildRelatedEntryCard(
                                                 relatedEntries[i],
                                                 theme,
-                                                elevation: 10 + i * 2,
-                                                scale: scale,
-                                                rotation: rotation,
+                                                elevation: 10 + i * 2, 
+                                                scale: 1.0, 
+                                                rotation: 0.0,
                                                 yOffset: 0,
                                                 shadowOpacity: shadowOpacity,
-                                                expanded: expanded,
-                                                onTap: () {
-                                                  setState(() {
-                                                    if (_expandedRelatedIndex == i) {
-                                                      _expandedRelatedIndex = null;
-                                                    } else {
-                                                      _expandedRelatedIndex = i;
-                                                    }
-                                                  });
+                                                onTap: () { // FIXED onTap
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) => EntryInsightScreen(
+                                                        entry: relatedEntries[i],
+                                                        journalController: widget.journalController,
+                                                      ),
+                                                    ),
+                                                  );
                                                 },
-                                                collapsedHeight: collapsedHeight,
-                                                expandedHeight: expandedHeight,
                                               ),
                                             ),
-                                          );
-                                        },
-                                      ),
-                                ],
-                              ),
-                            );
-                          },
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                            if (relatedEntries.isNotEmpty) const SizedBox(height: 4), // Keep or adjust based on visual preference
+                          ],
                         ),
                   if (!_fetchingRelated) ...[
                     const SizedBox(height: 24),
@@ -507,7 +462,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
     );
   }
 
-  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, bool expanded = false, VoidCallback? onTap, double collapsedHeight = 100, double expandedHeight = 250}) {
+  Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, VoidCallback? onTap}) {
     return Transform.translate(
       offset: Offset(0, yOffset),
       child: Transform.rotate(
@@ -517,44 +472,44 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
           child: GestureDetector(
             onTap: onTap,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 400), // Animation for any size changes
               curve: Curves.easeInOut,
-              constraints: BoxConstraints(
-                minHeight: expanded ? expandedHeight : collapsedHeight,
-                maxHeight: expanded ? expandedHeight : collapsedHeight,
+              constraints: const BoxConstraints(
+                minHeight: 100, // Ensure a minimum height
+                // No maxHeight, allowing the card to grow with content
               ),
               child: Card(
                 elevation: elevation,
                 shadowColor: Colors.black.withOpacity(shadowOpacity),
-                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+                margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18),
-                  side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.10), width: 1.2),
+                  borderRadius: BorderRadius.circular(14),
+                  side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.08), width: 1.0),
                 ),
-                color: theme.cardColor.withOpacity(0.98),
+                color: theme.cardColor,
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(14),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(shadowOpacity),
-                        blurRadius: 18,
-                        offset: const Offset(0, 8),
+                        color: Colors.black.withOpacity(shadowOpacity * 0.8),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(14),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(18),
                       onTap: onTap,
                       child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: SingleChildScrollView(
-                          physics: expanded ? const ClampingScrollPhysics() : const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                        child: SingleChildScrollView( // Allows scrolling for very long content
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisSize: MainAxisSize.min, // Key for wrapping content
                             children: [
                               Row(
                                 children: [
@@ -575,19 +530,10 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                                 ],
                               ),
                               const SizedBox(height: 6),
-                              AnimatedCrossFade(
-                                duration: const Duration(milliseconds: 400),
-                                crossFadeState: expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-                                firstChild: Text(
-                                  entry.text.length > 60 ? '${entry.text.substring(0, 60)}...' : entry.text,
-                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                secondChild: Text(
-                                  entry.text.length > 240 ? '${entry.text.substring(0, 240)}...' : entry.text,
-                                  style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                                ),
+                              // Directly show full text, AnimatedCrossFade removed
+                              Text(
+                                entry.text,
+                                style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
                               ),
                               if (entry.tags.isNotEmpty)
                                 Padding(
