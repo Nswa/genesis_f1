@@ -31,86 +31,196 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
   bool _loadingOverallInsight = true;
     // DeepSeek service initialized with embedded API key
   final DeepseekService _deepseekService = DeepseekService();
+
+  // Cache and refresh state
+  bool _isRefreshingInsights = false;
+  bool _showingCachedEntryInsight = false;
+  bool _showingCachedOverallInsight = false;
+
+  // Static cache for insights across screen instances
+  static final Map<String, String> _staticEntryContextCache = {};
+  static final Map<String, String> _staticOverallInsightCache = {};
   
   @override
   void initState() {
     super.initState();
+    _isRefreshingInsights = false;
+    _showingCachedEntryInsight = false;
+    _showingCachedOverallInsight = false;
     _loadRelatedEntries();
   }
 
-  Future<void> _loadRelatedEntries() async {
-    // Start with loading state
-    setState(() {
-      isLoading = true;
-      _loadingEntryInsight = true;
-      _loadingOverallInsight = true;
-    });
+  Future<void> _loadRelatedEntries({bool forceRefreshInsights = false}) async {
+    // Ensure entry.localId is not null before using it as a cache key.
+    // If it's null, we can't cache, so we'll just load fresh data.
+    final String? entryId = widget.entry.localId;
 
-    // Find related entries based on tags, dates, or content similarity
+    if (entryId == null) {
+      // Handle missing entryId: Log an error or show a message, then load without caching.
+      if (mounted) {
+        setState(() {
+          _entryContextInsight = "Error: Entry ID is missing. Cannot cache insights.";
+          _overallInsight = "";
+          isLoading = false;
+          _loadingEntryInsight = false;
+          _loadingOverallInsight = false;
+          _showingCachedEntryInsight = false;
+          _showingCachedOverallInsight = false;
+        });
+      }
+      return; // Stop further processing if no ID
+    }
+
+    // Start with loading state
+    if (mounted) {
+      setState(() {
+        if (_entryContextInsight.isEmpty && _overallInsight.isEmpty) {
+          isLoading = true;
+        }
+        _loadingEntryInsight = true;
+        _loadingOverallInsight = true;
+        // If forcing refresh, ensure cached flags are reset early
+        if (forceRefreshInsights) {
+          _showingCachedEntryInsight = false;
+          _showingCachedOverallInsight = false;
+        }
+      });
+    }
+
+    if (forceRefreshInsights) {
+      if (mounted) {
+        setState(() {
+          _entryContextInsight = ''; 
+          _overallInsight = '';    
+          // _showingCachedEntryInsight & _showingCachedOverallInsight already set to false above
+        });
+      }
+    }
+
+    // Find related entries (this part remains the same)
     final relatedByTags = _findRelatedByTags();
     final relatedByDate = _findRelatedByDate();
     final relatedByContent = _findRelatedByContent();
-
-    // Combine all related entries, remove duplicates and the original entry
     final allRelated = {...relatedByTags, ...relatedByDate, ...relatedByContent}
         .where((e) => e.localId != widget.entry.localId)
         .toList();
-
-    // Sort by relevance or date
     allRelated.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
-    
-    // Limit to top 5 most relevant
     final limitedRelated = allRelated.take(5).toList();
 
-    setState(() {
-      relatedEntries = limitedRelated;
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        relatedEntries = limitedRelated;
+        isLoading = false; 
+      });
+    }
     
-    // Once we have related entries, fetch AI insights
     if (limitedRelated.isNotEmpty) {
-      // Get entry context insight
-      try {
-        final contextInsight = await _deepseekService.analyzeEntryContext(
-          widget.entry,
-          limitedRelated,
-        );
-        
-        setState(() {
-          _entryContextInsight = contextInsight;
-          _loadingEntryInsight = false;
-        });
-      } catch (e) {
-        setState(() {
-          _entryContextInsight = "Unable to generate insights at this time.";
-          _loadingEntryInsight = false;
-        });
+      // --- Entry Context Insight ---
+      bool fetchedNewEntryContext = true; 
+      if (!forceRefreshInsights && _staticEntryContextCache.containsKey(entryId)) {
+        final cachedValue = _staticEntryContextCache[entryId]!
+;
+        if (mounted) {
+          setState(() {
+            _entryContextInsight = cachedValue;
+            _loadingEntryInsight = false;
+            _showingCachedEntryInsight = true; 
+          });
+        }
+        fetchedNewEntryContext = false; 
+      }
+
+      if (fetchedNewEntryContext || forceRefreshInsights) {
+        if (mounted) {
+          setState(() {
+            _loadingEntryInsight = true; // Show loader while fetching
+            _showingCachedEntryInsight = false; // Data will be fresh
+          });
+        }
+        try {
+          final contextInsight = await _deepseekService.analyzeEntryContext(
+            widget.entry,
+            limitedRelated,
+          );
+          _staticEntryContextCache[entryId] = contextInsight; 
+          if (mounted) {
+            setState(() {
+              _entryContextInsight = contextInsight;
+              _loadingEntryInsight = false;
+            });
+          }
+        } catch (e) {
+          final errorMessage = "Unable to generate insights at this time.";
+          _staticEntryContextCache[entryId] = errorMessage; 
+          if (mounted) {
+            setState(() {
+              _entryContextInsight = errorMessage;
+              _loadingEntryInsight = false;
+            });
+          }
+        }
       }
       
-      // Get overall insight about all entries together
-      try {
-        final overallInsight = await _deepseekService.generateOverallInsights(
-          widget.entry,
-          limitedRelated,
-        );
-        
+      // --- Overall Insight ---
+      bool fetchedNewOverallInsight = true;
+      if (!forceRefreshInsights && _staticOverallInsightCache.containsKey(entryId)) {
+        final cachedValue = _staticOverallInsightCache[entryId]!
+;
+        if (mounted) {
+          setState(() {
+            _overallInsight = cachedValue;
+            _loadingOverallInsight = false;
+            _showingCachedOverallInsight = true; 
+          });
+        }
+        fetchedNewOverallInsight = false;
+      }
+
+      if (fetchedNewOverallInsight || forceRefreshInsights) {
+        if (mounted) {
+          setState(() {
+            _loadingOverallInsight = true; // Show loader
+            _showingCachedOverallInsight = false; // Data will be fresh
+          });
+        }
+        try {
+          final overallInsight = await _deepseekService.generateOverallInsights(
+            widget.entry,
+            limitedRelated,
+          );
+          _staticOverallInsightCache[entryId] = overallInsight; 
+          if (mounted) {
+            setState(() {
+              _overallInsight = overallInsight;
+              _loadingOverallInsight = false;
+            });
+          }
+        } catch (e) {
+          final errorMessage = "Unable to generate overall insights at this time.";
+          _staticOverallInsightCache[entryId] = errorMessage; 
+          if (mounted) {
+            setState(() {
+              _overallInsight = errorMessage;
+              _loadingOverallInsight = false;
+            });
+          }
+        }
+      }
+    } else { // No related entries
+      final String noRelatedMsg = "No related entries found to analyze.";
+      _staticEntryContextCache[entryId] = noRelatedMsg;
+      _staticOverallInsightCache[entryId] = ""; 
+
+      if (mounted) {
         setState(() {
-          _overallInsight = overallInsight;
+          _entryContextInsight = noRelatedMsg;
+          _overallInsight = "";
+          _loadingEntryInsight = false;
           _loadingOverallInsight = false;
-        });
-      } catch (e) {
-        setState(() {
-          _overallInsight = "Unable to generate overall insights at this time.";
-          _loadingOverallInsight = false;
+          _showingCachedEntryInsight = false; // Not from a prior successful insight cache
+          _showingCachedOverallInsight = false;
         });
       }
-    } else {
-      setState(() {
-        _entryContextInsight = "No related entries found to analyze.";
-        _overallInsight = "";
-        _loadingEntryInsight = false;
-        _loadingOverallInsight = false;
-      });
     }
   }
 
@@ -175,6 +285,20 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         .toSet();
   }
 
+  Future<void> _refreshInsights() async {
+    if (mounted) {
+      setState(() {
+        _isRefreshingInsights = true;
+      });
+    }
+    await _loadRelatedEntries(forceRefreshInsights: true);
+    if (mounted) {
+      setState(() {
+        _isRefreshingInsights = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -185,6 +309,23 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
         title: const Text('Entry Insight'),
         backgroundColor: background,
         elevation: 0,
+        actions: [
+          _isRefreshingInsights
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Adjust padding as needed
+                  child: SizedBox(
+                      width: 24, // Standard icon button size
+                      height: 24, // Standard icon button size
+                      child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.white70,)), // Ensure color contrasts with AppBar
+                )
+              : IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: isLoading || _loadingEntryInsight || _loadingOverallInsight
+                      ? null // Disable if any loading is in progress
+                      : _refreshInsights,
+                  tooltip: 'Refresh Insights',
+                ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -412,6 +553,14 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                           _entryContextInsight,
                           style: theme.textTheme.bodyMedium,
                         ),
+                        if (_showingCachedEntryInsight && !_loadingEntryInsight && _entryContextInsight.isNotEmpty && _entryContextInsight != "No related entries found to analyze." && _entryContextInsight != "Unable to generate insights at this time.")
+                          Padding(
+                            padding: const EdgeInsets.only(top: 6.0),
+                            child: Text(
+                              "(Insight from cache)",
+                              style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic, color: theme.hintColor.withOpacity(0.8)),
+                            ),
+                          ),
                       ],
                     ],
                   ),
@@ -599,9 +748,22 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> {
                       ],
                     ),
                   )
-                : Text(
-                    _overallInsight,
-                    style: theme.textTheme.bodyMedium,
+                : Column( // Added Column here
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _overallInsight,
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                      if (_showingCachedOverallInsight && !_loadingOverallInsight && _overallInsight.isNotEmpty && _overallInsight != "Unable to generate overall insights at this time.")
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6.0),
+                          child: Text(
+                            "(Insight from cache)",
+                            style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic, color: theme.hintColor.withOpacity(0.8)),
+                          ),
+                        ),
+                    ],
                   ),
           ),
         ),
