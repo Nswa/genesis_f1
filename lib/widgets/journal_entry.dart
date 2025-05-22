@@ -3,8 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/entry.dart';
+import '../utils/text_scale_controller.dart';
 
-class JournalEntryWidget extends StatelessWidget {
+class JournalEntryWidget extends StatefulWidget {
   final Entry entry;
   final void Function(Entry) onToggleFavorite;
   final VoidCallback? onTap;
@@ -18,6 +19,37 @@ class JournalEntryWidget extends StatelessWidget {
     this.onLongPress,
   });
 
+  @override
+  State<JournalEntryWidget> createState() => _JournalEntryWidgetState();
+}
+
+class _JournalEntryWidgetState extends State<JournalEntryWidget> {
+  double _baseScale = 1.0;
+
+  void _handleScaleStart(ScaleStartDetails details) {
+    _baseScale = TextScaleController.instance.scale.value;
+  }
+
+  void _handleScaleUpdate(ScaleUpdateDetails details) {
+    TextScaleController.instance.setScale(_baseScale * details.scale);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    TextScaleController.instance.scale.addListener(_onScaleChanged);
+  }
+
+  @override
+  void dispose() {
+    TextScaleController.instance.scale.removeListener(_onScaleChanged);
+    super.dispose();
+  }
+
+  void _onScaleChanged() {
+    setState(() {}); // Rebuild on global scale change
+  }
+
   Widget _buildTagsBar(BuildContext context, TextStyle? style) {
     final theme = Theme.of(context);
     return Stack(
@@ -27,7 +59,7 @@ class JournalEntryWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(right: 14),
             child: Text(
-              entry.tags.join(" "),
+              widget.entry.tags.join(" "),
               style: style,
               softWrap: false,
               maxLines: 1,
@@ -64,15 +96,15 @@ class JournalEntryWidget extends StatelessWidget {
     TextStyle? timestampStyle,
   ) {
     final List<Widget?> widgets = [
-      Text(entry.timestamp, style: timestampStyle),
-      entry.mood?.isNotEmpty == true
-          ? Text(entry.mood!, style: regularStyle)
+      Text(widget.entry.timestamp, style: timestampStyle),
+      widget.entry.mood?.isNotEmpty == true
+          ? Text(widget.entry.mood!, style: regularStyle)
           : null,
-      entry.tags.isNotEmpty
+      widget.entry.tags.isNotEmpty
           ? Flexible(child: _buildTagsBar(context, regularStyle))
           : null,
-      entry.wordCount > 0
-          ? Text('${entry.wordCount} words', style: regularStyle)
+      widget.entry.wordCount > 0
+          ? Text('${widget.entry.wordCount} words', style: regularStyle)
           : null,
     ];
     // Remove nulls
@@ -110,52 +142,47 @@ class JournalEntryWidget extends StatelessWidget {
 
     return FadeTransition(
       opacity: CurvedAnimation(
-        parent: entry.animController,
+        parent: widget.entry.animController,
         curve: Curves.easeOut,
       ),
       child: SlideTransition(
         position: Tween<Offset>(
           begin: const Offset(0, 0.05),
           end: Offset.zero,
-        ).animate(entry.animController),
+        ).animate(widget.entry.animController),
         child: GestureDetector(
-          onTap: onTap,
-          onLongPress: onLongPress,
+          onTap: widget.onTap,
+          onLongPress: widget.onLongPress,
+          onScaleStart: _handleScaleStart,
+          onScaleUpdate: _handleScaleUpdate,
           behavior: HitTestBehavior.opaque, // Improve hit detection
           child: AnimatedContainer(
-            duration: const Duration(
-              milliseconds: 120,
-            ), // Shorter duration for snappier feel
-            curve: Curves.easeOutQuart, // Curve for a smooth but quick start
-            padding: const EdgeInsets.fromLTRB(
-              12,
-              8, // Further reduced top padding
-              12,
-              8, // Further reduced bottom padding
-            ),
+            duration: const Duration(milliseconds: 120),
+            curve: Curves.easeOutQuart,
+            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
             decoration: BoxDecoration(
-              color:
-                  entry.isSelected
-                      ? theme
-                          .highlightColor // Use defined highlightColor directly
-                      : Colors.transparent,
+              color: widget.entry.isSelected
+                  ? theme.highlightColor
+                  : Colors.transparent,
               borderRadius: BorderRadius.circular(
-                entry.isSelected ? 6.0 : 0.0, // Slightly smaller radius
+                widget.entry.isSelected ? 6.0 : 0.0,
               ),
             ),
-            transform:
-                Matrix4.identity()..scale(
-                  entry.isSelected ? 0.97 : 1.0, // Adjusted scale for selection
-                ),
+            transform: Matrix4.identity()..scale(
+              widget.entry.isSelected ? 0.97 : 1.0,
+            ),
             transformAlignment: Alignment.center,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Builder(
                   builder: (context) {
-                    final regularStyle = theme.textTheme.bodySmall;
+                    final scale = TextScaleController.instance.scale.value;
+                    final regularStyle = theme.textTheme.bodySmall?.copyWith(
+                      fontSize: (theme.textTheme.bodySmall?.fontSize ?? 12.0) * scale,
+                    );
                     final timestampStyle = regularStyle?.copyWith(
-                      fontSize: (regularStyle.fontSize ?? 12.0) + 1.0,
+                      fontSize: ((regularStyle.fontSize ?? 12.0) + 1.0),
                     );
                     final separator = Text(' • ', style: regularStyle);
                     final tagsSpacer = Text(' ', style: regularStyle);
@@ -171,9 +198,8 @@ class JournalEntryWidget extends StatelessWidget {
                     );
                   },
                 ),
-                if ((entry.imageUrl != null && entry.imageUrl!.isNotEmpty) ||
-                    (entry.localImagePath != null &&
-                        entry.localImagePath!.isNotEmpty))
+                if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
+                    (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty))
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
                     child: ConstrainedBox(
@@ -184,10 +210,10 @@ class JournalEntryWidget extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4.0),
                         child:
-                            entry.imageUrl != null && entry.imageUrl!.isNotEmpty
+                            widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
                                 ? CachedNetworkImage(
-                                    imageUrl: entry.imageUrl!,
-                                    key: ValueKey(entry.imageUrl!),
+                                    imageUrl: widget.entry.imageUrl!,
+                                    key: ValueKey(widget.entry.imageUrl!),
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) {
                                       final theme = Theme.of(context);
@@ -200,8 +226,8 @@ class JournalEntryWidget extends StatelessWidget {
                                         highlightColor: highlightColor,
                                         child: Container(
                                           decoration: BoxDecoration(
-                                            color: baseColor, // Canvas for shimmer
-                                            borderRadius: BorderRadius.circular(4.0), // Match ClipRRect
+                                            color: baseColor,
+                                            borderRadius: BorderRadius.circular(4.0),
                                           ),
                                         ),
                                       );
@@ -210,8 +236,8 @@ class JournalEntryWidget extends StatelessWidget {
                                         Icon(Icons.error),
                                   )
                                 : Image.file(
-                                    File(entry.localImagePath!),
-                                    key: ValueKey(entry.localImagePath!),
+                                    File(widget.entry.localImagePath!),
+                                    key: ValueKey(widget.entry.localImagePath!),
                                     fit: BoxFit.cover,
                                     errorBuilder: (
                                       BuildContext context,
@@ -234,46 +260,37 @@ class JournalEntryWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                const SizedBox(height: 4), // Keep spacing consistent
+                const SizedBox(height: 4),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Text(
-                        entry.text,
-                        style: theme.textTheme.bodyMedium,
+                        widget.entry.text,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontSize: (theme.textTheme.bodyMedium?.fontSize ?? 14.0) * TextScaleController.instance.scale.value,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     GestureDetector(
-                      onTap: () => onToggleFavorite(entry),
-                      behavior:
-                          HitTestBehavior
-                              .opaque, // Ensure tap registers on padding
+                      onTap: () => widget.onToggleFavorite(widget.entry),
+                      behavior: HitTestBehavior.opaque,
                       child: Padding(
-                        // Add padding to increase touch target
-                        padding: const EdgeInsets.all(
-                          8.0,
-                        ), // 8dp padding around icon
+                        padding: const EdgeInsets.all(8.0),
                         child: Icon(
-                          entry.isFavorite
+                          widget.entry.isFavorite
                               ? Icons.bookmark
                               : Icons.bookmark_outline,
-                          size: 18, // Icon size remains 18
-                          color:
-                              entry.isFavorite
-                                  ? Colors
-                                      .amber // Or another color for selected bookmark
-                                  : theme
-                                      .iconTheme
-                                      .color, // Use iconTheme color directly
+                          size: 18,
+                          color: widget.entry.isFavorite
+                              ? Colors.amber
+                              : theme.iconTheme.color,
                         ),
                       ),
                     ),
                   ],
                 ),
-                // const SizedBox(height: 4), // Removed space for divider
-                // Divider Removed
               ],
             ),
           ),
