@@ -1,18 +1,17 @@
-// import 'dart:ui'; // Unnecessary import
+//
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
-import 'favorites_screen.dart'; // Import the new screen
-import 'entry_insight_screen.dart'; // Import the insight screen
-// import 'package:shimmer/shimmer.dart'; // No longer needed here
+import 'favorites_screen.dart';
+import 'entry_insight_screen.dart';
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
-import '../widgets/indeterminate_progress_bar.dart'; // Import new progress bar
+import '../widgets/indeterminate_progress_bar.dart';
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
 import '../widgets/journal_toolbar.dart';
-import '../widgets/journal_selection_toolbar.dart'; // Added import
+import '../widgets/journal_selection_toolbar.dart';
 import '../controller/journal_controller.dart';
 import '../utils/system_ui_helper.dart';
 
@@ -45,7 +44,7 @@ class _JournalScreenState extends State<JournalScreen>
     );
     jc.loadEntriesFromFirestore();
     _searchController.addListener(() {
-      // Listener to update UI when search text changes (e.g. for clear button)
+      // Listener to update UI when search text changes
       if (mounted) {
         setState(() {});
       }
@@ -119,9 +118,7 @@ class _JournalScreenState extends State<JournalScreen>
                           ),
                         );
                       },
-                      onOpenSettings: () {
-                        // Placeholder for settings functionality
-                      },
+                      onOpenSettings: () {},
                       onOpenDatePicker: () {
                         showCalendarModal(
                           context,
@@ -160,8 +157,7 @@ class _JournalScreenState extends State<JournalScreen>
                                     }
                                   },
                                   child: Container(
-                                    color:
-                                        background, // Ensure background for tap area
+                                    color: background,
                                     padding: const EdgeInsets.fromLTRB(
                                       16,
                                       8, // Reduced top padding
@@ -179,23 +175,19 @@ class _JournalScreenState extends State<JournalScreen>
                                   ),
                                 ),
                                 sliver: SliverAnimatedList(
-                                  key: GlobalKey<SliverAnimatedListState>(),
+                                  key: PageStorageKey(entryGroup.key),
                                   initialItemCount: entryGroup.value.length,
                                   itemBuilder: (context, index, animation) {
                                     return SizeTransition(
                                       sizeFactor: animation,
-                                      axisAlignment: 0.0,                                      child: JournalEntryWidget(
+                                      axisAlignment: 0.0,
+                                      child: JournalEntryWidget(
                                         entry: entryGroup.value[index],
                                         onToggleFavorite: jc.toggleFavorite,
                                         onTap: () {
                                           if (jc.isSelectionMode) {
-                                            setState(
-                                              () => jc.toggleEntrySelection(
-                                                entryGroup.value[index],
-                                              ),
-                                            );
+                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
                                           } else {
-                                            // Navigate to insight screen when tapped
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -208,11 +200,7 @@ class _JournalScreenState extends State<JournalScreen>
                                           }
                                         },
                                         onLongPress: () {
-                                          setState(
-                                            () => jc.toggleEntrySelection(
-                                              entryGroup.value[index],
-                                            ),
-                                          );
+                                          setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
                                         },
                                       ),
                                     );
@@ -222,8 +210,8 @@ class _JournalScreenState extends State<JournalScreen>
                             }).toList(),
                   ),
                 ),
-                EdgeFade(top: true, background: background), // Use new widget
-                EdgeFade(top: false, background: background), // Use new widget
+                EdgeFade(top: true, background: background),
+                EdgeFade(top: false, background: background),
               ],
             ),
           ),
@@ -231,7 +219,7 @@ class _JournalScreenState extends State<JournalScreen>
             onVerticalDragUpdate: jc.handleDragUpdate,
             onVerticalDragEnd: (_) => jc.handleDragEnd(),
             child: JournalInputWidget(
-              journalController: jc, // Pass the full controller instance
+              journalController: jc,
             ),
           ),
           Container(
@@ -239,22 +227,18 @@ class _JournalScreenState extends State<JournalScreen>
             width: double.infinity,
             color: background.withAlpha(24),
             alignment: Alignment.centerLeft,
-            child:
-                jc.isSavingEntry
-                    ? IndeterminateProgressBar(
+            child: jc.isSavingEntry
+                ? IndeterminateProgressBar(
+                    color: Theme.of(context).hintColor,
+                    height: 1.5,
+                  )
+                : FractionallySizedBox(
+                    widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(0.0, 1.0),
+                    child: Container(
+                      height: 1,
                       color: Theme.of(context).hintColor,
-                      height: 1.5, // Match thickness
-                    )
-                    : FractionallySizedBox(
-                      widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(
-                        0.0,
-                        1.0,
-                      ),
-                      child: Container(
-                        height: 1, // Original height for drag progress
-                        color: Theme.of(context).hintColor,
-                      ),
                     ),
+                  ),
           ),
         ],
       ),
