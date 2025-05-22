@@ -125,7 +125,7 @@ class _JournalScreenState extends State<JournalScreen>
                       onOpenDatePicker: () {
                         showCalendarModal(
                           context,
-                          jc.entries, // Show all entries in calendar, not filtered
+                          jc.entries, // show all entries in calendar, not filtered
                           scrollController,
                         );
                       },
