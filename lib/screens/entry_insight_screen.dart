@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/entry.dart';
 import '../controller/journal_controller.dart';
 import '../services/deepseek_service.dart';
@@ -34,6 +36,50 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
   static final Map<String, String> _insightCache = {};
   static final Map<String, List<String>> _relatedIdsCache = {};
 
+  // Persistent cache keys
+  static const String _insightCacheKey = 'insight_cache';
+  static const String _relatedIdsCacheKey = 'related_ids_cache';
+
+  static bool _persistentCacheLoaded = false;
+
+  // Loads persistent cache from SharedPreferences (call in initState)
+  static Future<void> loadPersistentCache() async {
+    if (_persistentCacheLoaded) return;
+    final prefs = await SharedPreferences.getInstance();
+    final insightMap = prefs.getString(_insightCacheKey);
+    final relatedMap = prefs.getString(_relatedIdsCacheKey);
+    if (insightMap != null) {
+      final decoded = Map<String, dynamic>.from(await _decodeJson(insightMap));
+      _insightCache.clear();
+      decoded.forEach((k, v) => _insightCache[k] = v.toString());
+    }
+    if (relatedMap != null) {
+      final decoded = Map<String, dynamic>.from(await _decodeJson(relatedMap));
+      _relatedIdsCache.clear();
+      decoded.forEach((k, v) {
+        if (v is List) {
+          _relatedIdsCache[k] = List<String>.from(v);
+        } else if (v is String) {
+          _relatedIdsCache[k] = [v];
+        }
+      });
+    }
+    _persistentCacheLoaded = true;
+  }
+
+  // Saves persistent cache to SharedPreferences
+  static Future<void> savePersistentCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_insightCacheKey, _encodeJson(_insightCache));
+    await prefs.setString(_relatedIdsCacheKey, _encodeJson(_relatedIdsCache));
+  }
+
+  // Helper for encoding/decoding JSON
+  static String _encodeJson(Map map) => jsonEncode(map);
+  static Future<Map<String, dynamic>> _decodeJson(String s) async {
+    return s.isEmpty ? {} : Map<String, dynamic>.from(jsonDecode(s));
+  }
+
   // For animated headers
   final ValueNotifier<int> _relatedDots = ValueNotifier<int>(0);
   final ValueNotifier<int> _insightDots = ValueNotifier<int>(0);
@@ -50,7 +96,9 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
   @override
   void initState() {
     super.initState();
-    _startPhasedLoading();
+    _EntryInsightScreenState.loadPersistentCache().then((_) {
+      _startPhasedLoading();
+    });
   }
 
   @override
@@ -91,6 +139,10 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
         _fetchingRelated = false;
         _generatingInsight = false;
       });
+      // Re-initialize cascade animations for cached related entries
+      for (int i = 0; i < related.length; i++) {
+        _startCascadeAnimation(i);
+      }
       // Scroll to bottom after build
       WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
       return;
@@ -123,8 +175,8 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
         await Future.delayed(const Duration(milliseconds: 120));
         _scrollToBottom();
       }
-      if (entryId != null) {
-        _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
+      if (entryId != null) {        _relatedIdsCache[entryId] = related.map((e) => e.localId ?? '').where((id) => id.isNotEmpty).toList();
+        await _EntryInsightScreenState.savePersistentCache();
       }
     }
     setState(() { _fetchingRelated = false; });
@@ -145,8 +197,8 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
     }
     setState(() { _loadingInsight = false; _generatingInsight = false; });
     _insightTimer?.cancel();
-    if (entryId != null) {
-      _insightCache[entryId] = _briefInsight;
+    if (entryId != null) {      _insightCache[entryId] = _briefInsight;
+      await _EntryInsightScreenState.savePersistentCache();
     }
   }
 
