@@ -19,9 +19,13 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
   bool isLogin = true;
   String email = '';
   String password = '';
+  String firstName = '';
+  String lastName = '';
   bool _isSubmitting = false;
   final GlobalKey _emailFieldKey = GlobalKey();
   final GlobalKey _passwordFieldKey = GlobalKey();
+  final GlobalKey _firstNameFieldKey = GlobalKey();
+  final GlobalKey _lastNameFieldKey = GlobalKey();
   late AnimationController _borderAnimController;
   late Animation<Color?> _borderColorAnim;
 
@@ -57,12 +61,21 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
         await authManager.signIn(email, password);
         goToJournalScreen(context); // Force navigation after email/password login
       } else {
-        await authManager.signUp(email, password);
+        if (firstName.trim().isEmpty || lastName.trim().isEmpty) {
+          FloatingTooltip.show(
+            context: context,
+            targetKey: _firstNameFieldKey,
+            message: 'Please enter your first and last name.',
+          );
+          return;
+        }
+        await authManager.signUp(email, password, firstName.trim(), lastName.trim());
         goToJournalScreen(context); // Force navigation after registration
       }
     } on FirebaseAuthException catch (e) {
       String? emailError;
       String? passwordError;
+      String? nameError;
       switch (e.code) {
         case 'user-not-found':
         case 'wrong-password':
@@ -97,6 +110,13 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
           context: context,
           targetKey: _passwordFieldKey,
           message: passwordError,
+        );
+      }
+      if (nameError != null) {
+        FloatingTooltip.show(
+          context: context,
+          targetKey: _firstNameFieldKey,
+          message: nameError,
         );
       }
     } finally {
@@ -136,8 +156,79 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                   ),
 
                   const SizedBox(height: 64), // Increased padding from 48 to 64
+                  // Registration fields (first/last name)
+                  if (!isLogin) ...[
+                    const SizedBox(height: 30),
+                    Container(
+                      key: _firstNameFieldKey,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark ? Colors.black.withOpacity(0.15) : Colors.black.withOpacity(0.04),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        onChanged: (val) => firstName = val,
+                        style: TextStyle(
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        ),
+                        cursorColor: isDark ? AppColors.cursorDark : AppColors.cursorLight,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          hintText: 'First Name',
+                          hintStyle: TextStyle(
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      key: _lastNameFieldKey,
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: isDark ? AppColors.backgroundDark : AppColors.backgroundLight,
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: isDark ? AppColors.borderDark : AppColors.borderLight,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: isDark ? Colors.black.withOpacity(0.15) : Colors.black.withOpacity(0.04),
+                            blurRadius: 6,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        onChanged: (val) => lastName = val,
+                        style: TextStyle(
+                          color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                        ),
+                        cursorColor: isDark ? AppColors.cursorDark : AppColors.cursorLight,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                          hintText: 'Last Name',
+                          hintStyle: TextStyle(
+                            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondaryLight,
+                          ),
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                  ],
                   // Email TextField
-                  //add top padding
                   const SizedBox(height: 95), // Added padding
                   Container(
                     key: _emailFieldKey,

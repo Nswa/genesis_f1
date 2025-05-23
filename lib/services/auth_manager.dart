@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user_profile.dart';
 
 class AuthManager {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -12,12 +15,36 @@ class AuthManager {
     );
   }
 
-  /// Register a new user with email and password
-  Future<UserCredential> signUp(String email, String password) async {
-    return await _auth.createUserWithEmailAndPassword(
+
+  /// Register a new user with email, password, first name, and last name
+  Future<UserCredential> signUp(String email, String password, String firstName, String lastName) async {
+    final credential = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
+    // Save user profile to Firestore
+    final user = credential.user;
+    if (user != null) {
+      final profile = UserProfile(
+        uid: user.uid,
+        firstName: firstName,
+        lastName: lastName,
+        email: user.email ?? email,
+      );
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(profile.toMap());
+      // Optionally update Firebase displayName
+      await user.updateDisplayName('$firstName $lastName');
+    }
+    return credential;
+  }
+
+  /// Fetch user profile from Firestore
+  Future<UserProfile?> fetchUserProfile(String uid) async {
+    final doc = await FirebaseFirestore.instance.collection('users').doc(uid).get();
+    if (doc.exists) {
+      return UserProfile.fromMap(doc.data()!);
+    }
+    return null;
   }
 
   /// Sign out the current user
