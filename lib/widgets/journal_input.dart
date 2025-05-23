@@ -23,6 +23,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   // final ImagePicker _picker = ImagePicker(); // Removed, logic in JournalController
 
   late AnimationController _arrowAnimController;
+  bool _isRecording = false;
+  Offset _recordButtonPosition = Offset(0, 0);
 
   @override
   void initState() {
@@ -226,18 +228,29 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                         ),
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.radio_button_checked,
-                                        size: 24,
-                                        color: theme.iconTheme.color?.withOpacity(0.7),
-                                      ),
-                                      onPressed: () {
-                                        // Placeholder for record button functionality
+                                    GestureDetector(
+                                      onTapDown: (details) {
+                                        setState(() {
+                                          _isRecording = true;
+                                        });
                                       },
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-                                      visualDensity: VisualDensity.compact,
+                                      onTapUp: (details) {
+                                        setState(() {
+                                          _isRecording = false;
+                                        });
+                                      },
+                                      child: AnimatedContainer(
+                                        duration: const Duration(milliseconds: 150),
+                                        curve: Curves.easeInOut,
+                                        transform: _isRecording
+                                            ? Matrix4.translationValues(0, -45, 0)
+                                            : Matrix4.identity(),
+                                        child: Icon(
+                                          Icons.radio_button_checked,
+                                          size: 28,
+                                          color: _isRecording ? Colors.red : theme.iconTheme.color?.withOpacity(0.7),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
