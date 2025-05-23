@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:genesis_f1/constant/size.dart';
-import 'package:genesis_f1/services/user_profile_service.dart';
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
 import '../controller/journal_controller.dart';
 
-class JournalToolbar extends StatefulWidget {
+class JournalToolbar extends StatelessWidget {
   final bool isSearching;
   final VoidCallback onToggleSearch;
   final VoidCallback onToggleFavorites;
@@ -29,32 +28,13 @@ class JournalToolbar extends StatefulWidget {
     required this.syncStatus,
   });
 
-  @override
-  State<JournalToolbar> createState() => _JournalToolbarState();
-}
-
-class _JournalToolbarState extends State<JournalToolbar> {
-  String _getTimeOfDayGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'morning';
-    if (hour < 17) return 'afternoon';
-    return 'evening';
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    // Load user profile when toolbar is created
-    UserProfileService.instance.loadProfile();
-  }
-
   Widget _buildSyncStatusIcon(BuildContext context) {
-    IconData iconData;
-    Color iconColor;
+    late IconData iconData;
+    late Color iconColor;
     bool shouldAnimate = false;
-    String statusText;
+    late String statusText;
 
-    switch (widget.syncStatus) {
+    switch (syncStatus) {
       case SyncStatus.synced:
         iconData = Icons.cloud_done_outlined;
         iconColor = Colors.green;
@@ -116,35 +96,27 @@ class _JournalToolbarState extends State<JournalToolbar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (!widget.isSearching) ...[            Row(
+          if (!isSearching) ...[
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ListenableBuilder(
-                  listenable: UserProfileService.instance,
-                  builder: (context, _) {
-                    final profile = UserProfileService.instance.profile;
-                    final greeting = profile != null 
-                      ? '${_getTimeOfDayGreeting()}, ${profile.firstName}'
-                      : 'welcome';
-                    return Text(greeting.toLowerCase(), style: theme.textTheme.titleMedium);
-                  },
-                ),
+                Text('genesis', style: theme.textTheme.titleMedium),
                 const SizedBox(width: 5.0),
                 _buildSyncStatusIcon(context),
               ],
             ),
           ],
-          if (widget.isSearching)
+          if (isSearching)
             Expanded(
               child: SizedBox(
-                height: 36, // Consistent height for the TextField
+                height: 36,
                 child: TextField(
-                  controller: widget.searchController,
-                  focusNode: widget.searchFocusNode,
-                  onChanged: widget.onSearchChanged,
+                  controller: searchController,
+                  focusNode: searchFocusNode,
+                  onChanged: onSearchChanged,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isDarkTheme ? Colors.white : Colors.black,
-                    fontSize: SizeConstants.textMedium, // Adjusted for input
+                    fontSize: SizeConstants.textMedium,
                   ),
                   decoration: InputDecoration(
                     hintText: 'Search entries...',
@@ -189,22 +161,19 @@ class _JournalToolbarState extends State<JournalToolbar> {
                       horizontal: 10.0,
                     ),
                     suffixIcon:
-                        widget.searchController.text.isNotEmpty
-                            ? IconButton(
-                              icon: Icon(
-                                Icons.clear,
-                                size: SizeConstants.iconSmall,
-                                color: (isDarkTheme
-                                        ? Colors.white
-                                        : Colors.black)
-                                    .withOpacity(0.6),
-                              ),
-                              onPressed: () {
-                                widget.searchController.clear();
-                                widget.onSearchChanged('');
-                              },
-                            )
-                            : null,
+                      searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: Icon(
+                              Icons.clear,
+                              size: SizeConstants.iconSmall,
+                              color: (isDarkTheme ? Colors.white : Colors.black).withOpacity(0.6),
+                            ),
+                            onPressed: () {
+                              searchController.clear();
+                              onSearchChanged('');
+                            },
+                          )
+                        : null,
                   ),
                   cursorColor: theme.colorScheme.primary,
                 ),
@@ -212,64 +181,61 @@ class _JournalToolbarState extends State<JournalToolbar> {
             ),
           Row(
             children: [
-              if (!widget.isSearching) // Only show calendar if not searching, to save space
+              if (!isSearching)
                 IconButton(
                   icon: const Icon(
                     Icons.calendar_today,
-                    size: SizeConstants.iconMedium, // Use constant
+                    size: SizeConstants.iconMedium,
                   ),
-                  onPressed: widget.onOpenDatePicker,
+                  onPressed: onOpenDatePicker,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  visualDensity:
-                      VisualDensity.compact, // Added for closer spacing
+                  visualDensity: VisualDensity.compact,
                 ),
               IconButton(
                 icon: Icon(
-                  widget.isSearching ? Icons.close : Icons.search, // Toggle icon
+                  isSearching ? Icons.close : Icons.search,
                   size: SizeConstants.iconMedium,
-                ), // Use constant
-                onPressed: widget.onToggleSearch, // Use the new callback
+                ),
+                onPressed: onToggleSearch,
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
-                visualDensity:
-                    VisualDensity.compact, // Added for closer spacing
+                visualDensity: VisualDensity.compact,
               ),
-              if (!widget.isSearching) // Only show favorites if not searching
+              if (!isSearching)
                 IconButton(
                   icon: const Icon(
                     Icons.bookmark_border,
-                    size: SizeConstants.iconMedium, // Use constant
+                    size: SizeConstants.iconMedium,
                   ),
-                  onPressed: widget.onToggleFavorites,
+                  onPressed: onToggleFavorites,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  visualDensity:
-                      VisualDensity.compact, // Added for closer spacing
+                  visualDensity: VisualDensity.compact,
                 ),
-              if (!widget.isSearching) // Only show more_vert if not searching
+              if (!isSearching)
                 PopupMenuButton(
                   icon: const Icon(
                     Icons.more_vert,
                     size: SizeConstants.iconMedium,
-                  ), // Use constant
-                  itemBuilder:
-                      (context) => const [
-                        PopupMenuItem(
-                          value: 'settings',
-                          child: Text('Settings'),
-                        ),
-                        PopupMenuItem(value: 'logout', child: Text('Logout')),
-                      ],
+                  ),
+                  itemBuilder: (context) => const [
+                    PopupMenuItem(
+                      value: 'settings',
+                      child: Text('Settings'),
+                    ),
+                    PopupMenuItem(value: 'logout', child: Text('Logout')),
+                  ],
                   onSelected: (value) async {
                     if (value == 'logout') {
                       await authManager.signOut();
-                      if (!context.mounted) return;
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (_) => const AuthScreen()),
-                      );
+                      if (context.mounted) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => const AuthScreen()),
+                        );
+                      }
                     } else if (value == 'settings') {
-                      widget.onOpenSettings();
+                      onOpenSettings();
                     }
                   },
                 ),

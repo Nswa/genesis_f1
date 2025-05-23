@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../controller/journal_controller.dart'; // Added controller import
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
+import 'package:genesis_f1/services/user_profile_service.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final JournalController journalController;
@@ -68,6 +69,21 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         _emojiBarController.reverse();
       }
     });
+  }
+
+  String _getTimeOfDayGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'afternoon';
+    return 'evening';
+  }
+
+  String _getHintText() {
+    final profile = UserProfileService.instance.profile;
+    if (profile != null) {
+      return "${_getTimeOfDayGreeting()}, ${profile.firstName.toLowerCase()}...";
+    }
+    return "Write your thoughts...";
   }
 
   @override
@@ -206,7 +222,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             hintText:
                                 isSaving
                                     ? "Saving entry..."
-                                    : "Write your thoughts...",
+                                    : _getHintText(),
                             hintStyle: TextStyle(color: theme.hintColor),
                             border: InputBorder.none,
                           ),
