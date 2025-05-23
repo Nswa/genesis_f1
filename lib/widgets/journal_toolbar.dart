@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:genesis_f1/constant/size.dart'; // Import SizeConstants
+import 'package:genesis_f1/constant/size.dart';
+import 'package:genesis_f1/services/user_profile_service.dart';
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
-import '../controller/journal_controller.dart'; // Import SyncStatus
+import '../controller/journal_controller.dart';
 
-class JournalToolbar extends StatelessWidget {
-  final bool isSearching; // To toggle search field visibility
-  final VoidCallback onToggleSearch; // Renamed from onSearch
+class JournalToolbar extends StatefulWidget {
+  final bool isSearching;
+  final VoidCallback onToggleSearch;
   final VoidCallback onToggleFavorites;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenDatePicker;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final ValueChanged<String> onSearchChanged;
-  final SyncStatus syncStatus; // Added sync status
+  final SyncStatus syncStatus;
 
   const JournalToolbar({
     super.key,
@@ -25,8 +26,27 @@ class JournalToolbar extends StatelessWidget {
     required this.searchController,
     required this.searchFocusNode,
     required this.onSearchChanged,
-    required this.syncStatus, // Added sync status
+    required this.syncStatus,
   });
+
+  @override
+  State<JournalToolbar> createState() => _JournalToolbarState();
+}
+
+class _JournalToolbarState extends State<JournalToolbar> {
+  String _getTimeOfDayGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'afternoon';
+    return 'evening';
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Load user profile when toolbar is created
+    UserProfileService.instance.loadProfile();
+  }
 
   Widget _buildSyncStatusIcon(BuildContext context) {
     IconData iconData;
@@ -34,7 +54,7 @@ class JournalToolbar extends StatelessWidget {
     bool shouldAnimate = false;
     String statusText;
 
-    switch (syncStatus) {
+    switch (widget.syncStatus) {
       case SyncStatus.synced:
         iconData = Icons.cloud_done_outlined;
         iconColor = Colors.green;
@@ -96,24 +116,32 @@ class JournalToolbar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (!isSearching) ...[
-            Row(
+          if (!widget.isSearching) ...[            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('genesis', style: theme.textTheme.titleMedium),
+                ListenableBuilder(
+                  listenable: UserProfileService.instance,
+                  builder: (context, _) {
+                    final profile = UserProfileService.instance.profile;
+                    final greeting = profile != null 
+                      ? '${_getTimeOfDayGreeting()}, ${profile.firstName}'
+                      : 'welcome';
+                    return Text(greeting.toLowerCase(), style: theme.textTheme.titleMedium);
+                  },
+                ),
                 const SizedBox(width: 5.0),
                 _buildSyncStatusIcon(context),
               ],
             ),
           ],
-          if (isSearching)
+          if (widget.isSearching)
             Expanded(
               child: SizedBox(
                 height: 36, // Consistent height for the TextField
                 child: TextField(
-                  controller: searchController,
-                  focusNode: searchFocusNode,
-                  onChanged: onSearchChanged,
+                  controller: widget.searchController,
+                  focusNode: widget.searchFocusNode,
+                  onChanged: widget.onSearchChanged,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isDarkTheme ? Colors.white : Colors.black,
                     fontSize: SizeConstants.textMedium, // Adjusted for input
@@ -161,7 +189,7 @@ class JournalToolbar extends StatelessWidget {
                       horizontal: 10.0,
                     ),
                     suffixIcon:
-                        searchController.text.isNotEmpty
+                        widget.searchController.text.isNotEmpty
                             ? IconButton(
                               icon: Icon(
                                 Icons.clear,
@@ -172,8 +200,8 @@ class JournalToolbar extends StatelessWidget {
                                     .withOpacity(0.6),
                               ),
                               onPressed: () {
-                                searchController.clear();
-                                onSearchChanged('');
+                                widget.searchController.clear();
+                                widget.onSearchChanged('');
                               },
                             )
                             : null,
@@ -184,13 +212,13 @@ class JournalToolbar extends StatelessWidget {
             ),
           Row(
             children: [
-              if (!isSearching) // Only show calendar if not searching, to save space
+              if (!widget.isSearching) // Only show calendar if not searching, to save space
                 IconButton(
                   icon: const Icon(
                     Icons.calendar_today,
                     size: SizeConstants.iconMedium, // Use constant
                   ),
-                  onPressed: onOpenDatePicker,
+                  onPressed: widget.onOpenDatePicker,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   visualDensity:
@@ -198,28 +226,28 @@ class JournalToolbar extends StatelessWidget {
                 ),
               IconButton(
                 icon: Icon(
-                  isSearching ? Icons.close : Icons.search, // Toggle icon
+                  widget.isSearching ? Icons.close : Icons.search, // Toggle icon
                   size: SizeConstants.iconMedium,
                 ), // Use constant
-                onPressed: onToggleSearch, // Use the new callback
+                onPressed: widget.onToggleSearch, // Use the new callback
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 visualDensity:
                     VisualDensity.compact, // Added for closer spacing
               ),
-              if (!isSearching) // Only show favorites if not searching
+              if (!widget.isSearching) // Only show favorites if not searching
                 IconButton(
                   icon: const Icon(
                     Icons.bookmark_border,
                     size: SizeConstants.iconMedium, // Use constant
                   ),
-                  onPressed: onToggleFavorites,
+                  onPressed: widget.onToggleFavorites,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   visualDensity:
                       VisualDensity.compact, // Added for closer spacing
                 ),
-              if (!isSearching) // Only show more_vert if not searching
+              if (!widget.isSearching) // Only show more_vert if not searching
                 PopupMenuButton(
                   icon: const Icon(
                     Icons.more_vert,
@@ -241,7 +269,7 @@ class JournalToolbar extends StatelessWidget {
                         MaterialPageRoute(builder: (_) => const AuthScreen()),
                       );
                     } else if (value == 'settings') {
-                      onOpenSettings();
+                      widget.onOpenSettings();
                     }
                   },
                 ),
