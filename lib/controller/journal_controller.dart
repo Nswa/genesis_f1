@@ -347,7 +347,8 @@ class JournalController {
       localImagePath: localImagePath, // Save local image path if offline
     );
 
-    entries.add(entry);
+    // Insert at the start so it appears at the bottom in reverse:true
+    entries.insert(0, entry);
     if (_db != null && _store != null) {
       await _store!.record(localId).put(_db!, _entryToMap(entry));
     }
@@ -362,8 +363,9 @@ class JournalController {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (scrollController.hasClients) {
+        // With reverse:true, scroll to minScrollExtent to stay at the latest
         scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
+          scrollController.position.minScrollExtent,
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );

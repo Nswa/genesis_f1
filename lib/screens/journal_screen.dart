@@ -82,7 +82,10 @@ class _JournalScreenState extends State<JournalScreen>
     updateSystemUiOverlay(context);
     final background = Theme.of(context).scaffoldBackgroundColor;
     // Use filteredEntries for display
+    // Ensure grouped entries are ordered with latest date first
     final grouped = jc.groupEntriesByDate(jc.filteredEntries);
+    final groupedEntriesDesc = grouped.entries.toList()
+      ..sort((a, b) => b.key.compareTo(a.key));
 
     return Scaffold(
       body: Column(
@@ -138,18 +141,18 @@ class _JournalScreenState extends State<JournalScreen>
                   child: CustomScrollView(
                     key: ValueKey(jc.isLoading),
                     controller: scrollController,
+                    reverse: true, // Show latest at bottom and scroll there
                     slivers:
                         jc.isLoading
                             ? List.generate(5, (_) => const ShimmerSliver())
-                                .toList() // Use new widget
-                            : grouped.entries.map((entryGroup) {
+                                .toList()
+                            : groupedEntriesDesc.map((entryGroup) {
                               return SliverStickyHeader(
                                 header: GestureDetector(
                                   onLongPress: () {
                                     jc.selectEntriesByDate(entryGroup.value);
                                   },
                                   onTap: () {
-                                    // Added onTap for deselection
                                     if (jc.isSelectionMode) {
                                       jc.deselectEntriesByDate(
                                         entryGroup.value,
@@ -160,9 +163,9 @@ class _JournalScreenState extends State<JournalScreen>
                                     color: background,
                                     padding: const EdgeInsets.fromLTRB(
                                       16,
-                                      8, // Reduced top padding
+                                      8,
                                       0,
-                                      4, // Reduced bottom padding
+                                      4,
                                     ),
                                     child: Text(
                                       entryGroup.key,
