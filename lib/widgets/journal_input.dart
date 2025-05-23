@@ -5,6 +5,7 @@ import '../controller/journal_controller.dart'; // Added controller import
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
 import 'package:genesis_f1/services/user_profile_service.dart';
+import 'package:camera/camera.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final JournalController journalController;
@@ -21,10 +22,14 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   bool _isEmojiBarExpanded = false;
   // File? _pickedImageFile; // Removed, will use widget.journalController.pickedImageFile
   // final ImagePicker _picker = ImagePicker(); // Removed, logic in JournalController
-
   late AnimationController _arrowAnimController;
   bool _isRecording = false;
   Offset _recordButtonPosition = Offset(0, 0);
+  
+  // Camera related variables
+  CameraController? _cameraController;
+  bool _showCameraPreview = false;
+  bool _isCameraInitialized = false;
 
   @override
   void initState() {
@@ -39,12 +44,64 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
   }
-
   @override
   void dispose() {
     _emojiBarController.dispose();
     _arrowAnimController.dispose();
+    _cameraController?.dispose();
     super.dispose();
+  }
+
+  Future<void> _initializeCamera() async {
+    try {
+      final cameras = await availableCameras();
+      if (cameras.isNotEmpty) {
+        _cameraController = CameraController(
+          cameras.first,
+          ResolutionPreset.low,
+        );
+        await _cameraController!.initialize();
+        if (mounted) {
+          setState(() {
+            _isCameraInitialized = true;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
+  }
+
+  void _startRecording() async {
+    setState(() {
+      _isRecording = true;
+    });
+    
+    // Wait for button to finish ascending (150ms)
+    await Future.delayed(const Duration(milliseconds: 150));
+    
+    if (_isRecording) {
+      // Initialize camera if not already done
+      if (_cameraController == null) {
+        await _initializeCamera();
+      }
+      
+      if (_isCameraInitialized && mounted) {
+        setState(() {
+          _showCameraPreview = true;
+        });
+      }
+    }
+  }
+
+  void _stopRecording() {
+    setState(() {
+      _isRecording = false;
+      _showCameraPreview = false;
+      //dispose camera usage
+      _cameraController?.dispose();
+      _cameraController = null;
+    });
   }
 
   // Future<void> _pickImage() async { // Moved to JournalController
@@ -227,29 +284,49 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                           border: InputBorder.none,
                                         ),
                                       ),
-                                    ),
-                                    GestureDetector(
+                                    ),                                    GestureDetector(
                                       onTapDown: (details) {
-                                        setState(() {
-                                          _isRecording = true;
-                                        });
+                                        _startRecording();
                                       },
                                       onTapUp: (details) {
-                                        setState(() {
-                                          _isRecording = false;
-                                        });
+                                        _stopRecording();
                                       },
-                                      child: AnimatedContainer(
-                                        duration: const Duration(milliseconds: 150),
-                                        curve: Curves.easeInOut,
-                                        transform: _isRecording
-                                            ? Matrix4.translationValues(0, -45, 0)
-                                            : Matrix4.identity(),
-                                        child: Icon(
-                                          Icons.radio_button_checked,
-                                          size: 28,
-                                          color: _isRecording ? Colors.red : theme.iconTheme.color?.withOpacity(0.7),
-                                        ),
+                                      onTapCancel: () {
+                                        _stopRecording();
+                                      },
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          AnimatedContainer(
+                                            duration: const Duration(milliseconds: 150),
+                                            curve: Curves.easeInOut,
+                                            transform: _isRecording
+                                                ? Matrix4.translationValues(0, -55, 0)
+                                                : Matrix4.identity(),
+                                            child: Icon(
+                                              Icons.radio_button_checked,
+                                              size: 28,
+                                              color: _isRecording ? Colors.red : theme.iconTheme.color?.withOpacity(0.7),
+                                            ),
+                                          ),
+                                          // Camera preview positioned above the button
+                                          if (_showCameraPreview && _isCameraInitialized && _cameraController != null)
+                                            Positioned(
+                                              bottom: 90, // Position above the button
+                                              left: -90, // Center horizontally
+                                              child: Container(
+                                                width: 120,
+                                                height: 120,
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(color: Colors.red, width: 3),
+                                                ),
+                                                child: ClipOval(
+                                                  child: CameraPreview(_cameraController!),
+                                                ),
+                                              ),
+                                            ),
+                                        ],
                                       ),
                                     ),
                                   ],
