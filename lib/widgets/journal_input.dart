@@ -207,26 +207,40 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                           ],
                         ),
                         const SizedBox(height: 8), // Standardized spacing
-                        TextField(
-                          cursorColor:
-                              theme.brightness == Brightness.dark
-                                  ? Colors.white70
-                                  : Colors.black54,
-                          controller: widget.journalController.controller,
-                          focusNode: widget.journalController.focusNode,
-                          enabled:
-                              !isSaving, // Still useful for visual cue and semantics
-                          maxLines: null,
-                          style: theme.textTheme.bodyMedium,
-                          decoration: InputDecoration(
-                            hintText:
-                                isSaving
-                                    ? "Saving entry..."
-                                    : _getHintText(),
-                            hintStyle: TextStyle(color: theme.hintColor),
-                            border: InputBorder.none,
-                          ),
-                        ),
+                        Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        cursorColor: theme.brightness == Brightness.dark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                        controller: widget.journalController.controller,
+                                        focusNode: widget.journalController.focusNode,
+                                        enabled: !isSaving,
+                                        maxLines: null,
+                                        style: theme.textTheme.bodyMedium,
+                                        decoration: InputDecoration(
+                                          hintText: isSaving ? "Saving entry..." : _getHintText(),
+                                          hintStyle: TextStyle(color: theme.hintColor),
+                                          border: InputBorder.none,
+                                        ),
+                                      ),
+                                    ),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.radio_button_checked,
+                                        size: 24,
+                                        color: theme.iconTheme.color?.withOpacity(0.7),
+                                      ),
+                                      onPressed: () {
+                                        // Placeholder for record button functionality
+                                      },
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                  ],
+                                ),
                         if (widget.journalController.pickedImageFile != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
