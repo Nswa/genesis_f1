@@ -77,11 +77,11 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     if (hour < 17) return 'afternoon';
     return 'evening';
   }
-
   String _getHintText() {
     final profile = UserProfileService.instance.profile;
     if (profile != null) {
-      return "${_getTimeOfDayGreeting()}, ${profile.firstName.toLowerCase()}...";
+      final firstWord = profile.firstName.split(" ")[0];
+      return "${_getTimeOfDayGreeting()}, ${firstWord.toLowerCase()}...";
     }
     return "Write your thoughts...";
   }
