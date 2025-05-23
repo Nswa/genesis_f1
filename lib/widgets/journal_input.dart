@@ -1,4 +1,5 @@
-// import 'dart:io'; // No longer needed here
+import 'dart:io';
+import 'dart:async';
 import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart'; // No longer needed here
 import '../controller/journal_controller.dart'; // Added controller import
@@ -6,6 +7,10 @@ import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
 import 'package:genesis_f1/services/user_profile_service.dart';
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
+import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
+import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final JournalController journalController;
@@ -18,37 +23,37 @@ class JournalInputWidget extends StatefulWidget {
 
 class _JournalInputWidgetState extends State<JournalInputWidget>
     with TickerProviderStateMixin {
-  late AnimationController _emojiBarController;
-  bool _isEmojiBarExpanded = false;
-  // File? _pickedImageFile; // Removed, will use widget.journalController.pickedImageFile
+  late AnimationController _emojiBarController;  bool _isEmojiBarExpanded = false;  // File? _pickedImageFile; // Removed, will use widget.journalController.pickedImageFile
   // final ImagePicker _picker = ImagePicker(); // Removed, logic in JournalController
-  late AnimationController _arrowAnimController;
   bool _isRecording = false;
-  Offset _recordButtonPosition = Offset(0, 0);
   
   // Camera related variables
   CameraController? _cameraController;
   bool _showCameraPreview = false;
   bool _isCameraInitialized = false;
-
-  @override
+  bool _isVideoRecording = false;
+  Timer? _recordingTimer;
+  File? _generatedGif;  @override
   void initState() {
     super.initState();
     _emojiBarController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-
-    _arrowAnimController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    )..repeat(reverse: true);
-  }
-  @override
+    
+    // Set up callback to clear GIF when image is picked
+    widget.journalController.onClearGif = () {
+      if (mounted) {
+        setState(() {
+          _generatedGif = null;
+        });
+      }
+    };
+  }  @override
   void dispose() {
     _emojiBarController.dispose();
-    _arrowAnimController.dispose();
     _cameraController?.dispose();
+    _recordingTimer?.cancel();
     super.dispose();
   }
 
@@ -71,7 +76,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       print('Error initializing camera: $e');
     }
   }
-
   void _startRecording() async {
     setState(() {
       _isRecording = true;
@@ -90,18 +94,93 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         setState(() {
           _showCameraPreview = true;
         });
+        
+        // Start video recording
+        await _startVideoRecording();
       }
     }
   }
 
-  void _stopRecording() {
+  Future<void> _startVideoRecording() async {
+    try {
+      if (_cameraController != null && _cameraController!.value.isInitialized) {
+        await _cameraController!.startVideoRecording();
+        
+        setState(() {
+          _isVideoRecording = true;
+        });
+        
+        // Auto-stop recording after 5 seconds (configurable between 3-7s)
+        _recordingTimer = Timer(const Duration(seconds: 5), () {
+          _stopRecording();
+        });
+      }
+    } catch (e) {
+      print('Error starting video recording: $e');
+      _stopRecording();
+    }
+  }
+
+  void _stopRecording() async {
+    _recordingTimer?.cancel();
+    
+    if (_isVideoRecording && _cameraController != null) {
+      try {        final XFile videoFile = await _cameraController!.stopVideoRecording();
+        // Convert video to GIF using ffmpeg_kit_flutter_new
+        await _convertVideoToGif(videoFile);
+        
+      } catch (e) {
+        print('Error stopping video recording: $e');
+      }
+    }
+    
     setState(() {
       _isRecording = false;
       _showCameraPreview = false;
-      //dispose camera usage
-      _cameraController?.dispose();
-      _cameraController = null;
+      _isVideoRecording = false;
     });
+    
+    //dispose camera usage
+    _cameraController?.dispose();
+    _cameraController = null;
+  }
+  Future<void> _convertVideoToGif(XFile videoFile) async {
+    try {
+      // Get temporary directory for GIF storage
+      final Directory tempDir = await getTemporaryDirectory();
+      final String gifPath = path.join(
+        tempDir.path,
+        'journal_gif_${DateTime.now().millisecondsSinceEpoch}.gif',
+      );
+      
+      // FFmpeg command to convert video to GIF
+      // Scale to 320px width, optimize for file size, and set frame rate to 10fps
+      final String command = '-i "${videoFile.path}" -vf "scale=320:-1:flags=lanczos,fps=10" -loop 0 "$gifPath"';
+      
+      print('Starting GIF conversion...');
+      
+      await FFmpegKit.execute(command).then((session) async {
+        final returnCode = await session.getReturnCode();
+        
+        if (ReturnCode.isSuccess(returnCode)) {
+          print('GIF conversion successful: $gifPath');
+          
+          final File gifFile = File(gifPath);
+          if (await gifFile.exists()) {            setState(() {
+              _generatedGif = gifFile;
+              // Clear any selected image since only one media type is allowed
+              widget.journalController.clearImage();
+            });
+            print('GIF file size: ${await gifFile.length()} bytes');
+          }
+        } else {
+          print('GIF conversion failed with return code: $returnCode');
+        }
+      });
+      
+    } catch (e) {
+      print('Error converting video to GIF: $e');
+    }
   }
 
   // Future<void> _pickImage() async { // Moved to JournalController
@@ -362,6 +441,55 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       widget
                                           .journalController
                                           .clearImage, // Individual disabling handled by IgnorePointer
+                                  child: Container(
+                                    margin: const EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withAlpha(128),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),                          ),
+                        // GIF preview (similar to image preview)
+                        if (_generatedGif != null && widget.journalController.pickedImageFile == null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Stack(
+                              alignment: Alignment.topRight,
+                              children: [
+                                Container(
+                                  constraints: const BoxConstraints(
+                                    maxHeight: 100,
+                                    maxWidth: 150,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    border: Border.all(
+                                      color: theme.dividerColor,
+                                      width: 0.5,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(3.5),
+                                    child: Image.file(
+                                      _generatedGif!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _generatedGif = null;
+                                    });
+                                  },
                                   child: Container(
                                     margin: const EdgeInsets.all(4),
                                     padding: const EdgeInsets.all(2),

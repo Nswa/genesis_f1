@@ -662,11 +662,16 @@ class JournalController {
     }
   }
 
+  // Callback for clearing GIF when image is picked
+  VoidCallback? onClearGif;
+
   // Method to pick an image
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       pickedImageFile = File(image.path);
+      // Clear any existing GIF since only one media type is allowed
+      onClearGif?.call();
       onUpdate();
     }
   }
