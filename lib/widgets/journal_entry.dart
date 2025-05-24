@@ -258,6 +258,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
       return;
     }
 
+    final theme = Theme.of(context);
     final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -270,63 +271,92 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
     showMenu(
       context: context,
       position: position,
-      elevation: 8,
+      elevation: 6,
+      color: theme.brightness == Brightness.dark 
+          ? const Color(0xFF2A2A2A) 
+          : Colors.white,
+      shadowColor: Colors.black.withOpacity(0.15),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
+        side: BorderSide(
+          color: theme.brightness == Brightness.dark 
+              ? Colors.white.withOpacity(0.1)
+              : Colors.black.withOpacity(0.08),
+          width: 0.5,
+        ),
       ),
-      items: [
+      constraints: const BoxConstraints(
+        minWidth: 140,
+        maxWidth: 160,
+      ),      items: <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           value: 'insight',
+          height: 36,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.lightbulb_outline,
-                size: 18,
-                color: Theme.of(context).iconTheme.color,
+                size: 16,
+                color: theme.iconTheme.color?.withOpacity(0.8),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Text(
                 'AI Insight',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'IBM Plex Sans',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: theme.textTheme.bodyMedium?.color,
                 ),
               ),
             ],
           ),
         ),
+        const PopupMenuDivider(height: 1),
         PopupMenuItem<String>(
           value: 'edit',
+          height: 36,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.edit_outlined,
-                size: 18,
-                color: Theme.of(context).iconTheme.color,
+                size: 16,
+                color: theme.iconTheme.color?.withOpacity(0.8),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Text(
                 'Edit',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'IBM Plex Sans',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: theme.textTheme.bodyMedium?.color,
                 ),
               ),
             ],
           ),
         ),
+        const PopupMenuDivider(height: 1),
         PopupMenuItem<String>(
           value: 'delete',
+          height: 36,
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(
                 Icons.delete_outline,
-                size: 18,
+                size: 16,
                 color: Colors.red,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               Text(
                 'Delete',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontFamily: 'IBM Plex Sans',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
                   color: Colors.red,
                 ),
               ),

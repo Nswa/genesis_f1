@@ -7,6 +7,8 @@ import 'entry_insight_screen.dart';
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
 import '../widgets/indeterminate_progress_bar.dart';
+import '../utils/custom_toast.dart';
+import '../utils/custom_delete_dialog.dart';
 
 import '../widgets/journal_input.dart';
 import '../widgets/journal_entry.dart';
@@ -206,34 +208,19 @@ class _JournalScreenState extends State<JournalScreen>
                                                 ),
                                               ),
                                             );
-                                          },
-                                          onEdit: () {
-                                            // Placeholder: show a SnackBar for now
-                                            ScaffoldMessenger.of(context).showSnackBar(
-                                              SnackBar(
-                                                content: Text('Edit coming soon!'),
-                                                duration: Duration(seconds: 1),
-                                              ),
+                                          },                                          onEdit: () {
+                                            // Placeholder: show a custom toast for now
+                                            CustomToast.show(
+                                              context,
+                                              message: 'Edit coming soon!',
+                                              icon: Icons.edit_outlined,
                                             );
-                                          },
-                                          onDelete: () async {
+                                          },                                          onDelete: () async {
                                             final entry = entryGroup.value[index];
-                                            final confirm = await showDialog<bool>(
-                                              context: context,
-                                              builder: (ctx) => AlertDialog(
-                                                title: Text('Delete Entry'),
-                                                content: Text('Are you sure you want to delete this entry?'),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () => Navigator.of(ctx).pop(false),
-                                                    child: Text('Cancel'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () => Navigator.of(ctx).pop(true),
-                                                    child: Text('Delete', style: TextStyle(color: Colors.red)),
-                                                  ),
-                                                ],
-                                              ),
+                                            final confirm = await CustomDeleteDialog.show(
+                                              context,
+                                              title: 'Delete Entry',
+                                              message: 'Are you sure you want to delete this entry? This action cannot be undone.',
                                             );
                                             if (confirm == true) {
                                               setState(() {
