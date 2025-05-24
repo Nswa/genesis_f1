@@ -65,12 +65,11 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
               maxLines: 1,
             ),
           ),
-        ),
-        Positioned(
+        ),        Positioned(
           right: 0,
           top: 0,
           bottom: 0,
-          width: 10,
+          width: 16,
           child: IgnorePointer(
             child: Container(
               decoration: BoxDecoration(
@@ -78,9 +77,12 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Colors.transparent,
-                    theme.scaffoldBackgroundColor.withOpacity(0.85),
+                    theme.scaffoldBackgroundColor.withOpacity(0.0),
+                    theme.scaffoldBackgroundColor.withOpacity(0.6),
+                    theme.scaffoldBackgroundColor.withOpacity(0.9),
+                    theme.scaffoldBackgroundColor,
                   ],
+                  stops: const [0.0, 0.3, 0.7, 1.0],
                 ),
               ),
             ),
