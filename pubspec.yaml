@@ -35,12 +35,12 @@ dependencies:
   sembast: ^3.6.0+1
   path_provider: ^2.0.0
   path: ^1.8.3
-  
-  # Media
+    # Media
   image_picker: ^1.1.2
   cached_network_image: ^3.4.1
   camera: ^0.11.1
   ffmpeg_kit_flutter_new: ^1.6.1
+  easy_image_viewer: ^1.5.1
   # Utilities
   connectivity_plus: ^5.0.2
   fuzzy: ^0.5.1

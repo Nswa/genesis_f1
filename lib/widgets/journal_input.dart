@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
-// import 'package:image_picker/image_picker.dart'; // No longer needed here
-import '../controller/journal_controller.dart'; // Added controller import
+import '../controller/journal_controller.dart';
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
 import 'package:genesis_f1/services/user_profile_service.dart';
@@ -11,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
+import 'custom_image_viewer.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final JournalController journalController;
@@ -94,6 +94,15 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         }
       }
     });
+  }
+  void _showImageViewer(BuildContext context, File imageFile) {
+    final imageProvider = FileImage(imageFile);
+    final heroTag = 'input_image_${imageFile.path.hashCode}';
+    showCustomImageViewer(
+      context, 
+      imageProvider,
+      heroTag: heroTag,
+    );
   }
 
   Future<void> _initializeCamera() async {
@@ -516,12 +525,17 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       color: theme.dividerColor,
                                       width: 0.5,
                                     ),
-                                  ),
-                                  child: ClipRRect(
+                                  ),                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(3.5),
-                                    child: Image.file(
-                                      widget.journalController.pickedImageFile!,
-                                      fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                      onTap: () => _showImageViewer(context, widget.journalController.pickedImageFile!),
+                                      child: Hero(
+                                        tag: 'input_image_${widget.journalController.pickedImageFile!.path.hashCode}',
+                                        child: Image.file(
+                                          widget.journalController.pickedImageFile!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -564,12 +578,17 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       color: theme.dividerColor,
                                       width: 0.5,
                                     ),
-                                  ),
-                                  child: ClipRRect(
+                                  ),                                  child: ClipRRect(
                                     borderRadius: BorderRadius.circular(3.5),
-                                    child: Image.file(
-                                      _generatedGif!,
-                                      fit: BoxFit.cover,
+                                    child: GestureDetector(
+                                      onTap: () => _showImageViewer(context, _generatedGif!),
+                                      child: Hero(
+                                        tag: 'input_image_${_generatedGif!.path.hashCode}',
+                                        child: Image.file(
+                                          _generatedGif!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),                                GestureDetector(

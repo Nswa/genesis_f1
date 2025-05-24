@@ -10,6 +10,7 @@ import '../models/entry.dart';
 import '../controller/journal_controller.dart';
 import '../services/deepseek_service.dart';
 import '../widgets/indeterminate_progress_bar.dart';
+import '../widgets/custom_image_viewer.dart';
 
 class EntryInsightScreen extends StatefulWidget {
   final Entry entry;
@@ -109,6 +110,28 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
       c.dispose();
     }
     super.dispose();
+  }
+  void _showImageViewer(BuildContext context) {
+    ImageProvider? imageProvider;
+    String? heroTag;
+    
+    if (widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) {
+      // Use network image for Firebase stored images
+      imageProvider = CachedNetworkImageProvider(widget.entry.imageUrl!);
+      heroTag = 'insight_image_${widget.entry.localId}_${widget.entry.imageUrl!}';
+    } else if (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty) {
+      // Use file image for local images
+      imageProvider = FileImage(File(widget.entry.localImagePath!));
+      heroTag = 'insight_image_${widget.entry.localId}_${widget.entry.localImagePath!}';
+    }
+    
+    if (imageProvider != null) {
+      showCustomImageViewer(
+        context, 
+        imageProvider,
+        heroTag: heroTag,
+      );
+    }
   }
 
   Future<void> _startPhasedLoading({bool forceRefresh = false}) async {
@@ -429,57 +452,63 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
               ],
             ),
             
-            const SizedBox(height: 8),
-            
-            // Image if exists
+            const SizedBox(height: 8),            // Image if exists
             if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
                 (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty))
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 240,
-                    minWidth: double.infinity,
-                  ),
-                  child: widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: widget.entry.imageUrl!,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) {
-                            final isDark = theme.brightness == Brightness.dark;
-                            final baseColor = isDark ? Colors.grey[900]! : Colors.grey[200]!;
-                            final highlightColor = isDark ? Colors.grey[850]! : Colors.grey[100]!;
+              GestureDetector(
+                onTap: () => _showImageViewer(context),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 240,
+                      minWidth: double.infinity,
+                    ),
+                    child: Hero(
+                      tag: widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
+                          ? 'insight_image_${widget.entry.localId}_${widget.entry.imageUrl!}'
+                          : 'insight_image_${widget.entry.localId}_${widget.entry.localImagePath!}',
+                      child: widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
+                          ? CachedNetworkImage(
+                              imageUrl: widget.entry.imageUrl!,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) {
+                                final isDark = theme.brightness == Brightness.dark;
+                                final baseColor = isDark ? Colors.grey[900]! : Colors.grey[200]!;
+                                final highlightColor = isDark ? Colors.grey[850]! : Colors.grey[100]!;
 
-                            return Shimmer.fromColors(
-                              baseColor: baseColor,
-                              highlightColor: highlightColor,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: baseColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                            );
-                          },
-                          errorWidget: (context, url, error) => Icon(Icons.error),
-                        )
-                      : Image.file(
-                          File(widget.entry.localImagePath!),
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 100,
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Icon(
-                                  Icons.broken_image,
-                                  color: Colors.grey[600],
-                                  size: 40,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                                return Shimmer.fromColors(
+                                  baseColor: baseColor,
+                                  highlightColor: highlightColor,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: baseColor,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                );
+                              },
+                              errorWidget: (context, url, error) => Icon(Icons.error),
+                            )
+                          : Image.file(
+                              File(widget.entry.localImagePath!),
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 100,
+                                  color: Colors.grey[300],
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.broken_image,
+                                      color: Colors.grey[600],
+                                      size: 40,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                    ),
+                  ),
                 ),
               ),
             

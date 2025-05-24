@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../models/entry.dart';
 import '../utils/text_scale_controller.dart';
+import 'custom_image_viewer.dart';
 
 class JournalEntryWidget extends StatefulWidget {
   final Entry entry;
@@ -220,6 +221,28 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
       children: children,
     );
   }
+  void _showImageViewer(BuildContext context) {
+    ImageProvider? imageProvider;
+    String? heroTag;
+    
+    if (widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) {
+      // Use network image for Firebase stored images
+      imageProvider = CachedNetworkImageProvider(widget.entry.imageUrl!);
+      heroTag = 'entry_image_${widget.entry.localId}_${widget.entry.imageUrl!}';
+    } else if (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty) {
+      // Use file image for local images
+      imageProvider = FileImage(File(widget.entry.localImagePath!));
+      heroTag = 'entry_image_${widget.entry.localId}_${widget.entry.localImagePath!}';
+    }
+    
+    if (imageProvider != null) {
+      showCustomImageViewer(
+        context, 
+        imageProvider,
+        heroTag: heroTag,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -289,11 +312,15 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                       constraints: BoxConstraints(
                         maxHeight: 200 * TextScaleController.instance.scale.value,
                         minWidth: double.infinity,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(4.0),
-                        child:
-                            widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
+                      ),                      child: GestureDetector(
+                        onTap: () => _showImageViewer(context),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4.0),
+                          child: Hero(
+                            tag: widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
+                                ? 'entry_image_${widget.entry.localId}_${widget.entry.imageUrl!}'
+                                : 'entry_image_${widget.entry.localId}_${widget.entry.localImagePath!}',
+                            child: widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty
                                 ? CachedNetworkImage(
                                     imageUrl: widget.entry.imageUrl!,
                                     key: ValueKey(widget.entry.imageUrl!),
@@ -340,6 +367,8 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                                       );
                                     },
                                   ),
+                          ),
+                        ),
                       ),
                     ),                  ),
                 const SizedBox(height: 3),
