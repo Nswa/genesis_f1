@@ -25,6 +25,8 @@ class JournalEntryWidget extends StatefulWidget {
 
 class _JournalEntryWidgetState extends State<JournalEntryWidget> {
   double _baseScale = 1.0;
+  late ScrollController _tagsScrollController;
+  bool _showStartFade = false;
 
   void _handleScaleStart(ScaleStartDetails details) {
     _baseScale = TextScaleController.instance.scale.value;
@@ -34,14 +36,26 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
     TextScaleController.instance.setScale(_baseScale * details.scale);
   }
 
+  void _onTagsScroll() {
+    if (_tagsScrollController.hasClients) {
+      setState(() {
+        _showStartFade = _tagsScrollController.offset > 0;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _tagsScrollController = ScrollController();
+    _tagsScrollController.addListener(_onTagsScroll);
     TextScaleController.instance.scale.addListener(_onScaleChanged);
   }
 
   @override
   void dispose() {
+    _tagsScrollController.removeListener(_onTagsScroll);
+    _tagsScrollController.dispose();
     TextScaleController.instance.scale.removeListener(_onScaleChanged);
     super.dispose();
   }
@@ -59,6 +73,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
     return Stack(
       children: [
         SingleChildScrollView(
+          controller: _tagsScrollController,
           scrollDirection: Axis.horizontal,
           child: Padding(
             padding: const EdgeInsets.only(right: 14),
@@ -69,7 +84,34 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
               maxLines: 1,
             ),
           ),
-        ),        Positioned(
+        ),
+        // Start fade (only when scrolled)
+        if (_showStartFade)
+          Positioned(
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 16,
+            child: IgnorePointer(
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: [
+                      backgroundColor,
+                      backgroundColor.withOpacity(0.9),
+                      backgroundColor.withOpacity(0.6),
+                      backgroundColor.withOpacity(0.0),
+                    ],
+                    stops: const [0.0, 0.3, 0.7, 1.0],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        // End fade (always visible)
+        Positioned(
           right: 0,
           top: 0,
           bottom: 0,
