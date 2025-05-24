@@ -624,10 +624,12 @@ class JournalController {
     }
     _db?.close(); // Close the Sembast database
   }
-
   // Drag handlers
   void handleDragUpdate(DragUpdateDetails details) {
     if (isSavingEntry || controller.text.trim().isEmpty) return;
+
+    // Check if dragging should be disabled due to scrolling text
+    if (shouldDisableDrag?.call() == true) return;
 
     dragOffsetY += details.delta.dy;
     dragOffsetY = dragOffsetY.clamp(-300.0, 0.0);
@@ -691,6 +693,10 @@ class JournalController {
 
   // Callback for clearing GIF when image is picked
   VoidCallback? onClearGif;
+  
+  // Callback to check if text needs scrolling
+  bool Function()? shouldDisableDrag;
+  
   // Method to pick an image
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);

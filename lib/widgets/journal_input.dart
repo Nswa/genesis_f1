@@ -27,6 +27,10 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   // final ImagePicker _picker = ImagePicker(); // Removed, logic in JournalController
   bool _isRecording = false;
   
+  // Text height tracking for scroll detection
+  bool _needsScrolling = false;
+  final GlobalKey _textFieldKey = GlobalKey();
+  
   // Camera related variables
   CameraController? _cameraController;
   bool _showCameraPreview = false;
@@ -59,8 +63,10 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     widget.journalController.controller.removeListener(_onControllerChanged);
     super.dispose();
   }
-
   void _onControllerChanged() {
+    // Check if content needs scrolling
+    _checkIfNeedsScrolling();
+    
     // If controller text is cleared (after save), also clear GIF
     if (widget.journalController.controller.text.isEmpty && 
         widget.journalController.pickedGifFile == null && 
@@ -69,6 +75,25 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         _generatedGif = null;
       });
     }
+  }
+
+  void _checkIfNeedsScrolling() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_textFieldKey.currentContext != null) {
+        final RenderBox? renderBox = _textFieldKey.currentContext!.findRenderObject() as RenderBox?;
+        if (renderBox != null) {
+          // Calculate if the text content exceeds a reasonable height (about 4-5 lines)
+          const double maxHeightBeforeScroll = 120.0; // Adjust based on your design
+          final bool needsScrolling = renderBox.size.height > maxHeightBeforeScroll;
+          
+          if (needsScrolling != _needsScrolling) {
+            setState(() {
+              _needsScrolling = needsScrolling;
+            });
+          }
+        }
+      }
+    });
   }
 
   Future<void> _initializeCamera() async {
@@ -261,10 +286,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       ignoring: isSaving,
       child: AnimatedOpacity(
         // Wrap with AnimatedOpacity
-        duration: const Duration(milliseconds: 200),
-        opacity: isSaving ? 0.5 : 1.0, // Grey out if saving
+        duration: const Duration(milliseconds: 200),        opacity: isSaving ? 0.5 : 1.0, // Grey out if saving
         child: Transform.translate(
-          offset: Offset(0, widget.journalController.dragOffsetY),
+          offset: Offset(0, _needsScrolling ? 0 : widget.journalController.dragOffsetY),
           child: Transform.scale(
             scale: scaleValue,
             child: Column(
@@ -336,8 +360,32 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   visualDensity: VisualDensity.compact,
-                                ),
-                                const Spacer(),
+                                ),                                const Spacer(),
+                                // Save button when scrolling is needed
+                                if (_needsScrolling)
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        widget.journalController.triggerSave();
+                                      },
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                        decoration: BoxDecoration(
+                                          color: theme.primaryColor,
+                                          borderRadius: BorderRadius.circular(16),
+                                        ),
+                                        child: Text(
+                                          'Save',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 Text(
                                   DateFormatter.formatFullDate(now),
                                   style: TextStyle(
@@ -347,39 +395,48 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                   ),
                                 ),
                               ],
-                            ),
-                            IgnorePointer(
-                              ignoring: true,
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                size: 18, // Consistent icon size
-                                color: theme.iconTheme.color?.withOpacity(
-                                  0.5,
-                                ), // Consistent color
+                            ),                            // Only show swipe hint when not in scrolling mode
+                            if (!_needsScrolling)
+                              IgnorePointer(
+                                ignoring: true,
+                                child: Icon(
+                                  Icons.keyboard_arrow_up,
+                                  size: 18, // Consistent icon size
+                                  color: theme.iconTheme.color?.withOpacity(0.5),
+                                ),
                               ),
-                            ),
                           ],
                         ),
                         const SizedBox(height: 8), // Standardized spacing
                         Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextField(
-                                        cursorColor: theme.brightness == Brightness.dark
-                                            ? Colors.white70
-                                            : Colors.black54,
-                                        controller: widget.journalController.controller,
-                                        focusNode: widget.journalController.focusNode,
-                                        enabled: !isSaving,
-                                        maxLines: null,
-                                        style: theme.textTheme.bodyMedium,
-                                        decoration: InputDecoration(
-                                          hintText: isSaving ? "Saving entry..." : _getHintText(),
-                                          hintStyle: TextStyle(color: theme.hintColor),
-                                          border: InputBorder.none,
+                                  children: [                                    Expanded(
+                                      child: ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                          maxHeight: _needsScrolling ? 150.0 : double.infinity,
+                                        ),
+                                        child: SingleChildScrollView(
+                                          child: TextField(
+                                            key: _textFieldKey,
+                                            cursorColor: theme.brightness == Brightness.dark
+                                                ? Colors.white70
+                                                : Colors.black54,
+                                            controller: widget.journalController.controller,
+                                            focusNode: widget.journalController.focusNode,
+                                            enabled: !isSaving,
+                                            maxLines: null,
+                                            scrollPadding: EdgeInsets.zero,
+                                            style: theme.textTheme.bodyMedium,
+                                            decoration: InputDecoration(
+                                              hintText: isSaving ? "Saving entry..." : _getHintText(),
+                                              hintStyle: TextStyle(color: theme.hintColor),
+                                              border: InputBorder.none,
+                                              contentPadding: EdgeInsets.zero,
+                                              isDense: true,
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),                                    GestureDetector(
+                                    ),GestureDetector(
                                       onTapDown: (details) {
                                         _startRecording();
                                       },
