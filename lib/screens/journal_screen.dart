@@ -134,9 +134,8 @@ class _JournalScreenState extends State<JournalScreen>
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,
-                  child: CustomScrollView(
-                    key: ValueKey(jc.isLoading),
+                  switchOutCurve: Curves.easeInCubic,                  child: CustomScrollView(
+                    key: ValueKey('${jc.isLoading}_${jc.entries.length}_${grouped.length}'),
                     controller: scrollController,
                     slivers:
                         jc.isLoading
@@ -173,38 +172,48 @@ class _JournalScreenState extends State<JournalScreen>
                                       ),
                                     ),
                                   ),
-                                ),
-                                sliver: SliverAnimatedList(
-                                  key: PageStorageKey(entryGroup.key),
-                                  initialItemCount: entryGroup.value.length,
-                                  itemBuilder: (context, index, animation) {
-                                    return SizeTransition(
-                                      sizeFactor: animation,
-                                      axisAlignment: 0.0,
-                                      child: JournalEntryWidget(
-                                        entry: entryGroup.value[index],
-                                        onToggleFavorite: jc.toggleFavorite,
-                                        onTap: () {
-                                          if (jc.isSelectionMode) {
-                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
-                                          } else {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EntryInsightScreen(
-                                                  entry: entryGroup.value[index],
-                                                  journalController: jc,
+                                ),                                sliver: SliverList(
+                                  delegate: SliverChildBuilderDelegate(
+                                    (context, index) {
+                                      return TweenAnimationBuilder<double>(
+                                        duration: const Duration(milliseconds: 300),
+                                        tween: Tween(begin: 0.0, end: 1.0),
+                                        curve: Curves.easeOut,
+                                        builder: (context, value, child) {
+                                          return Transform.scale(
+                                            scale: 0.95 + (0.05 * value),
+                                            child: Opacity(
+                                              opacity: value,
+                                              child: child,
+                                            ),
+                                          );
+                                        },                                        child: JournalEntryWidget(
+                                          key: ValueKey(entryGroup.value[index].localId ?? entryGroup.value[index].firestoreId),
+                                          entry: entryGroup.value[index],
+                                          onToggleFavorite: jc.toggleFavorite,
+                                          onTap: () {
+                                            if (jc.isSelectionMode) {
+                                              setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) => EntryInsightScreen(
+                                                    entry: entryGroup.value[index],
+                                                    journalController: jc,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        onLongPress: () {
-                                          setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
-                                        },
-                                      ),
-                                    );
-                                  },
+                                              );
+                                            }
+                                          },
+                                          onLongPress: () {
+                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    childCount: entryGroup.value.length,
+                                  ),
                                 ),
                               );
                             }).toList(),

@@ -400,9 +400,7 @@ class JournalController {
         final firestoreData = _entryToFirestoreMap(entry);
         final docRef = await FirebaseFirestore.instance
             .collection(FirestorePaths.userEntriesPath())
-            .add(firestoreData);
-
-        entry.firestoreId = docRef.id;
+            .add(firestoreData);        entry.firestoreId = docRef.id;
         entry.isSynced = true;
         if (_db != null && _store != null) {
           await _store!.record(localId).update(_db!, {
@@ -411,6 +409,8 @@ class JournalController {
           });
         }
         _syncStatus = SyncStatus.synced;
+        // Additional update after Firestore sync
+        onUpdate();
       } catch (e) {
         debugPrint("Error saving to Firestore: $e");
         entry.isSynced = false;
