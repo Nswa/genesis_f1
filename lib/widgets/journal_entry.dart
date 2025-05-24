@@ -71,12 +71,11 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         : theme.scaffoldBackgroundColor;
     
     return Stack(
-      children: [
-        SingleChildScrollView(
+      children: [        SingleChildScrollView(
           controller: _tagsScrollController,
           scrollDirection: Axis.horizontal,
           child: Padding(
-            padding: const EdgeInsets.only(right: 14),
+            padding: const EdgeInsets.only(right: 12),
             child: Text(
               widget.entry.tags.join(" "),
               style: style,
@@ -201,13 +200,12 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         child: GestureDetector(
           onTap: widget.onTap,
           onLongPress: widget.onLongPress,
-          onScaleStart: _handleScaleStart,
-          onScaleUpdate: _handleScaleUpdate,
+          onScaleStart: _handleScaleStart,          onScaleUpdate: _handleScaleUpdate,
           behavior: HitTestBehavior.opaque, // Improve hit detection
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 120),
             curve: Curves.easeOutQuart,
-            padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
+            padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
             decoration: BoxDecoration(
               color: widget.entry.isSelected
                   ? theme.highlightColor
@@ -245,11 +243,10 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                       tagsSpacer,
                     );
                   },
-                ),
-                if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
+                ),                if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
                     (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty))
                   Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                    padding: const EdgeInsets.only(top: 5.0, bottom: 2.5),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
                         maxHeight: 200,
@@ -306,9 +303,8 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                                     },
                                   ),
                       ),
-                    ),
-                  ),
-                const SizedBox(height: 4),
+                    ),                  ),
+                const SizedBox(height: 3),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -320,12 +316,12 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     GestureDetector(
                       onTap: () => widget.onToggleFavorite(widget.entry),
                       behavior: HitTestBehavior.opaque,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: Icon(
                           widget.entry.isFavorite
                               ? Icons.bookmark
@@ -337,12 +333,11 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                         ),
                       ),
                     ),                  ],
-                ),
-                // Add a thin separator between entries
+                ),                // Add a thin separator between entries
                 Container(
                   height: 0.5,
                   width: double.infinity,
-                  margin: const EdgeInsets.only(top: 12.0),
+                  margin: const EdgeInsets.only(top: 8.0),
                   color: theme.dividerColor.withOpacity(0.3),
                 ),
               ],
