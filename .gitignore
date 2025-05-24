@@ -48,3 +48,7 @@ app.*.map.json
 
 # Twitter API keys (local, never commit)
 twitter_api.txt
+
+.repomixignore
+repo_context.md
+repomix.config.json
