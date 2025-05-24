@@ -96,8 +96,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             context,
                             index,
                           ) {
-                            final entry = entryGroup.value[index];
-                            return JournalEntryWidget(
+                            final entry = entryGroup.value[index];                            return JournalEntryWidget(
                               entry: entry,
                               // Allow unfavoriting from this screen
                               onToggleFavorite: (Entry e) async {
@@ -109,9 +108,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                   setState(() {});
                                 }
                               },
-                              // Disable selection mode interactions on this screen
-                              onTap: null,
-                              onLongPress: null,
+                              // Disable tap interactions on this screen for now
+                              onInsight: null,
+                              onEdit: null,
+                              onDelete: null,
+                              isSelectionMode: () => false,
+                              onToggleSelection: null,
                             );
                           }, childCount: entryGroup.value.length),
                         ),

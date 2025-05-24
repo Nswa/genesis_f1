@@ -11,6 +11,11 @@ class JournalEntryWidget extends StatefulWidget {
   final void Function(Entry) onToggleFavorite;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onInsight;
+  final bool Function()? isSelectionMode;
+  final VoidCallback? onToggleSelection;
 
   const JournalEntryWidget({
     super.key,
@@ -18,6 +23,11 @@ class JournalEntryWidget extends StatefulWidget {
     required this.onToggleFavorite,
     this.onTap,
     this.onLongPress,
+    this.onEdit,
+    this.onDelete,
+    this.onInsight,
+    this.isSelectionMode,
+    this.onToggleSelection,
   });
 
   @override
@@ -48,13 +58,12 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
       
       // Set the new scale
       TextScaleController.instance.setScale(newScale);
-      
-      // Calculate scroll offset adjustment to keep focal point stable
+        // Calculate scroll offset adjustment to keep focal point stable
       final scaleDelta = newScale - oldScale;
       if (scaleDelta.abs() > 0.001) { // Only adjust for meaningful scale changes
         WidgetsBinding.instance.addPostFrameCallback((_) {
           // Adjust scroll position based on focal point to keep it stable
-          final scrollController = Scrollable.of(context)?.widget.controller;
+          final scrollController = Scrollable.of(context).widget.controller;
           if (scrollController != null && scrollController.hasClients) {
             final currentOffset = scrollController.offset;
             final focalRatio = localFocalPoint.dy / (_widgetRenderBox!.size.height);
@@ -242,6 +251,104 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         heroTag: heroTag,
       );
     }
+  }  void _showContextMenu(BuildContext context, TapDownDetails details) {
+    // If in selection mode, toggle selection instead of showing context menu
+    if (widget.isSelectionMode?.call() == true) {
+      widget.onToggleSelection?.call();
+      return;
+    }
+
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RelativeRect position = RelativeRect.fromRect(
+      Rect.fromPoints(
+        details.globalPosition,
+        details.globalPosition,
+      ),
+      Offset.zero & overlay.size,
+    );
+
+    showMenu(
+      context: context,
+      position: position,
+      elevation: 8,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      items: [
+        PopupMenuItem<String>(
+          value: 'insight',
+          child: Row(
+            children: [
+              Icon(
+                Icons.lightbulb_outline,
+                size: 18,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'AI Insight',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'edit',
+          child: Row(
+            children: [
+              Icon(
+                Icons.edit_outlined,
+                size: 18,
+                color: Theme.of(context).iconTheme.color,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Edit',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'delete',
+          child: Row(
+            children: [
+              const Icon(
+                Icons.delete_outline,
+                size: 18,
+                color: Colors.red,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                'Delete',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontSize: 14,
+                  color: Colors.red,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ).then((value) {
+      if (value != null) {
+        switch (value) {
+          case 'insight':
+            widget.onInsight?.call();
+            break;
+          case 'edit':
+            widget.onEdit?.call();
+            break;
+          case 'delete':
+            widget.onDelete?.call();
+            break;
+        }
+      }
+    });
   }
 
   @override
@@ -257,11 +364,11 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         position: Tween<Offset>(
           begin: const Offset(0, 0.05),
           end: Offset.zero,
-        ).animate(widget.entry.animController),
-        child: GestureDetector(
-          onTap: widget.onTap,
+        ).animate(widget.entry.animController),        child: GestureDetector(
+          onTapDown: (details) => _showContextMenu(context, details),
           onLongPress: widget.onLongPress,
-          onScaleStart: _handleScaleStart,          onScaleUpdate: _handleScaleUpdate,
+          onScaleStart: _handleScaleStart,
+          onScaleUpdate: _handleScaleUpdate,
           behavior: HitTestBehavior.opaque, // Improve hit detection
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 120),

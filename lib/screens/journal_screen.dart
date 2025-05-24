@@ -191,19 +191,56 @@ class _JournalScreenState extends State<JournalScreen>
                                           key: ValueKey(entryGroup.value[index].localId ?? entryGroup.value[index].firestoreId),
                                           entry: entryGroup.value[index],
                                           onToggleFavorite: jc.toggleFavorite,
-                                          onTap: () {
-                                            if (jc.isSelectionMode) {
-                                              setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
-                                            } else {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => EntryInsightScreen(
-                                                    entry: entryGroup.value[index],
-                                                    journalController: jc,
-                                                  ),
+                                          isSelectionMode: () => jc.isSelectionMode,
+                                          onToggleSelection: () {
+                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
+                                          },
+                                          onInsight: () async {
+                                            final entry = entryGroup.value[index];
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => EntryInsightScreen(
+                                                  entry: entry,
+                                                  journalController: jc,
                                                 ),
-                                              );
+                                              ),
+                                            );
+                                          },
+                                          onEdit: () {
+                                            // Placeholder: show a SnackBar for now
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text('Edit coming soon!'),
+                                                duration: Duration(seconds: 1),
+                                              ),
+                                            );
+                                          },
+                                          onDelete: () async {
+                                            final entry = entryGroup.value[index];
+                                            final confirm = await showDialog<bool>(
+                                              context: context,
+                                              builder: (ctx) => AlertDialog(
+                                                title: Text('Delete Entry'),
+                                                content: Text('Are you sure you want to delete this entry?'),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(ctx).pop(false),
+                                                    child: Text('Cancel'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(ctx).pop(true),
+                                                    child: Text('Delete', style: TextStyle(color: Colors.red)),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                            if (confirm == true) {
+                                              setState(() {
+                                                jc.selectedEntries.clear();
+                                                jc.selectedEntries.add(entry);
+                                              });
+                                              await jc.deleteSelectedEntries();
                                             }
                                           },
                                           onLongPress: () {
