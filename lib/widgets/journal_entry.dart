@@ -27,13 +27,51 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
   double _baseScale = 1.0;
   late ScrollController _tagsScrollController;
   bool _showStartFade = false;
+  Offset? _lastFocalPoint;
+  RenderBox? _widgetRenderBox;
 
   void _handleScaleStart(ScaleStartDetails details) {
     _baseScale = TextScaleController.instance.scale.value;
+    _lastFocalPoint = details.focalPoint;
+    // Capture the render box for position calculations
+    _widgetRenderBox = context.findRenderObject() as RenderBox?;
   }
 
   void _handleScaleUpdate(ScaleUpdateDetails details) {
-    TextScaleController.instance.setScale(_baseScale * details.scale);
+    final newScale = _baseScale * details.scale;
+    final oldScale = TextScaleController.instance.scale.value;
+    
+    // Calculate the focal point relative to the widget
+    if (_widgetRenderBox != null && _lastFocalPoint != null) {
+      final localFocalPoint = _widgetRenderBox!.globalToLocal(_lastFocalPoint!);
+      
+      // Set the new scale
+      TextScaleController.instance.setScale(newScale);
+      
+      // Calculate scroll offset adjustment to keep focal point stable
+      final scaleDelta = newScale - oldScale;
+      if (scaleDelta.abs() > 0.001) { // Only adjust for meaningful scale changes
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          // Adjust scroll position based on focal point to keep it stable
+          final scrollController = Scrollable.of(context)?.widget.controller;
+          if (scrollController != null && scrollController.hasClients) {
+            final currentOffset = scrollController.offset;
+            final focalRatio = localFocalPoint.dy / (_widgetRenderBox!.size.height);
+            final offsetAdjustment = focalRatio * 50 * scaleDelta; // Adjust multiplier as needed
+            
+            final newOffset = currentOffset + offsetAdjustment;
+            scrollController.animateTo(
+              newOffset,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      }
+    } else {
+      // Fallback to simple scaling
+      TextScaleController.instance.setScale(newScale);
+    }
   }
 
   void _onTagsScroll() {
@@ -249,7 +287,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                     padding: const EdgeInsets.only(top: 5.0, bottom: 2.5),
                     child: ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxHeight: 200,
+                        maxHeight: 200 * TextScaleController.instance.scale.value,
                         minWidth: double.infinity,
                       ),
                       child: ClipRRect(
