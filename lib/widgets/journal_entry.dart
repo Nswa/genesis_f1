@@ -48,10 +48,14 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
 
   void _onScaleChanged() {
     setState(() {}); // Rebuild on global scale change
-  }
-
-  Widget _buildTagsBar(BuildContext context, TextStyle? style) {
+  }  Widget _buildTagsBar(BuildContext context, TextStyle? style) {
     final theme = Theme.of(context);
+    // When selected, blend the highlight color with the scaffold background
+    // to match the actual visual appearance
+    final backgroundColor = widget.entry.isSelected 
+        ? Color.alphaBlend(theme.highlightColor, theme.scaffoldBackgroundColor)
+        : theme.scaffoldBackgroundColor;
+    
     return Stack(
       children: [
         SingleChildScrollView(
@@ -77,10 +81,10 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    theme.scaffoldBackgroundColor.withOpacity(0.0),
-                    theme.scaffoldBackgroundColor.withOpacity(0.6),
-                    theme.scaffoldBackgroundColor.withOpacity(0.9),
-                    theme.scaffoldBackgroundColor,
+                    backgroundColor.withOpacity(0.0),
+                    backgroundColor.withOpacity(0.6),
+                    backgroundColor.withOpacity(0.9),
+                    backgroundColor,
                   ],
                   stops: const [0.0, 0.3, 0.7, 1.0],
                 ),
@@ -290,8 +294,14 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                               : theme.iconTheme.color,
                         ),
                       ),
-                    ),
-                  ],
+                    ),                  ],
+                ),
+                // Add a thin separator between entries
+                Container(
+                  height: 0.5,
+                  width: double.infinity,
+                  margin: const EdgeInsets.only(top: 12.0),
+                  color: theme.dividerColor.withOpacity(0.3),
                 ),
               ],
             ),
