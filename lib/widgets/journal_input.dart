@@ -409,8 +409,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                               IgnorePointer(
                                 ignoring: true,
                                 child: Icon(
-                                  Icons.keyboard_arrow_up,
-                                  size: 18, // Consistent icon size
+                                  Icons.keyboard_double_arrow_up,
+                                  size: 16, // Consistent icon size
                                   color: theme.iconTheme.color?.withOpacity(0.5),
                                 ),
                               ),
