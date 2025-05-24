@@ -410,9 +410,25 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                         const SizedBox(height: 8), // Standardized spacing
                         Row(
                                   children: [                                    Expanded(
-                                      child: ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                          maxHeight: _needsScrolling ? 150.0 : double.infinity,
+                                      child: ConstrainedBox(                                        constraints: BoxConstraints(
+                                          maxHeight: _needsScrolling 
+                                              ? () {
+                                                  final screenHeight = MediaQuery.of(context).size.height;
+                                                  final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+                                                  final topPadding = MediaQuery.of(context).padding.top;
+                                                  final bottomPadding = MediaQuery.of(context).padding.bottom;
+                                                  
+                                                  // Calculate available height more conservatively
+                                                  final availableHeight = screenHeight - keyboardHeight - topPadding - bottomPadding;
+                                                  
+                                                  // Reserve space for toolbar, margins, and other UI elements (reduced to 150px)
+                                                  final reservedSpace = 150.0;
+                                                  final usableHeight = availableHeight - reservedSpace;
+                                                  
+                                                  // Use 50% of usable height for better balance
+                                                  return (usableHeight * 0.5).clamp(200.0, 450.0);
+                                                }()
+                                              : double.infinity, // Balanced height with proper keyboard handling
                                         ),
                                         child: SingleChildScrollView(
                                           child: TextField(
