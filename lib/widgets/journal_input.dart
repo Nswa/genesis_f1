@@ -40,8 +40,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    
-    // Set up callback to clear GIF when image is picked
+      // Set up callback to clear GIF when image is picked
     widget.journalController.onClearGif = () {
       if (mounted) {
         setState(() {
@@ -49,12 +48,27 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         });
       }
     };
+    
+    // Listen to controller changes to clear GIF when entry is saved/cleared
+    widget.journalController.controller.addListener(_onControllerChanged);
   }  @override
   void dispose() {
     _emojiBarController.dispose();
     _cameraController?.dispose();
     _recordingTimer?.cancel();
+    widget.journalController.controller.removeListener(_onControllerChanged);
     super.dispose();
+  }
+
+  void _onControllerChanged() {
+    // If controller text is cleared (after save), also clear GIF
+    if (widget.journalController.controller.text.isEmpty && 
+        widget.journalController.pickedGifFile == null && 
+        _generatedGif != null) {
+      setState(() {
+        _generatedGif = null;
+      });
+    }
   }
 
   Future<void> _initializeCamera() async {
@@ -165,11 +179,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
         if (ReturnCode.isSuccess(returnCode)) {
           print('GIF conversion successful: $gifPath');
           
-          final File gifFile = File(gifPath);
-          if (await gifFile.exists()) {            setState(() {
+          final File gifFile = File(gifPath);          if (await gifFile.exists()) {
+            setState(() {
               _generatedGif = gifFile;
               // Clear any selected image since only one media type is allowed
               widget.journalController.clearImage();
+              // Set the GIF in the controller so it gets saved
+              widget.journalController.setGifFile(gifFile);
             });
             print('GIF file size: ${await gifFile.length()} bytes');
           }
@@ -483,12 +499,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       fit: BoxFit.cover,
                                     ),
                                   ),
-                                ),
-                                GestureDetector(
+                                ),                                GestureDetector(
                                   onTap: () {
                                     setState(() {
                                       _generatedGif = null;
                                     });
+                                    // Also clear from controller
+                                    widget.journalController.clearGif();
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.all(4),

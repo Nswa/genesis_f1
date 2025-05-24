@@ -37,9 +37,9 @@ class JournalController {
   bool isDragging = false;
   bool hasTriggeredSave = false;
   bool showRipple = false;
-  bool isLoading = false;
-  bool isSavingEntry = false;
+  bool isLoading = false;  bool isSavingEntry = false;
   File? pickedImageFile;
+  File? pickedGifFile; // Add GIF file support
   final ImagePicker _picker = ImagePicker(); // Added ImagePicker instance
 
   String _searchTerm = '';
@@ -202,7 +202,7 @@ class JournalController {
     for (var record in records) {
       entries.add(_entryFromMap(record.key, record.value));
     }
-    entries.sort((a, b) => a.rawDateTime.compareTo(b.rawDateTime));
+    entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime)); // Sort newest first
     onUpdate();
   }
 
@@ -241,10 +241,10 @@ class JournalController {
               localId: doc.id,
               localImagePath: null,
             );
-          }).toList();
-
-      entries.clear();
+          }).toList();      entries.clear();
       entries.addAll(loadedEntries);
+      // Sort entries newest first
+      entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
 
       if (_db != null && _store != null) {
         await _store!.delete(_db!);
@@ -270,10 +270,8 @@ class JournalController {
 
     isSavingEntry = true;
     _syncStatus = SyncStatus.syncing;
-    onUpdate();
-
-    final text = controller.text.trim();
-    if (text.isEmpty && pickedImageFile == null) {
+    onUpdate();    final text = controller.text.trim();
+    if (text.isEmpty && pickedImageFile == null && pickedGifFile == null) {
       isSavingEntry = false;
       _updateSyncStatus();
       onUpdate();
@@ -286,11 +284,10 @@ class JournalController {
     final user = FirebaseAuth.instance.currentUser;
     final timestamp = DateTime.now();
     final localId =
-        'local_${timestamp.millisecondsSinceEpoch}_${entries.length}';
-
-    final connectivityResult = await Connectivity().checkConnectivity();
+        'local_${timestamp.millisecondsSinceEpoch}_${entries.length}';    final connectivityResult = await Connectivity().checkConnectivity();
     bool isOnline = connectivityResult != ConnectivityResult.none;
 
+    // Handle image upload
     if (pickedImageFile != null) {
       if (isOnline && user != null) {
         try {
@@ -310,6 +307,33 @@ class JournalController {
       } else {
         // Offline: store local image path
         localImagePath = pickedImageFile!.path;
+      }
+    }    // Handle GIF upload
+    if (pickedGifFile != null) {
+      if (isOnline && user != null) {
+        try {
+          debugPrint("Uploading GIF for user: ${user.uid}");
+          final fileName =
+              '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.gif';
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_gifs')
+              .child(user.uid)
+              .child(fileName);
+          debugPrint("Storage path: ${storageRef.fullPath}");
+          UploadTask uploadTask = storageRef.putFile(pickedGifFile!);
+          TaskSnapshot snapshot = await uploadTask;
+          uploadedImageUrl = await snapshot.ref.getDownloadURL(); // Use same field for both
+          debugPrint("GIF uploaded successfully: $uploadedImageUrl");
+        } catch (e) {
+          debugPrint("Error uploading GIF: $e");
+          // If upload fails, store locally for offline sync
+          localImagePath = pickedGifFile!.path;
+        }
+      } else {
+        // Offline: store local GIF path
+        localImagePath = pickedGifFile!.path;
+        debugPrint("Storing GIF locally (offline): $localImagePath");
       }
     }
 
@@ -345,25 +369,26 @@ class JournalController {
       isSynced: false,
       firestoreId: null,
       localImagePath: localImagePath, // Save local image path if offline
-    );
-
-    entries.add(entry);
+    );    entries.add(entry);
+    // Sort entries to ensure newest first
+    entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
     if (_db != null && _store != null) {
       await _store!.record(localId).put(_db!, _entryToMap(entry));
-    }
-
-    controller.clear();
+    }    controller.clear();
     pickedImageFile = null;
+    pickedGifFile = null; // Clear GIF file too
+    onClearGif?.call(); // Explicitly clear GIF widget state
     dragOffsetY = 0;
     selectedMood = null;
     showRipple = true;
     animationController.forward();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    
+    // Update UI immediately to show the new entry
+    onUpdate();WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 100));
       if (scrollController.hasClients) {
         scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
+          0, // Scroll to top for newest entries
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
@@ -434,15 +459,16 @@ class JournalController {
       // If entry has a local image path but no imageUrl, upload the image
       if (entry.localImagePath != null &&
           entry.localImagePath!.isNotEmpty && // Added check for empty path
-          (entry.imageUrl == null || entry.imageUrl!.isEmpty)) {
-        try {
+          (entry.imageUrl == null || entry.imageUrl!.isEmpty)) {        try {
           final file = File(entry.localImagePath!);
           if (await file.exists()) { // Check if file exists before upload
-            final fileName =
-                '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+            final isGif = entry.localImagePath!.toLowerCase().endsWith('.gif');
+            final fileName = isGif
+                ? '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.gif'
+                : '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
             final storageRef = FirebaseStorage.instance
                 .ref()
-                .child('user_images')
+                .child(isGif ? 'user_gifs' : 'user_images')
                 .child(user.uid)
                 .child(fileName);
             UploadTask uploadTask = storageRef.putFile(file);
@@ -451,12 +477,11 @@ class JournalController {
             entry.imageUrl = url;
             entry.localImagePath = null; // Clear local path after successful upload
           } else {
-            debugPrint("Offline image file not found: ${entry.localImagePath}");
+            debugPrint("Offline file not found: ${entry.localImagePath}");
             // Decide how to handle missing file: clear localImagePath? Mark as error?
             entry.localImagePath = null; // Example: clear it to prevent re-attempts
-          }
-        } catch (e) {
-          debugPrint("Error uploading offline image for entry $localId: $e");
+          }        } catch (e) {
+          debugPrint("Error uploading offline file for entry $localId: $e");
         }
       }
 
@@ -646,12 +671,14 @@ class JournalController {
     selectedEntries.clear();
     onUpdate();
   }
-
   void cancelEntry() {
     controller.clear();
     pickedImageFile = null;
+    pickedGifFile = null; // Clear GIF file too
     selectedMood = null;
     showRipple = false;
+    dragOffsetY = 0;
+    onClearGif?.call(); // Clear GIF from widget
     onUpdate();
   }
 
@@ -664,21 +691,34 @@ class JournalController {
 
   // Callback for clearing GIF when image is picked
   VoidCallback? onClearGif;
-
   // Method to pick an image
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       pickedImageFile = File(image.path);
       // Clear any existing GIF since only one media type is allowed
+      pickedGifFile = null;
       onClearGif?.call();
       onUpdate();
     }
   }
-
   // Method to clear the picked image
   void clearImage() {
     pickedImageFile = null;
+    onUpdate();
+  }
+
+  // Method to set GIF file
+  void setGifFile(File gifFile) {
+    pickedGifFile = gifFile;
+    // Clear any selected image since only one media type is allowed
+    pickedImageFile = null;
+    onUpdate();
+  }
+  // Method to clear the GIF file
+  void clearGif() {
+    pickedGifFile = null;
+    onClearGif?.call(); // Also clear widget state
     onUpdate();
   }
 
