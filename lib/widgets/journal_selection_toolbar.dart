@@ -14,9 +14,8 @@ class JournalSelectionToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
+    final theme = Theme.of(context);    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

@@ -89,10 +89,8 @@ class JournalToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDarkTheme = theme.brightness == Brightness.dark;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+    final isDarkTheme = theme.brightness == Brightness.dark;    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -106,10 +104,9 @@ class JournalToolbar extends StatelessWidget {
               ],
             ),
           ],
-          if (isSearching)
-            Expanded(
+          if (isSearching)            Expanded(
               child: SizedBox(
-                height: 36,
+                height: 32,
                 child: TextField(
                   controller: searchController,
                   focusNode: searchFocusNode,
