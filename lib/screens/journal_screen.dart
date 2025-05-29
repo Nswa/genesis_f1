@@ -4,10 +4,10 @@ import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:genesis_f1/widgets/calendar_modal.dart';
 import 'favorites_screen.dart';
 import 'entry_insight_screen.dart';
+import 'edit_entry_screen.dart';
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
 import '../widgets/indeterminate_progress_bar.dart';
-import '../utils/custom_toast.dart';
 import '../utils/custom_delete_dialog.dart';
 
 import '../widgets/journal_input.dart';
@@ -208,14 +208,26 @@ class _JournalScreenState extends State<JournalScreen>
                                                 ),
                                               ),
                                             );
-                                          },                                          onEdit: () {
-                                            // Placeholder: show a custom toast for now
-                                            CustomToast.show(
+                                          },                                          onEdit: () async {
+                                            final entry = entryGroup.value[index];
+                                            final result = await Navigator.push<bool>(
                                               context,
-                                              message: 'Edit coming soon!',
-                                              icon: Icons.edit_outlined,
+                                              MaterialPageRoute(
+                                                builder: (context) => EditEntryScreen(
+                                                  entry: entry,
+                                                  journalController: jc,
+                                                ),
+                                              ),
                                             );
-                                          },                                          onDelete: () async {
+                                            
+                                            // If changes were saved, refresh the entries
+                                            if (result == true) {
+                                              setState(() {
+                                                // The controller will automatically update the UI
+                                                // through its reactive streams
+                                              });
+                                            }
+                                          },onDelete: () async {
                                             final entry = entryGroup.value[index];
                                             final confirm = await CustomDeleteDialog.show(
                                               context,

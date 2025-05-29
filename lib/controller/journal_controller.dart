@@ -780,4 +780,141 @@ class JournalController {
     }
     onUpdate();
   }
+
+  // Method to update an existing entry
+  Future<void> updateEntry(
+    Entry entry, {
+    required String text,
+    String? mood,
+    File? newImageFile,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final connectivityResult = await Connectivity().checkConnectivity();
+    bool isOnline = connectivityResult != ConnectivityResult.none;    // Parse tags from text
+    final tags = extractTags(text);
+    final wordCount = text.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
+
+    String? newImageUrl = entry.imageUrl;
+    String? newLocalImagePath = entry.localImagePath;
+
+    // Handle new image upload
+    if (newImageFile != null) {
+      if (isOnline && user != null) {
+        try {
+          // Delete old image if it exists
+          if (entry.imageUrl != null && entry.imageUrl!.isNotEmpty) {
+            try {
+              await FirebaseStorage.instance.refFromURL(entry.imageUrl!).delete();
+            } catch (e) {
+              debugPrint("Error deleting old image: $e");
+            }
+          }
+
+          // Upload new image
+          final fileName = '${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('user_images')
+              .child(user.uid)
+              .child(fileName);
+          
+          final uploadTask = storageRef.putFile(newImageFile);
+          final snapshot = await uploadTask;
+          newImageUrl = await snapshot.ref.getDownloadURL();
+          newLocalImagePath = null; // Clear local path since we have URL
+        } catch (e) {
+          debugPrint("Error uploading new image: $e");
+          // If upload fails, save local path for later sync
+          newLocalImagePath = newImageFile.path;
+        }
+      } else {
+        // Offline - save local path
+        newLocalImagePath = newImageFile.path;
+      }
+    }
+
+    // Create updated entry data
+    final updatedEntryData = {
+      'text': text,
+      'mood': mood,
+      'tags': tags,
+      'wordCount': wordCount,
+      'imageUrl': newImageUrl,
+      'localImagePath': newLocalImagePath,
+      'isSynced': false, // Mark as needing sync
+    };
+
+    // Update local database
+    if (_db != null && _store != null && entry.localId != null) {
+      await _store!.record(entry.localId!).update(_db!, updatedEntryData);
+    }
+
+    // Update the entry object in memory
+    final index = entries.indexWhere((e) => e.localId == entry.localId);
+    if (index != -1) {
+      // Update entry properties
+      final updatedEntry = Entry(
+        localId: entry.localId,
+        firestoreId: entry.firestoreId,
+        text: text,
+        timestamp: entry.timestamp,
+        rawDateTime: entry.rawDateTime,
+        animController: entry.animController,
+        mood: mood,
+        tags: tags,
+        wordCount: wordCount,
+        imageUrl: newImageUrl,
+        isFavorite: entry.isFavorite,
+        isSelected: entry.isSelected,
+        isSynced: false,
+        localImagePath: newLocalImagePath,
+      );
+      
+      entries[index] = updatedEntry;
+    }
+
+    // Update UI immediately
+    onUpdate();
+
+    // Sync to Firestore if online
+    if (isOnline && user != null && entry.firestoreId != null) {
+      try {
+        final firestoreData = {
+          'text': text,
+          'mood': mood,
+          'tags': tags,
+          'wordCount': wordCount,
+          'imageUrl': newImageUrl,
+          'isFavorite': entry.isFavorite,
+          'timestamp': entry.rawDateTime.toIso8601String(),
+        };
+
+        await FirebaseFirestore.instance
+            .collection(FirestorePaths.userEntriesPath())
+            .doc(entry.firestoreId)
+            .update(firestoreData);
+
+        // Mark as synced
+        if (_db != null && _store != null && entry.localId != null) {
+          await _store!.record(entry.localId!).update(_db!, {'isSynced': true});
+        }
+
+        // Update entry sync status in memory
+        final updatedIndex = entries.indexWhere((e) => e.localId == entry.localId);
+        if (updatedIndex != -1) {
+          entries[updatedIndex].isSynced = true;
+        }
+
+        _syncStatus = SyncStatus.synced;
+      } catch (e) {
+        debugPrint("Error updating entry in Firestore: $e");
+    _syncStatus = SyncStatus.error;
+      }
+    } else {
+      _syncStatus = SyncStatus.offline;
+    }
+
+    _updateSyncStatus();
+    onUpdate();
+  }
 }
