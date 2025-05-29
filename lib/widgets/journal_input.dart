@@ -6,6 +6,7 @@ import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
 import 'package:genesis_f1/services/user_profile_service.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
@@ -35,9 +36,15 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   CameraController? _cameraController;
   bool _showCameraPreview = false;
   bool _isCameraInitialized = false;
-  bool _isVideoRecording = false;
-  Timer? _recordingTimer;
-  File? _generatedGif;  @override
+  bool _isVideoRecording = false;  Timer? _recordingTimer;
+  File? _generatedGif;
+  
+  // Gesture detection for tap vs hold
+  Timer? _holdTimer;
+  bool _isHolding = false;
+  final ImagePicker _picker = ImagePicker();
+
+  @override
   void initState() {
     super.initState();
     _emojiBarController = AnimationController(
@@ -60,6 +67,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
     _emojiBarController.dispose();
     _cameraController?.dispose();
     _recordingTimer?.cancel();
+    _holdTimer?.cancel();
     widget.journalController.controller.removeListener(_onControllerChanged);
     super.dispose();
   }
@@ -230,6 +238,56 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       
     } catch (e) {
       print('Error converting video to GIF: $e');
+    }
+  }
+
+  // Method to open camera for photo capture (single tap)
+  Future<void> _openCameraForPhoto() async {
+    try {
+      final XFile? photo = await _picker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 85, // Good balance of quality and file size
+      );
+      
+      if (photo != null) {
+        final File imageFile = File(photo.path);
+        widget.journalController.pickedImageFile = imageFile;
+        // Clear any existing GIF since only one media type is allowed
+        widget.journalController.pickedGifFile = null;
+        widget.journalController.onClearGif?.call();
+        widget.journalController.onUpdate();
+      }
+    } catch (e) {
+      print('Error opening camera for photo: $e');
+    }
+  }
+
+  // Gesture handlers for tap vs hold detection
+  void _onTapDown() {
+    _isHolding = false;
+    _holdTimer = Timer(const Duration(milliseconds: 500), () {
+      // If we reach here, it's a hold gesture - start recording
+      _isHolding = true;
+      _startRecording();
+    });
+  }
+
+  void _onTapUp() {
+    _holdTimer?.cancel();
+    
+    if (!_isHolding) {
+      // It was a quick tap - open camera for photo
+      _openCameraForPhoto();
+    } else {
+      // It was a hold - stop recording
+      _stopRecording();
+    }
+  }
+
+  void _onTapCancel() {
+    _holdTimer?.cancel();
+    if (_isHolding) {
+      _stopRecording();
     }
   }
 
@@ -463,13 +521,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                       ),
                                     ),GestureDetector(
                                       onTapDown: (details) {
-                                        _startRecording();
+                                        _onTapDown();
                                       },
                                       onTapUp: (details) {
-                                        _stopRecording();
+                                        _onTapUp();
                                       },
                                       onTapCancel: () {
-                                        _stopRecording();
+                                        _onTapCancel();
                                       },
                                       child: Stack(
                                         clipBehavior: Clip.none,
