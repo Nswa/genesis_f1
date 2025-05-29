@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import flutter_svg
-import 'package:genesis_f1/digital_assets/auth_bg.dart';
-import 'package:genesis_f1/utils/system_ui_helper.dart';
+import 'package:collective/digital_assets/auth_bg.dart';
+import 'package:collective/utils/system_ui_helper.dart';
 import '../services/auth_manager.dart';
 import '../services/user_profile_service.dart';
-import 'package:genesis_f1/constant/colors.dart';
-import 'package:genesis_f1/widgets/floating_tooltip.dart';
+import 'package:collective/constant/colors.dart';
+import 'package:collective/widgets/floating_tooltip.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:genesis_f1/screens/journal_screen.dart';// Import JournalScreen
+import 'package:collective/screens/journal_screen.dart';// Import JournalScreen
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});

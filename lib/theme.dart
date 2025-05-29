@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:genesis_f1/constant/size.dart';
+import 'package:collective/constant/size.dart';
 
 final lightTheme = ThemeData(
   useMaterial3: true,

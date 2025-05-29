@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Comprehensive sizing constants for the entire app.
 ///
 /// Usage:
-/// 1. Import this file: `import 'package:genesis_f1/constant/size.dart';`
+/// 1. Import this file: `import 'package:collective/constant/size.dart';`
 /// 2. Use constants directly: `padding: SizeConstants.paddingMedium`
 /// 3. For EdgeInsets, use predefined constants: `padding: SizeConstants.paddingAllLarge`
 ///

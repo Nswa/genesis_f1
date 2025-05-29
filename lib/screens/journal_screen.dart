@@ -1,7 +1,7 @@
 //
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:genesis_f1/widgets/calendar_modal.dart';
+import 'package:collective/widgets/calendar_modal.dart';
 import 'favorites_screen.dart';
 import 'entry_insight_screen.dart';
 import 'edit_entry_screen.dart';

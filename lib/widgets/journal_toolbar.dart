@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:genesis_f1/constant/size.dart';
-import 'package:genesis_f1/constant/colors.dart';
+import 'package:collective/constant/size.dart';
+import 'package:collective/constant/colors.dart';
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
 import '../controller/journal_controller.dart';

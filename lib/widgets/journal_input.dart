@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../controller/journal_controller.dart';
 import '../utils/mood_utils.dart';
 import '../utils/date_formatter.dart';
-import 'package:genesis_f1/services/user_profile_service.dart';
+import 'package:collective/services/user_profile_service.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';

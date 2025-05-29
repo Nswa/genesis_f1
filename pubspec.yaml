@@ -1,5 +1,5 @@
-name: genesis_f1
-description: "Genesis — A journaling app focused on simplicity and speed, built with Flutter."
+name: collective
+description: "Collective — A journaling app focused on simplicity and speed, built with Flutter."
 publish_to: 'none' # Prevents accidental publishing to pub.dev
 
 version: 1.0.0+1
