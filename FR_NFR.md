@@ -1,8 +1,8 @@
-# Genesis F1 - Requirements Analysis Report
+# Collective (previously Collective) - Requirements Analysis Report
 
 ## Project Overview
 
-**Project Name:** Genesis F1  
+**Project Name:** Collective
 **Description:** A journaling app focused on simplicity and speed, built with Flutter  
 **Platform:** Mobile (Android primary, iOS support prepared)  
 **Architecture:** Flutter frontend with Firebase backend  
@@ -342,7 +342,7 @@
 
 ## Conclusion
 
-Genesis F1 represents a well-architected journaling application that balances simplicity with advanced features. The functional requirements cover comprehensive journaling capabilities enhanced by AI insights, while the non-functional requirements ensure a scalable, secure, and maintainable solution. The offline-first approach with cloud synchronization provides excellent user experience across various network conditions.
+Collective represents a well-architected journaling application that balances simplicity with advanced features. The functional requirements cover comprehensive journaling capabilities enhanced by AI insights, while the non-functional requirements ensure a scalable, secure, and maintainable solution. The offline-first approach with cloud synchronization provides excellent user experience across various network conditions.
 
 The project demonstrates modern mobile development practices with Flutter and Firebase, implementing sophisticated features like AI-powered insights while maintaining focus on core journaling functionality. The modular architecture and clean code patterns support long-term maintainability and feature expansion.
 

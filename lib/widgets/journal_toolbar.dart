@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:genesis_f1/constant/size.dart';
+import 'package:genesis_f1/constant/colors.dart';
 import '../services/auth_manager.dart';
 import '../screens/auth_screen.dart';
 import '../controller/journal_controller.dart';
@@ -94,11 +96,21 @@ class JournalToolbar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (!isSearching) ...[
-            Row(
+          if (!isSearching) ...[            Row(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text('genesis', style: theme.textTheme.titleMedium),
+                SvgPicture.asset(
+                  'assets/logo/collective_logo.svg',
+                  height: 20,
+                  width: 20,
+                  colorFilter: ColorFilter.mode(
+                    isDarkTheme ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                    BlendMode.srcIn,
+                  ),
+                ),
+                const SizedBox(width: 5),
+                Text('collective', style: theme.textTheme.titleMedium?.copyWith(fontSize: 20)),
                 const SizedBox(width: 5.0),
                 _buildSyncStatusIcon(context),
               ],

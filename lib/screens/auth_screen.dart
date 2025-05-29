@@ -147,13 +147,28 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
             child: IntrinsicHeight(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //add top padding
-                  const SizedBox(height: 190), // Increased padding from 48 to 64
-                  Text(
-                    'genesis',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displayLarge,
+                children: [                  //add top padding
+                  const SizedBox(height: 190), // Increased padding from 48 to 64                  // Logo and Title on same line
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/logo/collective_logo.svg',
+                        height: 40,
+                        width: 40,
+                        colorFilter: ColorFilter.mode(
+                          isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        'collective',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.displaySmall,
+                      ),
+                    ],
                   ),
 
                   const SizedBox(height: 64), // Increased padding from 48 to 64
@@ -230,7 +245,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
                     ),
                   ],
                   // Email TextField
-                  const SizedBox(height: 95), // Added padding
+                  const SizedBox(height: 0), // Added padding
                   Container(
                     key: _emailFieldKey,
                     margin: const EdgeInsets.symmetric(vertical: 8), // Adjusted margin
