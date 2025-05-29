@@ -251,7 +251,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         heroTag: heroTag,
       );
     }
-  }  void _showContextMenu(BuildContext context, TapDownDetails details) {
+  }  void _showContextMenu(BuildContext context, [Offset? globalPosition]) {
     // If in selection mode, toggle selection instead of showing context menu
     if (widget.isSelectionMode?.call() == true) {
       widget.onToggleSelection?.call();
@@ -260,17 +260,19 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
 
     final theme = Theme.of(context);
     final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-    final RelativeRect position = RelativeRect.fromRect(
-      Rect.fromPoints(
-        details.globalPosition,
-        details.globalPosition,
-      ),
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    
+    // Use provided position or default to center of the widget
+    final Offset position = globalPosition ?? box.localToGlobal(box.size.center(Offset.zero));
+    
+    final RelativeRect relativePosition = RelativeRect.fromRect(
+      Rect.fromPoints(position, position),
       Offset.zero & overlay.size,
     );
 
     showMenu(
       context: context,
-      position: position,
+      position: relativePosition,
       elevation: 6,
       color: theme.brightness == Brightness.dark 
           ? const Color(0xFF2A2A2A) 
@@ -288,7 +290,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
       constraints: const BoxConstraints(
         minWidth: 140,
         maxWidth: 160,
-      ),      items: <PopupMenuEntry<String>>[
+      ),items: <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
           value: 'insight',
           height: 36,
@@ -395,7 +397,15 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
           begin: const Offset(0, 0.05),
           end: Offset.zero,
         ).animate(widget.entry.animController),        child: GestureDetector(
-          onTapDown: (details) => _showContextMenu(context, details),
+          onTap: () {
+            // If in selection mode, toggle selection on tap
+            if (widget.isSelectionMode?.call() == true) {
+              widget.onToggleSelection?.call();
+            } else {
+              // Show context menu on regular tap when not in selection mode
+              _showContextMenu(context);
+            }
+          },
           onLongPress: widget.onLongPress,
           onScaleStart: _handleScaleStart,
           onScaleUpdate: _handleScaleUpdate,
