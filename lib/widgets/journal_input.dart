@@ -538,10 +538,14 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                             transform: _isRecording
                                                 ? Matrix4.translationValues(0, -55, 0)
                                                 : Matrix4.identity(),
+                                            // add small left paddding
+                                            margin: const EdgeInsets.only(left: 8, right: 8, top: 4),
                                             child: Icon(
                                               Icons.radio_button_checked,
                                               size: 28,
-                                              color: _isRecording ? Colors.red : theme.iconTheme.color?.withOpacity(0.7),
+                                              color: _isRecording
+                                                  ? Colors.red.withOpacity(0.7) // Reduced contrast for recording state
+                                                  : theme.iconTheme.color?.withOpacity(0.25), // Lower contrast for idle state
                                             ),
                                           ),
                                           // Camera preview positioned above the button
