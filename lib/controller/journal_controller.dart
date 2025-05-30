@@ -14,7 +14,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../models/entry.dart';
 
-import '../utils/tag_utils.dart';
 import '../utils/date_formatter.dart';
 import '../utils/firestore_paths.dart';
 import '../utils/animation_utils.dart';
@@ -27,8 +26,9 @@ class JournalController {
   final TextEditingController controller = TextEditingController();
   final FocusNode focusNode = FocusNode();
   final ScrollController scrollController;
+  Function()? shouldDisableDrag;
+  Function()? onClearGif; // Add callback for clearing GIF widget state
 
-  final double swipeThreshold = 120.0;
   final TickerProvider vsync;
   final VoidCallback onUpdate;
 
@@ -41,8 +41,9 @@ class JournalController {
   File? pickedImageFile;
   File? pickedGifFile; // Add GIF file support
   final ImagePicker _picker = ImagePicker(); // Added ImagePicker instance
-
   String _searchTerm = '';
+  List<String> manualTags = []; // Add manual tags support
+  static const double swipeThreshold = 80.0; // Add swipe threshold constant
 
   late final AnimationController snapBackController;
   late final AnimationController handlePulseController;
@@ -103,6 +104,29 @@ class JournalController {
 
   void updateSearchTerm(String term) {
     _searchTerm = term;
+    onUpdate();
+  }
+
+  // Manual tagging methods
+  void updateManualTags(List<String> tags) {
+    manualTags = List.from(tags);
+    onUpdate();
+  }
+
+  void addManualTag(String tag) {
+    if (!manualTags.contains(tag)) {
+      manualTags.add(tag);
+      onUpdate();
+    }
+  }
+
+  void removeManualTag(String tag) {
+    manualTags.remove(tag);
+    onUpdate();
+  }
+
+  void clearManualTags() {
+    manualTags.clear();
     onUpdate();
   }
 
@@ -335,24 +359,9 @@ class JournalController {
         localImagePath = pickedGifFile!.path;
         debugPrint("Storing GIF locally (offline): $localImagePath");
       }
-    }
-
-    final mood = selectedMood;
-    final List<String> rawTags = extractTags(text);
-    final List<String> tags =
-        rawTags
-            .map((tag) {
-              String currentTag = tag.trim();
-              if (currentTag.isEmpty) return null;
-              String tagName = currentTag;
-              while (tagName.startsWith('#')) {
-                tagName = tagName.substring(1);
-              }
-              if (tagName.isEmpty) return null;
-              return '#$tagName';
-            })
-            .whereType<String>()
-            .toList();
+    }    final mood = selectedMood;
+    // Use manual tags instead of automatic extraction
+    final List<String> tags = List<String>.from(manualTags);
     final wordCount =
         text.split(RegExp(r'\s+')).where((s) => s.isNotEmpty).length;
 
@@ -380,6 +389,7 @@ class JournalController {
     onClearGif?.call(); // Explicitly clear GIF widget state
     dragOffsetY = 0;
     selectedMood = null;
+    manualTags.clear(); // Clear manual tags after saving
     showRipple = true;
     animationController.forward();
     
@@ -672,12 +682,12 @@ class JournalController {
     }
     selectedEntries.clear();
     onUpdate();
-  }
-  void cancelEntry() {
+  }  void cancelEntry() {
     controller.clear();
     pickedImageFile = null;
     pickedGifFile = null; // Clear GIF file too
     selectedMood = null;
+    manualTags.clear(); // Clear manual tags when canceling
     showRipple = false;
     dragOffsetY = 0;
     onClearGif?.call(); // Clear GIF from widget
@@ -687,16 +697,9 @@ class JournalController {
   void triggerSave() {
     if (!hasTriggeredSave) {
       hasTriggeredSave = true;
-      _saveEntry();
-    }
+      _saveEntry();    }
   }
 
-  // Callback for clearing GIF when image is picked
-  VoidCallback? onClearGif;
-  
-  // Callback to check if text needs scrolling
-  bool Function()? shouldDisableDrag;
-  
   // Method to pick an image
   Future<void> pickImage() async {
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -790,8 +793,8 @@ class JournalController {
   }) async {
     final user = FirebaseAuth.instance.currentUser;
     final connectivityResult = await Connectivity().checkConnectivity();
-    bool isOnline = connectivityResult != ConnectivityResult.none;    // Parse tags from text
-    final tags = extractTags(text);
+    bool isOnline = connectivityResult != ConnectivityResult.none;    // Use manual tags instead of automatic extraction  
+    final tags = List<String>.from(manualTags);
     final wordCount = text.split(RegExp(r'\s+')).where((word) => word.isNotEmpty).length;
 
     String? newImageUrl = entry.imageUrl;

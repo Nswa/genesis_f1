@@ -247,6 +247,61 @@ class DeepseekService {
     }
   }
 
+  /// Generate intelligent tag suggestions based on journal entry text
+  Future<List<String>> suggestTags(String text, List<String> existingTags) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$_baseUrl/chat/completions'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $_apiKey',
+        },
+        body: jsonEncode({
+          'model': 'deepseek-chat',
+          'messages': [
+            {
+              'role': 'system',
+              'content': 'You are an intelligent journaling assistant that suggests relevant tags for journal entries. '
+                  'Analyze the provided text and suggest 3-5 concise, meaningful tags that capture the key themes, emotions, activities, or topics. '
+                  'Tags should be single words or short phrases, lowercase, and prefixed with #. '
+                  'Focus on: emotions, activities, people, places, themes, goals, or topics mentioned. '
+                  'Avoid generic words like "the", "and", etc. Be specific and meaningful. '
+                  'Return only the tags, one per line, no additional text.'
+            },
+            {
+              'role': 'user',
+              'content': 'Text: "$text"\n\nExisting tags to consider for context: ${existingTags.join(", ")}\n\nSuggest relevant tags:'
+            }
+          ],
+          'max_tokens': 100,
+          'temperature': 0.7,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final content = data['choices'][0]['message']['content'] as String;
+        
+        // Parse the response to extract tags
+        final suggestedTags = content
+            .split('\n')
+            .map((line) => line.trim())
+            .where((line) => line.isNotEmpty && line.startsWith('#'))
+            .map((tag) => tag.toLowerCase())
+            .take(5)
+            .toList();
+        
+        return suggestedTags;
+      } else {
+        debugPrint('DeepSeek API error for tag suggestions: ${response.statusCode}, ${response.body}');
+        return [];
+      }
+    } catch (e) {
+      debugPrint('Error getting tag suggestions: $e');
+      return [];
+    }
+  }
+
   /// Format entries for analyzing contextual relationship (legacy)
   @deprecated
   String _formatEntriesForAnalysis(Entry mainEntry, List<Entry> relatedEntries) {

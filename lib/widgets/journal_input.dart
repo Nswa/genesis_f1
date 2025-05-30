@@ -12,6 +12,7 @@ import 'package:path/path.dart' as path;
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'custom_image_viewer.dart';
+import 'tag_input.dart';
 
 class JournalInputWidget extends StatefulWidget {
   final JournalController journalController;
@@ -335,15 +336,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
-    final theme = Theme.of(context);
-
-    final fadeValue = (1 +
+    final theme = Theme.of(context);    final fadeValue = (1 +
             (widget.journalController.dragOffsetY /
-                widget.journalController.swipeThreshold))
+                JournalController.swipeThreshold))
         .clamp(0.0, 1.0);
     final scaleValue = (1 -
             (widget.journalController.dragOffsetY.abs() /
-                (widget.journalController.swipeThreshold * 1.5)))
+                (JournalController.swipeThreshold * 1.5)))
         .clamp(0.8, 1.0);
 
     final bool isSaving = widget.journalController.isSavingEntry;
@@ -723,10 +722,19 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                     ),
                                   ),
                                 ),
-                              );
-                            }).toList(),
+                              );                            }).toList(),
                       ),
                     ),
+                  ),
+                ),
+                // Tag input widget - add at the bottom
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(5, 8, 5, 0),
+                  child: TagInputWidget(
+                    journalController: widget.journalController,
+                    onTagsChanged: (tags) {
+                      widget.journalController.updateManualTags(tags);
+                    },
                   ),
                 ),
               ],

@@ -276,9 +276,8 @@ class _JournalScreenState extends State<JournalScreen>
                 ? IndeterminateProgressBar(
                     color: Theme.of(context).hintColor,
                     height: 1.5,
-                  )
-                : FractionallySizedBox(
-                    widthFactor: (-jc.dragOffsetY / jc.swipeThreshold).clamp(0.0, 1.0),
+                  )                : FractionallySizedBox(
+                    widthFactor: (-jc.dragOffsetY / JournalController.swipeThreshold).clamp(0.0, 1.0),
                     child: Container(
                       height: 1,
                       color: Theme.of(context).hintColor,
