@@ -20,12 +20,10 @@ class _TagInputWidgetState extends State<TagInputWidget> {
   final TextEditingController _tagController = TextEditingController();
   final FocusNode _tagFocusNode = FocusNode();
   List<String> _currentTags = [];
-  List<String> _suggestedTags = [];
-  bool _showSuggestions = false;
+  List<String> _suggestedTags = [];  bool _showSuggestions = false;
   bool _showInputField = false; // Add explicit state for input field visibility
-  final DeepseekService _deepseekService = DeepseekService();
-
-  @override
+  double _inputFieldWidth = 60.0; // Dynamic width for input field - start smaller
+  final DeepseekService _deepseekService = DeepseekService();  @override
   void initState() {
     super.initState();
     _currentTags = List.from(widget.journalController.manualTags);
@@ -38,23 +36,51 @@ class _TagInputWidgetState extends State<TagInputWidget> {
     _tagController.dispose();
     _tagFocusNode.dispose();
     super.dispose();
-  }
-
-  void _onTagInputChanged() {
+  }  void _onTagInputChanged() {
     final input = _tagController.text.trim();
+    _updateInputFieldWidth(input);
+    
     if (input.isNotEmpty && input.length >= 2) {
       _generateTagSuggestions(input);
+      // Also trigger AI suggestions if journal has content
+      if (widget.journalController.controller.text.trim().isNotEmpty) {
+        _getAISuggestions();
+      }
     } else {
       setState(() {
         _showSuggestions = false;
         _suggestedTags.clear();
       });
     }
-  }  void _onFocusChanged() {
+  }
+  void _updateInputFieldWidth(String text) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text.isEmpty ? '#tag' : text, // Use hint text for min width
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          fontSize: 12,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+    
+    // Calculate width with padding and some extra space
+    // Start smaller for hint text: 60px min, 200px max, padding: 20px
+    final baseWidth = text.isEmpty ? 40.0 : textPainter.width; // Smaller for hint
+    final calculatedWidth = (baseWidth + 20).clamp(60.0, 200.0);
+    
+    if (calculatedWidth != _inputFieldWidth) {
+      setState(() {
+        _inputFieldWidth = calculatedWidth;
+      });
+    }
+  }void _onFocusChanged() {
     setState(() {
       if (!_tagFocusNode.hasFocus) {
         _showSuggestions = false;
         _showInputField = false; // Hide input field when focus is lost
+        _inputFieldWidth = 60.0; // Reset width when hiding input field
       }
     });
   }
@@ -135,13 +161,13 @@ class _TagInputWidgetState extends State<TagInputWidget> {
     cleanTag = cleanTag.replaceAll(RegExp(r'#+'), '#');
     print('Debug: Clean tag: "$cleanTag"');
       if (!_currentTags.contains(cleanTag) && cleanTag.length > 1) {
-      print('Debug: Adding tag to list: $_currentTags');
-      setState(() {
+      print('Debug: Adding tag to list: $_currentTags');      setState(() {
         _currentTags.add(cleanTag);
         _tagController.clear();
         _showSuggestions = false;
         _suggestedTags.clear();
         _showInputField = false; // Hide input field after adding tag
+        _inputFieldWidth = 60.0; // Reset to default width
       });
       print('Debug: Updated tags: $_currentTags');
       widget.onTagsChanged(_currentTags);
@@ -162,147 +188,68 @@ class _TagInputWidgetState extends State<TagInputWidget> {
     
     if (input.isNotEmpty) {
       print('Debug: Adding tag: $input');
-      _addTag(input);
-    } else {
+      _addTag(input);    } else {
       print('Debug: Input empty, showing input field and requesting focus');
       setState(() {
         _showInputField = true;
+        _inputFieldWidth = 60.0; // Initialize with smaller default width
       });
       // Request focus after the widget is rebuilt
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _tagFocusNode.requestFocus();
+        // Update width for hint text
+        _updateInputFieldWidth('');
       });
     }
-  }
-  @override
+  }  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    print('Debug: TagInputWidget build called. Current tags: $_currentTags');    return Container(
-      // Add a background for visibility during debugging
-      // decoration: BoxDecoration(
-      //   border: Border.all(color: Colors.green, width: 1),
-      // ),
+    print('Debug: TagInputWidget build called. Current tags: $_currentTags');
+    
+    // Sync with controller's manual tags (e.g., after entry is saved and tags are cleared)
+    if (widget.journalController.manualTags.isEmpty && _currentTags.isNotEmpty) {
+      // Clear immediately without post-frame callback to fix UI not clearing after submission
+      _currentTags.clear();
+      _showInputField = false;
+      _showSuggestions = false;
+      _suggestedTags.clear();
+      _tagController.clear();
+      _inputFieldWidth = 60.0;
+      print('Debug: Cleared tags in sync with controller');
+    }
+    
+    return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [// Tags display and add button row
-        Row(
-          children: [
-            Expanded(
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
+        children: [
+          // Single scrollable row for tags, input, and suggestions
+          Container(
+            height: 40,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
                   // Display current tags
-                  ..._currentTags.map((tag) => _buildTagChip(tag, theme)),
+                  ..._currentTags.map((tag) => Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: _buildTagChip(tag, theme),
+                  )),
                   // Add tag button/input
                   _buildAddTagButton(theme),
+                  // Inline suggestions with animation
+                  if (_showSuggestions && _suggestedTags.isNotEmpty) ...[
+                    const SizedBox(width: 8),
+                    ..._suggestedTags.map((tag) => Padding(
+                      padding: const EdgeInsets.only(right: 6.0),
+                      child: _buildSuggestionChip(tag, theme),
+                    )),
+                  ],
                 ],
               ),
             ),
-            // AI suggestion button
-            if (widget.journalController.controller.text.trim().isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: GestureDetector(
-                  onTap: _getAISuggestions,
-                  child: Container(
-                    height: 28,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.secondary.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: theme.colorScheme.secondary.withOpacity(0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.auto_awesome,
-                          size: 14,
-                          color: theme.colorScheme.secondary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          'AI',
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.secondary,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-        
-        // Suggestions dropdown
-        if (_showSuggestions && _suggestedTags.isNotEmpty)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: theme.cardColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: theme.dividerColor.withOpacity(0.3),
-                width: 1,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Suggestions',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.hintColor,
-                    fontSize: 11,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: _suggestedTags.map((tag) => 
-                    GestureDetector(
-                      onTap: () => _addTag(tag),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: theme.colorScheme.primary.withOpacity(0.2),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Text(
-                          tag,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.primary,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ).toList(),
-                ),
-              ],
-            ),          ),
-      ],
-    ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -348,9 +295,10 @@ class _TagInputWidgetState extends State<TagInputWidget> {
       child: _showInputField 
         ? Row(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 120,
+            children: [              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                width: _inputFieldWidth,
                 height: 28,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
@@ -445,8 +393,43 @@ class _TagInputWidgetState extends State<TagInputWidget> {
                   ),
                 ],
               ),
-            ),
+            ),          ),
+    );
+  }
+
+  Widget _buildSuggestionChip(String tag, ThemeData theme) {
+    return GestureDetector(
+      onTap: () => _addTag(tag),
+      child: Container(
+        height: 28,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.secondary.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: theme.colorScheme.secondary.withOpacity(0.3),
+            width: 0.5,
           ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.auto_awesome,
+              size: 12,
+              color: theme.colorScheme.secondary.withOpacity(0.7),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              tag,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.secondary,
+                fontSize: 11,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
