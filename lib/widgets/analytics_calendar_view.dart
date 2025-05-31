@@ -233,17 +233,14 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
                   
                   if (hasEntries) ...[
                     Row(
-                      children: [
-                        ...List.generate(
+                      children: [                        ...List.generate(
                           (entryCount / 2).ceil().clamp(1, 5),
                           (index) => Container(
                             width: 6,
                             height: 6,
                             margin: const EdgeInsets.only(right: 3),
                             decoration: BoxDecoration(
-                              color: theme.primaryColor.withOpacity(
-                                0.4 + (intensity * 0.6),
-                              ),
+                              color: _getMonthCardIntensityColor(intensity, theme),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -319,15 +316,14 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
                 ),
               ),
               const SizedBox(width: 4),              ...List.generate(4, (index) {
-                final opacity = 0.2 + (index * 0.2);
                 return Container(
                   width: 8,
                   height: 8,
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   decoration: BoxDecoration(
                     color: theme.brightness == Brightness.dark 
-                      ? Colors.white.withOpacity(opacity * 0.8) 
-                      : theme.primaryColor.withOpacity(opacity),
+                      ? _getDarkModeIntensityColor(index, theme)
+                      : _getLightModeIntensityColor(index, theme),
                     shape: BoxShape.circle,
                   ),
                 );
@@ -355,5 +351,37 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
     
     // TODO: This will trigger the insights panel to update
     // We'll need to pass this selection up to the parent
+  }
+
+  // Helper methods for better intensity color scaling
+  Color _getDarkModeIntensityColor(int index, ThemeData theme) {
+    // Use a gradient from subtle blue to bright white for dark theme
+    const colors = [
+      Color(0xFF404060), // Subtle dark blue
+      Color(0xFF5060A0), // Medium blue  
+      Color(0xFF60A0E0), // Bright blue
+      Color(0xFFB0D0FF), // Light blue
+    ];
+    return colors[index];
+  }
+
+  Color _getLightModeIntensityColor(int index, ThemeData theme) {
+    // Use primary color with increasing intensity for light theme
+    final baseOpacity = 0.2 + (index * 0.2);
+    return theme.primaryColor.withOpacity(baseOpacity);
+  }
+
+  Color _getMonthCardIntensityColor(double intensity, ThemeData theme) {
+    if (theme.brightness == Brightness.dark) {
+      // Use blue gradient for dark theme instead of low opacity
+      return Color.lerp(
+        const Color(0xFF404060), // Dark blue
+        const Color(0xFF80B0FF), // Light blue
+        intensity,
+      )!;
+    } else {
+      // Keep existing logic for light theme
+      return theme.primaryColor.withOpacity(0.4 + (intensity * 0.6));
+    }
   }
 }

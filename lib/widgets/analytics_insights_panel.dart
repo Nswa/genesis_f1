@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:http/http.dart' as http;
 import '../services/analytics_service.dart';
 import '../controller/journal_controller.dart';
@@ -141,8 +142,14 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
   String _buildInsightsPrompt() {
     final entries = widget.topic.entries;
     final buffer = StringBuffer();
-    
-    buffer.writeln('Analyze these journal entries about "${widget.topic.name}" and provide meaningful insights:');
+      buffer.writeln('Analyze these journal entries about "${widget.topic.name}" and provide meaningful insights in markdown format:');
+    buffer.writeln('');
+    buffer.writeln('Please format your response using markdown with:');
+    buffer.writeln('- ## for main section headers');
+    buffer.writeln('- ### for subsection headers');
+    buffer.writeln('- **bold** for emphasis');
+    buffer.writeln('- *italic* for subtle emphasis');
+    buffer.writeln('- Bullet points for lists');
     buffer.writeln('');
     buffer.writeln('Focus on:');
     buffer.writeln('- Patterns and trends over time');
@@ -189,11 +196,10 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
     final timeSpan = widget.topic.lastEntryDate.difference(widget.topic.firstEntryDate).inDays;
     
     final buffer = StringBuffer();
-    
-    buffer.writeln('## Your Journey with $topicName');
+      buffer.writeln('## Your Journey with $topicName');
     buffer.writeln('');
     
-    buffer.writeln('Over the span of ${timeSpan > 365 ? '${(timeSpan / 365).round()} years' : '$timeSpan days'}, you\'ve written ${entries.length} entries about $topicName. This shows a meaningful connection to this topic in your life.');
+    buffer.writeln('Over the span of **${timeSpan > 365 ? '${(timeSpan / 365).round()} years' : '$timeSpan days'}**, you\'ve written **${entries.length} entries** about $topicName. This shows a meaningful connection to this topic in your life.');
     buffer.writeln('');
     
     // Find most active periods
@@ -208,17 +214,24 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
     final monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     final monthName = monthNames[int.parse(parts[0])];
     
-    buffer.writeln('Your most active period was $monthName ${parts[1]} with ${mostActiveMonth.value} entries, suggesting this was a particularly significant time for reflection on $topicName.');
+    buffer.writeln('### Key Insights');
+    buffer.writeln('');
+    buffer.writeln('- **Most active period**: $monthName ${parts[1]} with **${mostActiveMonth.value} entries**');
+    buffer.writeln('- This suggests it was a particularly significant time for reflection on $topicName');
     buffer.writeln('');
     
     // Check for mood patterns if available
     final moodEntries = entries.where((e) => e.mood != null && e.mood!.isNotEmpty);
     if (moodEntries.isNotEmpty) {
-      buffer.writeln('Looking at your emotional journey, you\'ve tracked various moods while writing about $topicName, showing thoughtful self-awareness.');
+      buffer.writeln('### Emotional Awareness');
+      buffer.writeln('');
+      buffer.writeln('You\'ve tracked various moods while writing about $topicName, showing *thoughtful self-awareness* and emotional intelligence.');
       buffer.writeln('');
     }
     
-    buffer.writeln('This collection represents an important aspect of your personal growth and reflection. Consider revisiting these entries to see how your perspective has evolved over time.');
+    buffer.writeln('### Reflection');
+    buffer.writeln('');
+    buffer.writeln('This collection represents an important aspect of your personal growth. Consider **revisiting these entries** to see how your perspective has evolved over time.');
     
     return buffer.toString();
   }
@@ -315,17 +328,63 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
         ),
       );
     }
-    
-    return SingleChildScrollView(
+      return SingleChildScrollView(
       controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            displayText,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              height: 1.6,
-              letterSpacing: 0.2,
+          // Use MarkdownBody for proper markdown rendering
+          MarkdownBody(
+            data: displayText,
+            styleSheet: MarkdownStyleSheet(
+              p: theme.textTheme.bodyMedium?.copyWith(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                height: 1.6,
+                letterSpacing: 0.2,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.9) 
+                  : Colors.black.withOpacity(0.8),
+              ),
+              h1: theme.textTheme.titleLarge?.copyWith(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              h2: theme.textTheme.titleMedium?.copyWith(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              h3: theme.textTheme.titleSmall?.copyWith(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              listBullet: TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.8) 
+                  : Colors.black.withOpacity(0.7),
+              ),
+              strong: TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              em: TextStyle(
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.9) 
+                  : Colors.black.withOpacity(0.8),
+              ),
             ),
           ),
           
