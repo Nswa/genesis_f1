@@ -1,4 +1,5 @@
 # Miscellaneous
+FR_NFR.md.bak
 *.class
 #*.github
 *.log
@@ -34,6 +35,7 @@ migrate_working_dir/
 .pub/
 /build/
 /.github/
+/FINAL-YEAR-PROJECT-2_REPORT/
 
 # Symbolication related
 app.*.symbols

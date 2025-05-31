@@ -76,7 +76,6 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
     } on FirebaseAuthException catch (e) {
       String? emailError;
       String? passwordError;
-      String? nameError;
       switch (e.code) {
         case 'user-not-found':
         case 'wrong-password':
@@ -113,13 +112,7 @@ class _AuthScreenState extends State<AuthScreen> with SingleTickerProviderStateM
           message: passwordError,
         );
       }
-      if (nameError != null) {
-        FloatingTooltip.show(
-          context: context,
-          targetKey: _firstNameFieldKey,
-          message: nameError,
-        );
-      }
+      // Removed redundant nameError check and tooltip, as nameError is always null
     } finally {
       _borderAnimController.stop();
       setState(() => _isSubmitting = false);
