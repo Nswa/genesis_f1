@@ -15,23 +15,22 @@ class AnalyticsTopicCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      return Container(
+      margin: const EdgeInsets.only(bottom: 8),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           child: Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isDark 
                 ? Colors.white.withOpacity(0.05)
                 : Colors.black.withOpacity(0.02),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: theme.dividerColor.withOpacity(0.1),
+                color: theme.dividerColor.withOpacity(0.15),
                 width: 0.5,
               ),
             ),
@@ -39,21 +38,21 @@ class AnalyticsTopicCard extends StatelessWidget {
               children: [
                 // Topic emoji
                 Container(
-                  width: 48,
-                  height: 48,
+                  width: 40,
+                  height: 40,
                   decoration: BoxDecoration(
                     color: theme.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: Text(
                       topic.emoji,
-                      style: const TextStyle(fontSize: 24),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                 ),
                 
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 
                 // Topic details
                 Expanded(
@@ -66,56 +65,69 @@ class AnalyticsTopicCard extends StatelessWidget {
                             child: Text(
                               topic.name,
                               style: theme.textTheme.titleMedium?.copyWith(
+                                fontFamily: 'IBM Plex Sans',
                                 fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                               ),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
-                              vertical: 4,
+                              vertical: 3,
                             ),
                             decoration: BoxDecoration(
                               color: theme.primaryColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               '${topic.entries.length}',
                               style: theme.textTheme.bodySmall?.copyWith(
+                                fontFamily: 'IBM Plex Sans',
                                 color: theme.primaryColor,
                                 fontWeight: FontWeight.w600,
+                                fontSize: 12,
                               ),
                             ),
                           ),
                         ],
                       ),
                       
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
                       
                       Text(
                         topic.description,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.hintColor,
+                          fontFamily: 'IBM Plex Sans',
+                          fontSize: 13,
+                          color: theme.brightness == Brightness.dark 
+                            ? Colors.white.withOpacity(0.7) 
+                            : Colors.black.withOpacity(0.6),
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                        maxLines: 2,                      ),
                       
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       
                       // Date range
                       Row(
                         children: [
                           Icon(
                             Icons.calendar_today_outlined,
-                            size: 14,
-                            color: theme.hintColor,
+                            size: 12,
+                            color: theme.brightness == Brightness.dark 
+                              ? Colors.white.withOpacity(0.5) 
+                              : Colors.black.withOpacity(0.4),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             _formatDateRange(),
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.hintColor,
+                              fontFamily: 'IBM Plex Sans',
+                              fontSize: 11,
+                              color: theme.brightness == Brightness.dark 
+                                ? Colors.white.withOpacity(0.5) 
+                                : Colors.black.withOpacity(0.4),
                             ),
                           ),
                         ],
@@ -124,13 +136,15 @@ class AnalyticsTopicCard extends StatelessWidget {
                   ),
                 ),
                 
-                const SizedBox(width: 12),
+                const SizedBox(width: 8),
                 
                 // Arrow indicator
                 Icon(
                   Icons.arrow_forward_ios,
-                  size: 16,
-                  color: theme.hintColor,
+                  size: 14,
+                  color: theme.brightness == Brightness.dark 
+                    ? Colors.white.withOpacity(0.4) 
+                    : Colors.black.withOpacity(0.3),
                 ),
               ],
             ),

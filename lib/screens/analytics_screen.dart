@@ -314,37 +314,49 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       ),
     );
   }
-
   Widget _buildHeader(ThemeData theme) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back, size: 24),
+            icon: Icon(Icons.arrow_back, 
+              size: 22, 
+              color: theme.iconTheme.color,
+            ),
             onPressed: () => Navigator.of(context).pop(),
             padding: EdgeInsets.zero,
             constraints: const BoxConstraints(),
           ),
           const SizedBox(width: 12),
-          Text(
-            _selectedTopic != null ? _selectedTopic!.name : 'Journey Analytics',
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.w600,
-              fontSize: 22,
+          Expanded(
+            child: Text(
+              _selectedTopic != null ? _selectedTopic!.name : 'Journey Analytics',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontFamily: 'IBM Plex Sans',
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
-          const Spacer(),
           if (_selectedTopic != null)
             IconButton(
-              icon: const Icon(Icons.close, size: 20),
+              icon: Icon(Icons.close, 
+                size: 20, 
+                color: theme.iconTheme.color,
+              ),
               onPressed: _goBackToTopics,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
             ),
           if (_selectedTopic == null && _hasAnalyzed)
             IconButton(
-              icon: const Icon(Icons.refresh, size: 20),
+              icon: Icon(Icons.refresh, 
+                size: 20, 
+                color: theme.iconTheme.color,
+              ),
               onPressed: _refresh,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
@@ -369,44 +381,50 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     
     return _buildTopicsOverview(theme);
   }
-
   Widget _buildAnalyzingState(ThemeData theme) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 80,
-            height: 80,
+            width: 64,
+            height: 64,
             decoration: BoxDecoration(
               color: theme.primaryColor.withOpacity(0.1),
               shape: BoxShape.circle,
             ),
             child: Center(
               child: SizedBox(
-                width: 32,
-                height: 32,
+                width: 28,
+                height: 28,
                 child: CircularProgressIndicator(
-                  strokeWidth: 3,
+                  strokeWidth: 2.5,
                   valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           Text(
             'Analyzing Your Journey',
-            style: theme.textTheme.headlineSmall?.copyWith(
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontFamily: 'IBM Plex Sans',
               fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               _analysisProgress,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.hintColor,
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.7) 
+                  : Colors.black.withOpacity(0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -415,7 +433,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       ),
     );
   }
-
   Widget _buildEmptyState(ThemeData theme) {
     return Center(
       child: Column(
@@ -423,23 +440,32 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         children: [
           Icon(
             Icons.analytics_outlined,
-            size: 64,
-            color: theme.hintColor,
+            size: 56,
+            color: theme.brightness == Brightness.dark 
+              ? Colors.white.withOpacity(0.5)
+              : Colors.black.withOpacity(0.4),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
           Text(
             'No Insights Yet',
-            style: theme.textTheme.headlineSmall?.copyWith(
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontFamily: 'IBM Plex Sans',
               fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 48),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Text(
               'Start journaling to discover patterns and insights in your thoughts.',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.hintColor,
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.7) 
+                  : Colors.black.withOpacity(0.6),
               ),
               textAlign: TextAlign.center,
             ),
@@ -448,7 +474,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       ),
     );
   }
-
   Widget _buildTopicsOverview(ThemeData theme) {
     return FadeTransition(
       opacity: _fadeController,
@@ -456,22 +481,28 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'You have ${_topics.length} ${_topics.length == 1 ? 'topic' : 'topics'} to reflect on',
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: theme.hintColor,
+                    fontFamily: 'IBM Plex Sans',
+                    fontSize: 16,
+                    color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 Text(
                   'Tap a topic to explore your journey',
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.hintColor,
+                    fontFamily: 'IBM Plex Sans',
+                    fontSize: 14,
+                    color: theme.brightness == Brightness.dark 
+                      ? Colors.white.withOpacity(0.7) 
+                      : Colors.black.withOpacity(0.6),
                   ),
                 ),
               ],
@@ -484,12 +515,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
               itemBuilder: (context, index) {
                 final topic = _topics[index];
                 return TweenAnimationBuilder<double>(
-                  duration: Duration(milliseconds: 400 + (index * 100)),
+                  duration: Duration(milliseconds: 350 + (index * 80)),
                   tween: Tween(begin: 0.0, end: 1.0),
                   curve: Curves.easeOutCubic,
                   builder: (context, value, child) {
                     return Transform.translate(
-                      offset: Offset(0, 20 * (1 - value)),
+                      offset: Offset(0, 15 * (1 - value)),
                       child: Opacity(
                         opacity: value,
                         child: child,

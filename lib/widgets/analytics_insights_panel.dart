@@ -226,32 +226,33 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
-    return Container(
-      padding: const EdgeInsets.all(16),
+      return Container(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
           Row(
-            children: [
-              Icon(
+            children: [              Icon(
                 Icons.lightbulb_outline,
-                size: 20,
-                color: theme.primaryColor,
+                size: 18,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.8) 
+                  : theme.primaryColor,
               ),
-              const SizedBox(width: 8),
-              Text(
+              const SizedBox(width: 8),              Text(
                 'Insights & Patterns',
                 style: theme.textTheme.titleMedium?.copyWith(
+                  fontFamily: 'IBM Plex Sans',
                   fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                  color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                 ),
               ),
               const Spacer(),
-              if (_isLoadingInsights)
-                SizedBox(
-                  width: 16,
-                  height: 16,
+              if (_isLoadingInsights)                SizedBox(
+                  width: 14,
+                  height: 14,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
                     valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
@@ -259,18 +260,17 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
                 ),
             ],
           ),
-          
-          const SizedBox(height: 16),
+            const SizedBox(height: 12),
           
           // Insights content
           Expanded(
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: theme.cardColor.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: theme.dividerColor.withOpacity(0.1),
+                  color: theme.dividerColor.withOpacity(0.15),
                   width: 0.5,
                 ),
               ),
@@ -278,7 +278,7 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
             ),
           ),
           
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           
           // Entry list section
           _buildEntryList(theme),
@@ -294,17 +294,21 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
+          children: [            Icon(
               Icons.auto_awesome_outlined,
               size: 32,
-              color: theme.hintColor,
+              color: theme.brightness == Brightness.dark 
+                ? Colors.white.withOpacity(0.6) 
+                : Colors.black.withOpacity(0.4),
             ),
-            const SizedBox(height: 8),
-            Text(
+            const SizedBox(height: 8),            Text(
               'Generating insights...',
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.hintColor,
+                fontFamily: 'IBM Plex Sans',
+                fontSize: 14,
+                color: theme.brightness == Brightness.dark 
+                  ? Colors.white.withOpacity(0.7) 
+                  : Colors.black.withOpacity(0.6),
               ),
             ),
           ],
@@ -330,20 +334,22 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
             Container(
               margin: const EdgeInsets.only(top: 4),
               child: Row(
-                children: [
-                  Container(
+                children: [                  Container(
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: theme.primaryColor,
+                      color: theme.brightness == Brightness.dark 
+                        ? Colors.white.withOpacity(0.8) 
+                        : theme.primaryColor,
                       shape: BoxShape.circle,
                     ),
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Analyzing...',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.hintColor,
+                    'Analyzing...',                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.brightness == Brightness.dark 
+                        ? Colors.white.withOpacity(0.6) 
+                        : Colors.black.withOpacity(0.5),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -360,11 +366,13 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
       height: 120,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
+        children: [          Text(
             'Related Entries (${widget.topic.entries.length})',
             style: theme.textTheme.titleSmall?.copyWith(
+              fontFamily: 'IBM Plex Sans',
               fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
             ),
           ),
           
@@ -406,11 +414,14 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
+              children: [                Text(
                   DateFormatter.formatForGrouping(entry.rawDateTime),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.primaryColor,
+                    fontFamily: 'IBM Plex Sans',
+                    fontSize: 12,
+                    color: theme.brightness == Brightness.dark 
+                      ? Colors.white.withOpacity(0.6) 
+                      : Colors.black.withOpacity(0.5),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -418,10 +429,15 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
                 const SizedBox(height: 4),
                 
                 Expanded(
-                  child: Text(
+                  child:                  Text(
                     entry.text,
                     style: theme.textTheme.bodySmall?.copyWith(
+                      fontFamily: 'IBM Plex Sans',
+                      fontSize: 12,
                       height: 1.3,
+                      color: theme.brightness == Brightness.dark 
+                        ? Colors.white.withOpacity(0.7) 
+                        : Colors.black.withOpacity(0.7),
                     ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,

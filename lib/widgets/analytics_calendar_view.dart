@@ -68,19 +68,20 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final monthlyEntries = _getEntriesByMonth();
-    
-    return Container(
-      padding: const EdgeInsets.all(16),
+      return Container(
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header with year selector
+        children: [          // Header with year selector
           Row(
             children: [
               Text(
                 'Journey Timeline',
                 style: theme.textTheme.titleLarge?.copyWith(
+                  fontFamily: 'IBM Plex Sans',
                   fontWeight: FontWeight.w600,
+                  fontSize: 18,
+                  color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                 ),
               ),
               const Spacer(),
@@ -88,7 +89,7 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
             ],
           ),
           
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           
           // Calendar grid
           Expanded(
@@ -104,12 +105,14 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
 
   Widget _buildYearSelector(ThemeData theme) {
     final availableYears = _getAvailableYears();
-    
-    if (availableYears.length <= 1) {
+      if (availableYears.length <= 1) {
       return Text(
         _selectedYear.toString(),
         style: theme.textTheme.titleMedium?.copyWith(
+          fontFamily: 'IBM Plex Sans',
           fontWeight: FontWeight.w500,
+          fontSize: 16,
+          color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
         ),
       );
     }
@@ -119,7 +122,12 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
       items: availableYears.map((year) {
         return DropdownMenuItem(
           value: year,
-          child: Text(year.toString()),
+          child: Text(
+            year.toString(),
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontFamily: 'IBM Plex Sans',
+            ),
+          ),
         );
       }).toList(),
       onChanged: (year) {
@@ -132,7 +140,9 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
       },
       underline: const SizedBox(),
       style: theme.textTheme.titleMedium?.copyWith(
+        fontFamily: 'IBM Plex Sans',
         fontWeight: FontWeight.w500,
+        color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
       ),
     );
   }
@@ -206,13 +216,16 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    monthName,
+                  Text(                    monthName,
                     style: theme.textTheme.titleSmall?.copyWith(
+                      fontFamily: 'IBM Plex Sans',
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: hasEntries 
-                          ? theme.textTheme.titleSmall?.color
-                          : theme.hintColor,
+                          ? (theme.brightness == Brightness.dark ? Colors.white : Colors.black)
+                          : (theme.brightness == Brightness.dark 
+                            ? Colors.white.withOpacity(0.5) 
+                            : Colors.black.withOpacity(0.4)),
                     ),
                   ),
                   
@@ -237,19 +250,21 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
+                    const SizedBox(height: 4),                    Text(
                       '$entryCount ${entryCount == 1 ? 'entry' : 'entries'}',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.hintColor,
+                        color: theme.brightness == Brightness.dark 
+                          ? Colors.white.withOpacity(0.6) 
+                          : Colors.black.withOpacity(0.5),
                         fontSize: 10,
                       ),
                     ),
-                  ] else ...[
-                    Text(
+                  ] else ...[                    Text(
                       'No entries',
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.hintColor,
+                        color: theme.brightness == Brightness.dark 
+                          ? Colors.white.withOpacity(0.4) 
+                          : Colors.black.withOpacity(0.4),
                         fontSize: 10,
                       ),
                     ),
@@ -263,14 +278,16 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
               Positioned(
                 top: 8,
                 right: 8,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    color: theme.primaryColor,
-                    shape: BoxShape.circle,
-                  ),
+                child:              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: theme.brightness == Brightness.dark 
+                    ? Colors.white.withOpacity(0.8) 
+                    : theme.primaryColor,
+                  shape: BoxShape.circle,
                 ),
+              ),
               ),
           ],
         ),
@@ -282,41 +299,45 @@ class _AnalyticsCalendarViewState extends State<AnalyticsCalendarView> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
-        children: [
-          Text(
+        children: [          Text(
             'Tap a month to explore entries',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.hintColor,
+              color: theme.brightness == Brightness.dark 
+                ? Colors.white.withOpacity(0.6) 
+                : Colors.black.withOpacity(0.5),
             ),
           ),
           const Spacer(),
           Row(
-            children: [
-              Text(
+            children: [              Text(
                 'Less',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.hintColor,
+                  color: theme.brightness == Brightness.dark 
+                    ? Colors.white.withOpacity(0.6) 
+                    : Colors.black.withOpacity(0.5),
                   fontSize: 10,
                 ),
               ),
-              const SizedBox(width: 4),
-              ...List.generate(4, (index) {
+              const SizedBox(width: 4),              ...List.generate(4, (index) {
                 final opacity = 0.2 + (index * 0.2);
                 return Container(
                   width: 8,
                   height: 8,
                   margin: const EdgeInsets.symmetric(horizontal: 1),
                   decoration: BoxDecoration(
-                    color: theme.primaryColor.withOpacity(opacity),
+                    color: theme.brightness == Brightness.dark 
+                      ? Colors.white.withOpacity(opacity * 0.8) 
+                      : theme.primaryColor.withOpacity(opacity),
                     shape: BoxShape.circle,
                   ),
                 );
               }),
-              const SizedBox(width: 4),
-              Text(
+              const SizedBox(width: 4),              Text(
                 'More',
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.hintColor,
+                  color: theme.brightness == Brightness.dark 
+                    ? Colors.white.withOpacity(0.6) 
+                    : Colors.black.withOpacity(0.5),
                   fontSize: 10,
                 ),
               ),
