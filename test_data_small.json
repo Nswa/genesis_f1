@@ -1,0 +1,43 @@
+{
+  "entries": [
+    {
+      "localId": "test_entry_1",
+      "firestoreId": null,
+      "text": "This is a test journal entry to verify the injection system works correctly.",
+      "timestamp": "2024-01-15T10:30:00.000",
+      "mood": "😊",
+      "tags": ["test", "verification"],
+      "wordCount": 13,
+      "imageUrl": null,
+      "isFavorite": false,
+      "isSynced": false,
+      "localImagePath": null
+    },
+    {
+      "localId": "test_entry_2", 
+      "firestoreId": null,
+      "text": "Another test entry with different mood and tags. This should help us verify the data injection.",
+      "timestamp": "2024-01-15T14:45:00.000",
+      "mood": "🤔",
+      "tags": ["test", "debugging", "verification"],
+      "wordCount": 16,
+      "imageUrl": null,
+      "isFavorite": true,
+      "isSynced": false,
+      "localImagePath": null
+    },
+    {
+      "localId": "test_entry_3",
+      "firestoreId": null,
+      "text": "Final test entry to complete our small dataset. Ready for testing!",
+      "timestamp": "2024-01-15T18:20:00.000",
+      "mood": "🎉",
+      "tags": ["test", "completion"],
+      "wordCount": 11,
+      "imageUrl": null,
+      "isFavorite": false,
+      "isSynced": false,
+      "localImagePath": null
+    }
+  ]
+}

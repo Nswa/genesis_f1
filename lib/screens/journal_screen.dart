@@ -6,6 +6,7 @@ import 'favorites_screen.dart';
 import 'entry_insight_screen.dart';
 import 'edit_entry_screen.dart';
 import 'analytics_screen.dart';
+import 'test_data_screen.dart';
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
 import '../widgets/indeterminate_progress_bar.dart';
@@ -32,7 +33,6 @@ class _JournalScreenState extends State<JournalScreen>
   final _searchController = TextEditingController();
   final _searchFocusNode = FocusNode();
   bool _isSearching = false;
-
   @override
   void initState() {
     super.initState();
@@ -52,6 +52,19 @@ class _JournalScreenState extends State<JournalScreen>
         setState(() {});
       }
     });
+    
+    // Add scroll listener for pagination
+    scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 200) {
+      // Load more when within 200 pixels of bottom
+      if (jc.canLoadMore && !jc.isLoadingMore) {
+        jc.loadMoreEntries();
+      }
+    }
   }
 
   @override
@@ -121,7 +134,16 @@ class _JournalScreenState extends State<JournalScreen>
                           ),
                         );
                       },
-                      onOpenSettings: () {},                      onOpenDatePicker: () {
+                      onOpenSettings: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TestDataScreen(
+                              journalController: jc,
+                            ),
+                          ),
+                        );
+                      },                      onOpenDatePicker: () {
                         showCalendarModal(
                           context,
                           jc.entries, // show all entries in calendar, not filtered
@@ -149,120 +171,138 @@ class _JournalScreenState extends State<JournalScreen>
                   switchOutCurve: Curves.easeInCubic,                  child: CustomScrollView(
                     key: ValueKey('${jc.isLoading}_${jc.entries.length}_${grouped.length}'),
                     controller: scrollController,
-                    slivers:
-                        jc.isLoading
-                            ? List.generate(5, (_) => const ShimmerSliver())
-                                .toList() // Use new widget
-                            : grouped.entries.map((entryGroup) {
-                              return SliverStickyHeader(
-                                header: GestureDetector(
-                                  onLongPress: () {
-                                    jc.selectEntriesByDate(entryGroup.value);
-                                  },
-                                  onTap: () {
-                                    // Added onTap for deselection
-                                    if (jc.isSelectionMode) {
-                                      jc.deselectEntriesByDate(
-                                        entryGroup.value,
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    color: background,
-                                    padding: const EdgeInsets.fromLTRB(
-                                      16,
-                                      8, // Reduced top padding
-                                      0,
-                                      4, // Reduced bottom padding
-                                    ),
-                                    child: Text(
-                                      entryGroup.key,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context).hintColor,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
+                    slivers: [
+                      if (jc.isLoading)
+                        ...List.generate(5, (_) => const ShimmerSliver())
+                      else ...[
+                        ...grouped.entries.map((entryGroup) {
+                          return SliverStickyHeader(
+                            header: GestureDetector(
+                              onLongPress: () {
+                                jc.selectEntriesByDate(entryGroup.value);
+                              },
+                              onTap: () {
+                                // Added onTap for deselection
+                                if (jc.isSelectionMode) {
+                                  jc.deselectEntriesByDate(
+                                    entryGroup.value,
+                                  );
+                                }
+                              },
+                              child: Container(
+                                color: background,
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  8, // Reduced top padding
+                                  0,
+                                  4, // Reduced bottom padding
+                                ),
+                                child: Text(
+                                  entryGroup.key,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context).hintColor,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                ),                                sliver: SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                    (context, index) {
-                                      return TweenAnimationBuilder<double>(
-                                        duration: const Duration(milliseconds: 300),
-                                        tween: Tween(begin: 0.0, end: 1.0),
-                                        curve: Curves.easeOut,
-                                        builder: (context, value, child) {
-                                          return Transform.scale(
-                                            scale: 0.95 + (0.05 * value),
-                                            child: Opacity(
-                                              opacity: value,
-                                              child: child,
-                                            ),
-                                          );
-                                        },                                        child: JournalEntryWidget(
-                                          key: ValueKey(entryGroup.value[index].localId ?? entryGroup.value[index].firestoreId),
-                                          entry: entryGroup.value[index],
-                                          onToggleFavorite: jc.toggleFavorite,
-                                          isSelectionMode: () => jc.isSelectionMode,
-                                          onToggleSelection: () {
-                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
-                                          },
-                                          onInsight: () async {
-                                            final entry = entryGroup.value[index];
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EntryInsightScreen(
-                                                  entry: entry,
-                                                  journalController: jc,
-                                                ),
-                                              ),
-                                            );
-                                          },                                          onEdit: () async {
-                                            final entry = entryGroup.value[index];
-                                            final result = await Navigator.push<bool>(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EditEntryScreen(
-                                                  entry: entry,
-                                                  journalController: jc,
-                                                ),
-                                              ),
-                                            );
-                                            
-                                            // If changes were saved, refresh the entries
-                                            if (result == true) {
-                                              setState(() {
-                                                // The controller will automatically update the UI
-                                                // through its reactive streams
-                                              });
-                                            }
-                                          },onDelete: () async {
-                                            final entry = entryGroup.value[index];
-                                            final confirm = await CustomDeleteDialog.show(
-                                              context,
-                                              title: 'Delete Entry',
-                                              message: 'Are you sure you want to delete this entry? This action cannot be undone.',
-                                            );
-                                            if (confirm == true) {
-                                              setState(() {
-                                                jc.selectedEntries.clear();
-                                                jc.selectedEntries.add(entry);
-                                              });
-                                              await jc.deleteSelectedEntries();
-                                            }
-                                          },
-                                          onLongPress: () {
-                                            setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
-                                          },
+                                ),
+                              ),
+                            ),
+                            sliver: SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                                (context, index) {
+                                  return TweenAnimationBuilder<double>(
+                                    duration: const Duration(milliseconds: 300),
+                                    tween: Tween(begin: 0.0, end: 1.0),
+                                    curve: Curves.easeOut,
+                                    builder: (context, value, child) {
+                                      return Transform.scale(
+                                        scale: 0.95 + (0.05 * value),
+                                        child: Opacity(
+                                          opacity: value,
+                                          child: child,
                                         ),
                                       );
                                     },
-                                    childCount: entryGroup.value.length,
-                                  ),
-                                ),
-                              );
-                            }).toList(),
+                                    child: JournalEntryWidget(
+                                      key: ValueKey(entryGroup.value[index].localId ?? entryGroup.value[index].firestoreId),
+                                      entry: entryGroup.value[index],
+                                      onToggleFavorite: jc.toggleFavorite,
+                                      isSelectionMode: () => jc.isSelectionMode,
+                                      onToggleSelection: () {
+                                        setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
+                                      },
+                                      onInsight: () async {
+                                        final entry = entryGroup.value[index];
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => EntryInsightScreen(
+                                              entry: entry,
+                                              journalController: jc,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      onEdit: () async {
+                                        final entry = entryGroup.value[index];
+                                        final result = await Navigator.push<bool>(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => EditEntryScreen(
+                                              entry: entry,
+                                              journalController: jc,
+                                            ),
+                                          ),
+                                        );
+                                        
+                                        // If changes were saved, refresh the entries
+                                        if (result == true) {
+                                          setState(() {
+                                            // The controller will automatically update the UI
+                                            // through its reactive streams
+                                          });
+                                        }
+                                      },
+                                      onDelete: () async {
+                                        final entry = entryGroup.value[index];
+                                        final confirm = await CustomDeleteDialog.show(
+                                          context,
+                                          title: 'Delete Entry',
+                                          message: 'Are you sure you want to delete this entry? This action cannot be undone.',
+                                        );
+                                        if (confirm == true) {
+                                          setState(() {
+                                            jc.selectedEntries.clear();
+                                            jc.selectedEntries.add(entry);
+                                          });
+                                          await jc.deleteSelectedEntries();
+                                        }
+                                      },
+                                      onLongPress: () {
+                                        setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
+                                      },
+                                    ),
+                                  );
+                                },
+                                childCount: entryGroup.value.length,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        // Loading indicator for pagination
+                        if (jc.isLoadingMore)
+                          SliverToBoxAdapter(
+                            child: Container(
+                              padding: const EdgeInsets.all(16),
+                              alignment: Alignment.center,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ],
                   ),
                 ),
                 EdgeFade(top: true, background: background),

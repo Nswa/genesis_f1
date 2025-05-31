@@ -53,6 +53,12 @@ class JournalController {
   SyncStatus _syncStatus = SyncStatus.synced;
   StreamSubscription<ConnectivityResult>? _connectivitySubscription;
 
+  // Pagination settings
+  static const int _pageSize = 50; // Load 50 entries at a time
+  int _currentOffset = 0;
+  bool _hasMoreEntries = true;
+  bool _isLoadingMore = false;
+
   SyncStatus get syncStatus => _syncStatus;
 
   bool get isSelectionMode => selectedEntries.isNotEmpty;
@@ -219,16 +225,81 @@ class JournalController {
     onUpdate();
   }
 
-  Future<void> _loadEntriesFromDb() async {
-    if (_db == null || _store == null) return;
-    final records = await _store!.find(_db!);
-    entries.clear();
-    for (var record in records) {
-      entries.add(_entryFromMap(record.key, record.value));
-    }
-    entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime)); // Sort newest first
+  // Public method to force reload entries from local database
+  // Useful for refreshing after test data injection
+  Future<void> reloadEntriesFromDatabase() async {
+    isLoading = true;
+    onUpdate();
+    
+    await _loadEntriesFromDb();
+    
+    isLoading = false;
     onUpdate();
   }
+
+  // Debug method to get current entry count
+  int get entryCount => entries.length;
+
+  // Debug method to get database entry count
+  Future<int> getDatabaseEntryCount() async {
+    if (_db == null || _store == null) return 0;
+    return await _store!.count(_db!);
+  }
+  Future<void> _loadEntriesFromDb({bool loadMore = false}) async {
+    if (_db == null || _store == null) return;
+    
+    if (_isLoadingMore) return; // Prevent multiple concurrent loads
+    
+    if (!loadMore) {
+      // Reset pagination for fresh load
+      _currentOffset = 0;
+      _hasMoreEntries = true;
+      entries.clear();
+    }
+    
+    if (!_hasMoreEntries) return; // No more entries to load
+    
+    _isLoadingMore = true;
+    
+    try {
+      // Use sembast Finder with limit and offset for pagination
+      final finder = sembast.Finder(
+        sortOrders: [sembast.SortOrder('timestamp', false)], // Sort by timestamp descending (newest first)
+        limit: _pageSize,
+        offset: _currentOffset,
+      );
+      
+      final records = await _store!.find(_db!, finder: finder);
+      
+      if (records.isEmpty) {
+        _hasMoreEntries = false;
+      } else {
+        final newEntries = records.map((record) => _entryFromMap(record.key, record.value)).toList();
+        entries.addAll(newEntries);
+        _currentOffset += records.length;
+        
+        // Check if we got fewer records than requested (indicates end of data)
+        if (records.length < _pageSize) {
+          _hasMoreEntries = false;
+        }
+      }
+      
+      onUpdate();
+    } finally {
+      _isLoadingMore = false;
+    }
+  }
+  
+  // Method to load more entries (for lazy loading)
+  Future<void> loadMoreEntries() async {
+    if (_hasMoreEntries && !_isLoadingMore) {
+      await _loadEntriesFromDb(loadMore: true);
+    }
+  }
+  
+  // Check if we can load more entries
+  bool get canLoadMore => _hasMoreEntries && !_isLoadingMore;
+  bool get isLoadingMore => _isLoadingMore;
 
   Future<void> loadEntriesFromFirestore() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -268,15 +339,38 @@ class JournalController {
           }).toList();      entries.clear();
       entries.addAll(loadedEntries);
       // Sort entries newest first
-      entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
-
-      if (_db != null && _store != null) {
+      entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));      if (_db != null && _store != null) {
+        // Preserve unsynced local entries before clearing database
+        final unsyncedRecords = await _store!.find(_db!, 
+          finder: sembast.Finder(filter: sembast.Filter.equals('isSynced', false))
+        );
+        
+        debugPrint("📦 JournalController: Found ${unsyncedRecords.length} unsynced entries to preserve");
+        
+        // Clear and repopulate with Firestore data
         await _store!.delete(_db!);
+        debugPrint("📦 JournalController: Cleared local database, repopulating with ${entries.length} Firestore entries");
+        
         for (var entry in entries) {
           await _store!
               .record(entry.firestoreId!)
               .put(_db!, _entryToMap(entry));
         }
+        
+        // Restore unsynced local entries (like test data)
+        for (var record in unsyncedRecords) {
+          await _store!.record(record.key).put(_db!, record.value);
+          // Also add to memory if not already present
+          final localEntry = _entryFromMap(record.key, record.value);
+          if (!entries.any((e) => e.localId == localEntry.localId)) {
+            entries.add(localEntry);
+          }
+        }
+        
+        debugPrint("📦 JournalController: Restored ${unsyncedRecords.length} unsynced entries. Total entries in memory: ${entries.length}");
+        
+        // Re-sort after adding local entries
+        entries.sort((a, b) => b.rawDateTime.compareTo(a.rawDateTime));
       }
       _syncStatus = SyncStatus.synced;
     } catch (e) {
