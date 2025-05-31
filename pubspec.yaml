@@ -68,6 +68,6 @@ flutter:
         - asset: assets/fonts/BreeSerif-Regular.ttf
 
 # Use local override to patch the twitter_login plugin with required namespace
-#dependency_overrides:
-#  twitter_login:
-#    path: local_plugins/twitter_login
+dependency_overrides:
+  twitter_login:
+    path: local_plugins/twitter_login

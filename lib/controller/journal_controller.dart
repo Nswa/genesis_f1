@@ -915,9 +915,56 @@ class JournalController {
       }
     } else {
       _syncStatus = SyncStatus.offline;
+    }    _updateSyncStatus();
+    onUpdate();
+  }
+
+  /// Scroll to a specific entry by ID
+  Future<void> scrollToEntry(String entryId) async {
+    // Find the entry by either localId or firestoreId
+    final entryIndex = entries.indexWhere((entry) => 
+      entry.localId == entryId || entry.firestoreId == entryId);
+    
+    if (entryIndex == -1) {
+      debugPrint('Entry with ID $entryId not found');
+      return;
     }
 
-    _updateSyncStatus();
-    onUpdate();
+    // Group entries by date to calculate scroll position
+    final grouped = groupEntriesByDate(entries);
+    double scrollOffset = 0.0;
+    bool foundEntry = false;
+
+    // Calculate approximate scroll position
+    for (final group in grouped.entries) {
+      if (foundEntry) break;
+      
+      // Add header height
+      scrollOffset += 60.0; // Approximate header height
+      
+      for (final entry in group.value) {
+        if (entry.localId == entryId || entry.firestoreId == entryId) {
+          foundEntry = true;
+          break;
+        }
+        // Add approximate entry height (varies by content)
+        scrollOffset += 120.0; // Base entry height
+        if (entry.text.length > 100) {
+          scrollOffset += (entry.text.length / 100) * 20; // Additional height for longer text
+        }
+        if (entry.imageUrl != null || entry.localImagePath != null) {
+          scrollOffset += 200.0; // Additional height for images
+        }
+      }
+    }
+
+    // Animate to the calculated position
+    if (scrollController.hasClients) {
+      await scrollController.animateTo(
+        scrollOffset,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 }

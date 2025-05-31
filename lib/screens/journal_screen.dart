@@ -5,6 +5,7 @@ import 'package:collective/widgets/calendar_modal.dart';
 import 'favorites_screen.dart';
 import 'entry_insight_screen.dart';
 import 'edit_entry_screen.dart';
+import 'analytics_screen.dart';
 import '../widgets/edge_fade.dart';
 import '../widgets/shimmer_sliver.dart';
 import '../widgets/indeterminate_progress_bar.dart';
@@ -120,12 +121,21 @@ class _JournalScreenState extends State<JournalScreen>
                           ),
                         );
                       },
-                      onOpenSettings: () {},
-                      onOpenDatePicker: () {
+                      onOpenSettings: () {},                      onOpenDatePicker: () {
                         showCalendarModal(
                           context,
                           jc.entries, // show all entries in calendar, not filtered
                           scrollController,
+                        );
+                      },
+                      onOpenAnalytics: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AnalyticsScreen(
+                              journalController: jc,
+                            ),
+                          ),
                         );
                       },
                     ),

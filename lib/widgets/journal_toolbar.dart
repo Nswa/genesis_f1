@@ -8,15 +8,14 @@ import '../controller/journal_controller.dart';
 
 class JournalToolbar extends StatelessWidget {
   final bool isSearching;
-  final VoidCallback onToggleSearch;
-  final VoidCallback onToggleFavorites;
+  final VoidCallback onToggleSearch;  final VoidCallback onToggleFavorites;
   final VoidCallback onOpenSettings;
   final VoidCallback onOpenDatePicker;
+  final VoidCallback onOpenAnalytics;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final ValueChanged<String> onSearchChanged;
   final SyncStatus syncStatus;
-
   const JournalToolbar({
     super.key,
     required this.isSearching,
@@ -24,6 +23,7 @@ class JournalToolbar extends StatelessWidget {
     required this.onToggleFavorites,
     required this.onOpenSettings,
     required this.onOpenDatePicker,
+    required this.onOpenAnalytics,
     required this.searchController,
     required this.searchFocusNode,
     required this.onSearchChanged,
@@ -189,14 +189,24 @@ class JournalToolbar extends StatelessWidget {
               ),
             ),
           Row(
-            children: [
-              if (!isSearching)
+            children: [              if (!isSearching)
                 IconButton(
                   icon: const Icon(
                     Icons.calendar_today,
                     size: SizeConstants.iconMedium,
                   ),
                   onPressed: onOpenDatePicker,
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                  visualDensity: VisualDensity.compact,
+                ),
+              if (!isSearching)
+                IconButton(
+                  icon: const Icon(
+                    Icons.analytics_outlined,
+                    size: SizeConstants.iconMedium,
+                  ),
+                  onPressed: onOpenAnalytics,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   visualDensity: VisualDensity.compact,
