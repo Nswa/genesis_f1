@@ -9,7 +9,7 @@ class CustomToast {
     Color? backgroundColor,
     Color? textColor,
   }) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     final overlay = Overlay.of(context);
     late OverlayEntry overlayEntry;
 
