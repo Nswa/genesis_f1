@@ -249,41 +249,37 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
             children: [              Icon(
                 Icons.lightbulb_outline,
                 size: 18,
-                color: theme.brightness == Brightness.dark 
-                  ? Colors.white.withOpacity(0.8) 
-                  : theme.primaryColor,
+                color: theme.colorScheme.primary,
               ),
-              const SizedBox(width: 8),              Text(
+              const SizedBox(width: 8),
+              Text(
                 'Insights & Patterns',
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontFamily: 'IBM Plex Sans',
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
-                  color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
                 ),
               ),
               const Spacer(),
               if (_isLoadingInsights)                SizedBox(
                   width: 14,
-                  height: 14,
-                  child: CircularProgressIndicator(
+                  height: 14,                  child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
+                    valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
                   ),
                 ),
             ],
           ),
             const SizedBox(height: 12),
-          
-          // Insights content
+            // Insights content
           Expanded(
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: theme.cardColor.withOpacity(0.5),
+                color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: theme.dividerColor.withOpacity(0.15),
+                  color: theme.colorScheme.outline.withOpacity(0.2),
                   width: 0.5,
                 ),
               ),
@@ -304,24 +300,21 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
     final displayText = _isLoadingInsights ? _streamingText : _insights;
     
     if (displayText.isEmpty && !_isLoadingInsights) {
-      return Center(
-        child: Column(
+      return Center(        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [            Icon(
+          children: [
+            Icon(
               Icons.auto_awesome_outlined,
               size: 32,
-              color: theme.brightness == Brightness.dark 
-                ? Colors.white.withOpacity(0.6) 
-                : Colors.black.withOpacity(0.4),
+              color: theme.colorScheme.onSurfaceVariant,
             ),
-            const SizedBox(height: 8),            Text(
+            const SizedBox(height: 8),
+            Text(
               'Generating insights...',
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 14,
-                color: theme.brightness == Brightness.dark 
-                  ? Colors.white.withOpacity(0.7) 
-                  : Colors.black.withOpacity(0.6),
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
           ],
@@ -332,8 +325,7 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
       controller: _scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Use MarkdownBody for proper markdown rendering
+        children: [          // Use MarkdownBody for proper markdown rendering
           MarkdownBody(
             data: displayText,
             styleSheet: MarkdownStyleSheet(
@@ -342,73 +334,57 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
                 fontSize: 14,
                 height: 1.6,
                 letterSpacing: 0.2,
-                color: theme.brightness == Brightness.dark 
-                  ? Colors.white.withOpacity(0.9) 
-                  : Colors.black.withOpacity(0.8),
               ),
               h1: theme.textTheme.titleLarge?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
-                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
               h2: theme.textTheme.titleMedium?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
               h3: theme.textTheme.titleSmall?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
-                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
-              listBullet: TextStyle(
+              listBullet: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 14,
-                color: theme.brightness == Brightness.dark 
-                  ? Colors.white.withOpacity(0.8) 
-                  : Colors.black.withOpacity(0.7),
               ),
-              strong: TextStyle(
+              strong: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
               ),
-              em: TextStyle(
+              em: theme.textTheme.bodyMedium?.copyWith(
                 fontFamily: 'IBM Plex Sans',
                 fontSize: 14,
                 fontStyle: FontStyle.italic,
-                color: theme.brightness == Brightness.dark 
-                  ? Colors.white.withOpacity(0.9) 
-                  : Colors.black.withOpacity(0.8),
               ),
             ),
           ),
-          
-          // Typing indicator
+            // Typing indicator
           if (_isLoadingInsights && _streamingText.isNotEmpty)
             Container(
               margin: const EdgeInsets.only(top: 4),
               child: Row(
-                children: [                  Container(
+                children: [
+                  Container(
                     width: 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      color: theme.brightness == Brightness.dark 
-                        ? Colors.white.withOpacity(0.8) 
-                        : theme.primaryColor,
+                      color: theme.colorScheme.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Analyzing...',                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.brightness == Brightness.dark 
-                        ? Colors.white.withOpacity(0.6) 
-                        : Colors.black.withOpacity(0.5),
+                    'Analyzing...',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -431,7 +407,6 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
               fontFamily: 'IBM Plex Sans',
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: theme.brightness == Brightness.dark ? Colors.white : Colors.black,
             ),
           ),
           
@@ -478,9 +453,6 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontFamily: 'IBM Plex Sans',
                     fontSize: 12,
-                    color: theme.brightness == Brightness.dark 
-                      ? Colors.white.withOpacity(0.6) 
-                      : Colors.black.withOpacity(0.5),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -494,9 +466,6 @@ class _AnalyticsInsightsPanelState extends State<AnalyticsInsightsPanel> {
                       fontFamily: 'IBM Plex Sans',
                       fontSize: 12,
                       height: 1.3,
-                      color: theme.brightness == Brightness.dark 
-                        ? Colors.white.withOpacity(0.7) 
-                        : Colors.black.withOpacity(0.7),
                     ),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,

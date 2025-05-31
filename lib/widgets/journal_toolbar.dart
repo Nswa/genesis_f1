@@ -187,9 +187,9 @@ class JournalToolbar extends StatelessWidget {
                   cursorColor: theme.colorScheme.primary,
                 ),
               ),
-            ),
-          Row(
-            children: [              if (!isSearching)
+            ),          Row(
+            children: [
+              if (!isSearching)
                 IconButton(
                   icon: const Icon(
                     Icons.calendar_today,
@@ -211,23 +211,13 @@ class JournalToolbar extends StatelessWidget {
                   constraints: const BoxConstraints(),
                   visualDensity: VisualDensity.compact,
                 ),
-              IconButton(
-                icon: Icon(
-                  isSearching ? Icons.close : Icons.search,
-                  size: SizeConstants.iconMedium,
-                ),
-                onPressed: onToggleSearch,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                visualDensity: VisualDensity.compact,
-              ),
-              if (!isSearching)
+              if (isSearching)
                 IconButton(
                   icon: const Icon(
-                    Icons.bookmark_border,
+                    Icons.close,
                     size: SizeConstants.iconMedium,
                   ),
-                  onPressed: onToggleFavorites,
+                  onPressed: onToggleSearch,
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
                   visualDensity: VisualDensity.compact,
@@ -238,23 +228,67 @@ class JournalToolbar extends StatelessWidget {
                     Icons.more_vert,
                     size: SizeConstants.iconMedium,
                   ),
-                  itemBuilder: (context) => const [
-                    PopupMenuItem(
-                      value: 'settings',
-                      child: Text('Settings'),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'search',
+                      child: Row(
+                        children: [
+                          Icon(Icons.search, size: 20),
+                          SizedBox(width: 12),
+                          Text('Search'),
+                        ],
+                      ),
                     ),
-                    PopupMenuItem(value: 'logout', child: Text('Logout')),
+                    const PopupMenuItem(
+                      value: 'favorites',
+                      child: Row(
+                        children: [
+                          Icon(Icons.bookmark_border, size: 20),
+                          SizedBox(width: 12),
+                          Text('Favorites'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'settings',
+                      child: Row(
+                        children: [
+                          Icon(Icons.settings, size: 20),
+                          SizedBox(width: 12),
+                          Text('Settings'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'logout',
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout, size: 20),
+                          SizedBox(width: 12),
+                          Text('Logout'),
+                        ],
+                      ),
+                    ),
                   ],
                   onSelected: (value) async {
-                    if (value == 'logout') {
-                      await authManager.signOut();
-                      if (context.mounted) {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (_) => const AuthScreen()),
-                        );
-                      }
-                    } else if (value == 'settings') {
-                      onOpenSettings();
+                    switch (value) {
+                      case 'search':
+                        onToggleSearch();
+                        break;
+                      case 'favorites':
+                        onToggleFavorites();
+                        break;
+                      case 'settings':
+                        onOpenSettings();
+                        break;
+                      case 'logout':
+                        await authManager.signOut();
+                        if (context.mounted) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => const AuthScreen()),
+                          );
+                        }
+                        break;
                     }
                   },
                 ),

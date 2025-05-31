@@ -492,15 +492,14 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                             )
                           : Image.file(
                               File(widget.entry.localImagePath!),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
+                              fit: BoxFit.cover,                              errorBuilder: (context, error, stackTrace) {
                                 return Container(
                                   height: 100,
-                                  color: Colors.grey[300],
+                                  color: theme.colorScheme.surfaceVariant,
                                   child: Center(
                                     child: Icon(
                                       Icons.broken_image,
-                                      color: Colors.grey[600],
+                                      color: theme.colorScheme.onSurfaceVariant,
                                       size: 40,
                                     ),
                                   ),
