@@ -12,56 +12,87 @@ class TestDataGenerator {
   static int _entryId = 0;
 
   // Malaysian student persona traits
-  static const String name = "Wei Ming";
+  static const String name = "Haziq";
   static const int age = 26;
   static const String university = "UTM";
   static const String course = "Software Engineering";
-  
-  // Malaysian slang and expressions
+    // Malaysian slang and expressions + emotional intensifiers
   static const List<String> malaysianSlang = [
     'lah', 'lor', 'wei', 'mah', 'la', 'kan', 'one', 'already', 'sia', 'ar',
     'confirm plus chop', 'blur like sotong', 'steady lah', 'aiyo', 'wah',
-    'chiong', 'shiok', 'paiseh', 'kiasu', 'kiasi', 'yum cha', 'tapau'
+    'chiong', 'shiok', 'paiseh', 'kiasu', 'kiasi', 'yum cha', 'tapau',
+    'kena', 'geng', 'gila', 'terror', 'cincai', 'walao', 'haiya',
+    'potong steam', 'shiok sendiri', 'boh', 'lidat', 'habis', 'sien'
   ];
 
-  // Common typos and shortforms in Malaysian context
-  static const Map<String, List<String>> typosAndShorts = {
-    'the': ['da', 'teh'],
-    'you': ['u'],
-    'your': ['ur'],
-    'because': ['cos', 'bcoz'],
-    'something': ['sth', 'smth'],
-    'someone': ['sb'],
-    'tomorrow': ['tmr', 'tmrw'],
-    'today': ['tdy'],
-    'yesterday': ['ytd'],
-    'project': ['proj'],
-    'assignment': ['assgmt', 'asgmt'],
-    'university': ['uni'],
-    'programming': ['coding'],
-    'definitely': ['def'],
-    'probably': ['prob'],
-    'anyway': ['anw'],
-    'okay': ['ok', 'k'],
-    'right': ['rite'],
-    'night': ['nite'],
-    'with': ['w'],
-    'without': ['w/o'],
-    'and': ['&', 'n'],
-    'very': ['v'],
-    'really': ['rly'],
-    'homework': ['hw'],
-  };
+  // Rage/frustrated expressions for angry moods
+  static const List<String> rageExpressions = [
+    'wtf', 'omg', 'fml', 'ugh', 'arghhh', 'WHYYY', 'dammit',
+    'seriously???', 'i cant even', 'this is bs', 'so done',
+    'kill me now', 'im dead inside', 'life is pain'
+  ];
 
+  // Happy expressions
+  static const List<String> happyExpressions = [
+    'yay!', 'woohoo!', 'best day ever!', 'so good!', 'amazing!',
+    'love this!', 'perfect!', 'yasss!', 'finally!', 'blessed!'
+  ];
+  // Common typos and shortforms in Malaysian context + mood-based variations
+  static const Map<String, List<String>> typosAndShorts = {
+    'the': ['da', 'teh', 'th'],
+    'you': ['u', 'yu'],
+    'your': ['ur', 'yor'],
+    'because': ['cos', 'bcoz', 'bcz', 'cuz'],
+    'something': ['sth', 'smth', 'someting'],
+    'someone': ['sb', 'sum1'],
+    'tomorrow': ['tmr', 'tmrw', 'tomoro'],
+    'today': ['tdy', '2day'],
+    'yesterday': ['ytd', 'yestrday'],
+    'project': ['proj', 'projek'],
+    'assignment': ['assgmt', 'asgmt', 'assgnmt'],
+    'university': ['uni', 'univ'],
+    'programming': ['coding', 'programing'],
+    'definitely': ['def', 'definately'],
+    'probably': ['prob', 'prolly', 'probly'],
+    'anyway': ['anw', 'anywy'],
+    'okay': ['ok', 'k', 'okey'],
+    'right': ['rite', 'rt'],
+    'night': ['nite', 'nght'],
+    'with': ['w', 'wit'],
+    'without': ['w/o', 'witout'],
+    'and': ['&', 'n', 'nd'],
+    'very': ['v', 'vry'],
+    'really': ['rly', 'rlly', 'realy'],
+    'homework': ['hw', 'homewrk'],
+    'stupid': ['stoopid', 'stewpid'],
+    'literally': ['literaly', 'lit'],
+    'seriously': ['srsly', 'seriously'],
+    'nothing': ['nth', 'nthg'],
+    'everything': ['evrythg', 'evrything'],
+    'cannot': ['cant', 'canot'],
+    'should': ['shld', 'shoud'],
+    'would': ['wld', 'woud'],
+    'though': ['tho', 'thou'],
+    'through': ['thru', 'trough'],
+    'people': ['ppl', 'peeps'],
+    'friend': ['frend', 'fren'],
+    'friends': ['frens', 'frends'],
+    'thinking': ['thinkin', 'thinkng'],
+    'going': ['goin', 'goign'],
+    'coming': ['comin', 'comng'],
+  };
   // Entry categories with weights (higher = more frequent)
   static const Map<String, double> entryTypes = {
-    'academic_stress': 0.20,
-    'work_life': 0.15,
-    'social_friends': 0.18,
-    'hobbies': 0.15,
-    'lazy_days': 0.12,
-    'random_thoughts': 0.10,
-    'family': 0.10,
+    'academic_stress': 0.18,
+    'work_life': 0.12,
+    'social_friends': 0.16,
+    'hobbies': 0.14,
+    'lazy_days': 0.10,
+    'random_thoughts': 0.08,
+    'family': 0.08,
+    'health_fitness': 0.06,
+    'travel_adventure': 0.04,
+    'romance_dating': 0.04,
   };
 
   // Mood distribution
@@ -259,10 +290,10 @@ class TestDataGenerator {
     
     return '😊';
   }
-
   static String _generateEntryContent(String entryType, DateTime date, String timeOfDay) {
     final baseContent = _generateBaseContent(entryType, date);
-    final processed = _applyMalaysianStyle(baseContent);
+    final mood = _selectMood(entryType);
+    final processed = _applyMalaysianStyle(baseContent, mood);
     return processed;
   }
 
@@ -283,18 +314,22 @@ class TestDataGenerator {
         return _generateHobbyContent();
       case 'lazy_days':
         return _generateLazyContent(isWeekend);
-      case 'random_thoughts':
-        return _generateRandomThoughts();
+      case 'random_thoughts':        return _generateRandomThoughts();
       case 'family':
         return _generateFamilyContent();
+      case 'health_fitness':
+        return _generateHealthContent();
+      case 'travel_adventure':
+        return _generateTravelContent();
+      case 'romance_dating':
+        return _generateRomanceContent();
       default:
         return _generateRandomThoughts();
     }
   }
-
   static String _generateAcademicContent(bool isExamPeriod, int month) {
     final academicEntries = [
-      // Assignments and projects
+      // Assignments and projects - more variety
       "FYP progress meeting today. Supervisor wants more documentation. Sometimes I think they want us to document every breath we take.",
       "Data structures assignment due tomorrow and I'm stuck on the binary tree implementation. YouTube tutorials here I come.",
       "Group project meeting was chaos. Everyone wants to be the leader but nobody wants to do the actual work.",
@@ -305,30 +340,66 @@ class TestDataGenerator {
       "Algorithm complexity analysis makes my head hurt. Big O notation should be called Big Oh-No notation.",
       "Computer networks assignment about TCP/IP. At least now I know why my internet is so slow.",
       "Human computer interaction project requires user interviews. Talking to strangers is scarier than coding.",
+      "Web development assignment using Node.js. Backend development is like plumbing but with more Stack Overflow.",
+      "Mobile app project proposal rejected. Apparently 'Tinder for food' already exists. Innovation is hard.",
+      "Artificial intelligence coursework on neural networks. My brain can't understand how artificial brains work.",
+      "Cybersecurity assignment on ethical hacking. Finally a legitimate reason to break things.",
+      "Cloud computing project on AWS. Amazon is taking over the world one server at a time.",
+      "Blockchain presentation tomorrow. Still not sure what blockchain actually does besides confuse me.",
+      "UI/UX design project feedback: 'needs more white space'. Apparently emptiness is trendy.",
+      "Computer graphics assignment in OpenGL. Making a cube took 50 lines of code. Efficiency questionable.",
+      "Software testing lab on unit tests. Breaking code systematically is therapeutic.",
+      "Game development project using Unity. Physics engine vs my game logic = eternal conflict.",
       
-      // Exam stress
+      // Exam stress - more realistic scenarios
       "2 more exams to go. Surviving on coffee and instant noodles. This is fine. Everything is fine.",
       "Studied for 8 hours straight. My brain feels like mashed potatoes.",
       "Exam hall was freezing cold. Hard to think when your fingers are numb.",
       "Multiple choice questions are evil. Between A and C, life becomes meaningless.",
       "Open book exam but forgot to bring calculator. Basic math suddenly became rocket science.",
       "Final year project presentation went surprisingly well. Maybe I do know what I'm talking about.",
+      "Differential equations exam was brutal. Numbers and letters shouldn't mix like this.",
+      "Statistics exam tomorrow. Probability of me passing is statistically insignificant.",
+      "Programming exam on paper. Writing code without IDE feels like stone age technology.",
+      "Discrete mathematics proof by induction. Proving things that are obviously true seems redundant.",
+      "Linear algebra exam. Matrices are everywhere and they're plotting against me.",
+      "Digital logic design exam. Boolean algebra is not boolean at all. False advertising.",
+      "Computer architecture exam on CPU design. Apparently knowing how to use computer isn't enough.",
+      "Operating systems exam about process scheduling. My life needs better scheduling algorithms.",
       
-      // Lectures and classes
+      // Lectures and classes - more realistic experiences
       "Operating systems lecture was actually interesting today. Process scheduling is like organizing my life.",
       "Skipped morning lecture because of rain. Priorities: staying dry > education.",
       "Professor's code example had bugs. Spent 30 minutes debugging before realizing it wasn't my fault.",
       "Computer graphics assignment requires OpenGL. Why do they torture us with ancient technology?",
       "Mobile app development using Flutter. Finally something that might be useful in real life.",
       "Artificial intelligence course is making me question my own intelligence.",
+      "Machine learning lecture on gradient descent. Math optimization vs life optimization parallels noted.",
+      "Software engineering principles lecture. Theory vs industry practice gap acknowledged.",
+      "Database management systems. SQL queries are like asking computer very specific questions.",
+      "Computer networks lab. Ping command success rate inversely proportional to assignment urgency.",
+      "Compiler design lecture. Understanding how computers understand us understanding computers. Meta.",
+      "Information security seminar on password strength. 'password123' apparently not secure enough.",
+      "Data mining techniques lecture. Finding patterns in data like finding meaning in life.",
+      "Distributed systems complexity. Coordinating multiple computers harder than coordinating group project.",
       
-      // University life
+      // University life - more varied scenarios
       "Library wifi is down again. How am I supposed to copy-paste from Stack Overflow?",
       "Cafeteria food is getting worse. RM5 for rubber chicken and sad vegetables.",
       "Parking on campus is a battle royale. Arrived 2 hours early just to find a spot.",
       "Group study session turned into gossip session. We're definitely failing this exam.",
       "Dean's list ceremony next week. Finally some recognition for my suffering.",
       "Graduation is 6 months away. Scared and excited at the same time.",
+      "Student council election campaign. Promises of better wifi and cheaper food. Classic politics.",
+      "Career fair overwhelmed with tech companies. Free t-shirts vs actual job prospects evaluation.",
+      "Academic advisor meeting. Graduation timeline optimistic vs realistic assessment needed.",
+      "Course registration system crashed during peak hours. Technology fails when needed most.",
+      "Scholarship application deadline approaching. Essay on 'why I deserve money' stress levels rising.",
+      "Laboratory equipment malfunction. 3-hour experiment becomes 6-hour troubleshooting session.",
+      "Thesis proposal defense preparation. PowerPoint animations won't save poor research methodology.",
+      "Study abroad application process. Dreams vs budget vs parental approval triangle.",
+      "Industry guest speaker inspiring but intimidating. Real world expectations recalibrated.",
+      "Academic conference abstract submission. 200 words to summarize months of work. Compression algorithm needed.",
     ];
 
     if (isExamPeriod) {
@@ -529,19 +600,153 @@ class TestDataGenerator {
     return familyEntries[_random.nextInt(familyEntries.length)];
   }
 
-  static String _applyMalaysianStyle(String content) {
+  static String _generateHealthContent() {
+    final healthEntries = [
+      // Fitness and exercise
+      "Gym session today was brutal. Leg day = can't walk properly tomorrow.",
+      "Morning jog around the neighbourhood. Fresh air hits different at 6am.",
+      "Yoga class was surprisingly challenging. Flexibility is not my strong suit.",
+      "Skipped gym for a week. Muscle memory apparently has amnesia.",
+      "New fitness app claims I burned 500 calories. Walking to the fridge counts right?",
+      "Personal trainer session. Learned that I'm weaker than I thought possible.",
+      "Swimming laps at the pool. Chlorine hair is the new fashion statement.",
+      "Rock climbing attempt. Arms are jelly but adrenaline is addictive.",
+      "Basketball with friends. Cardio disguised as fun actually works.",
+      "Hiking trail was steeper than expected. Nature doesn't care about fitness level.",
+      
+      // Health and wellness
+      "Annual health checkup. Doctor says I need more vegetables and less screen time.",
+      "Tried meditation app for stress relief. Mind wandered to assignment deadlines.",
+      "Sleep schedule is completely wrecked. 3am bedtime becoming a habit.",
+      "Drank 8 glasses of water today. Bathroom breaks every 30 minutes was worth it.",
+      "Vitamin D deficiency from too much indoor time. Sunlight is apparently necessary.",
+      "Stress eating reached new levels. Chips for breakfast is not a food group.",
+      "Eye strain from coding all day. Blue light glasses make me look smart.",
+      "Posture check: currently shaped like a question mark from laptop hunching.",
+      "Mental health day needed. Sometimes brain requires maintenance like computers.",
+      "Allergies acting up again. Spring season is beautiful but my nose disagrees.",
+      
+      // Food and diet experiments
+      "Attempted healthy cooking. Smoke alarm still thinks I'm making BBQ.",
+      "Meal prep Sunday turned into order takeout Monday. Planning vs reality gap.",
+      "Tried intermittent fasting. Lasted 12 hours before discovering emergency snacks.",
+      "Green smoothie experiment. Looks like swamp water but tastes surprisingly good.",
+      "Coffee detox day 1. Headache confirms caffeine addiction is real.",
+      "Discovered protein bars taste like cardboard. Expensive cardboard with vitamins.",
+    ];
+
+    return healthEntries[_random.nextInt(healthEntries.length)];
+  }
+
+  static String _generateTravelContent() {
+    final travelEntries = [
+      // Local adventures
+      "Weekend trip to Cameron Highlands. Cool weather and strawberry farms = perfect escape.",
+      "Penang food tour with friends. Gained 3kg and zero regrets about life choices.",
+      "KL city exploration. Got lost in Pavilion mall for 2 hours. Urban jungle navigation failed.",
+      "Malacca historical trip. UNESCO sites and chicken rice balls make great combination.",
+      "Genting trip for fresh air. Came back with lighter wallet and heavier heart.",
+      "Port Dickson beach day. Sunburned despite applying SPF 50 religiously.",
+      "Fraser's Hill camping adventure. Nature sounds beautiful until 3am mosquito orchestra.",
+      "Langkawi island hopping. Paradise exists and it has duty-free chocolate.",
+      "Ipoh white coffee pilgrimage. Caffeine tourism is legitimate travel category.",
+      "Sekinchan paddy fields visit. Instagram photos vs reality gap is real.",
+      
+      // Transportation adventures
+      "Flight delayed 3 hours. Airport wifi and overpriced coffee keeping me alive.",
+      "Bus journey to hometown. Highway rest stops are cultural experiences.",
+      "LRT breakdown during rush hour. Sardine can simulation successful.",
+      "Grab driver became unofficial tour guide. 5-star conversation, 3-star driving.",
+      "Road trip planning stage. Google Maps vs actual traffic conditions battle.",
+      "AirAsia flight turbulence. Prayer level increased to maximum intensity.",
+      
+      // Travel planning and dreams
+      "Japan travel fund update: RM500 saved, RM5000 more to go. Ramen dreams intensify.",
+      "Europe backpacking plan in progress. YouTube research counts as preparation.",
+      "Passport renewal queue was 3 hours long. Bureaucracy tests patience levels.",
+      "Travel bucket list growing faster than bank account. Mathematics is cruel.",
+      "Solo travel anxiety vs wanderlust. Internal conflict at maximum intensity.",
+      "Student visa application stress. Documentation requirements rival PhD thesis.",
+    ];
+
+    return travelEntries[_random.nextInt(travelEntries.length)];
+  }
+
+  static String _generateRomanceContent() {
+    final romanceEntries = [
+      // Dating life
+      "Coffee date went surprisingly well. Conversation flowed better than expected.",
+      "Tinder match turned out to be catfish. Reality vs photos gap reached ocean level.",
+      "Double date disaster. Friend's boyfriend and my date bonded. Wrong chemistry activated.",
+      "Valentine's Day single life celebration. Self-love is the best love anyway.",
+      "Dating app fatigue setting in. Swiping feels like part-time job without salary.",
+      "Blind date setup by friends. Optimism vs realistic expectations internal battle.",
+      "First date nerves kicking in. What to wear crisis reaching critical levels.",
+      "Long distance relationship challenges. Video calls replacing physical presence inadequately.",
+      "Crush finally texted back. Response time analysis reaching detective levels.",
+      "Relationship status update: it's complicated became permanent setting.",
+      
+      // Relationship thoughts
+      "Watching couples everywhere. Single life observation skills improving daily.",
+      "Friend's wedding planning stress. Marriage looks beautiful and terrifying simultaneously.",
+      "Ex posted new relationship photos. Moving on speedrun champion discovered.",
+      "Dating standards vs reality check. Prince charming might be regular guy.",
+      "Love language test results. Mine is food, obviously. Priorities crystal clear.",
+      "Relationship advice from married friends. Theory vs practice gap acknowledged.",
+      
+      // Romantic failures and wins
+      "Pickup line attempt failed spectacularly. Confidence level decreased significantly.",
+      "Romantic movie night alone. Fictional relationships set unrealistic expectations.",
+      "Anniversary of being single celebration. Independence day personal edition.",
+      "Cooking disaster for romantic dinner. Takeout saves the day again.",
+      "Love at first sight debunked. Takes minimum 3 meetings for accurate assessment.",
+      "Wingman duty for friend. Success rate: friend happy, me still single.",
+    ];
+
+    return romanceEntries[_random.nextInt(romanceEntries.length)];
+  }
+  static String _applyMalaysianStyle(String content, String? mood) {
     var result = content;
     
-    // Add Malaysian slang occasionally (20% chance)
-    if (_random.nextDouble() < 0.2) {
-      final slang = malaysianSlang[_random.nextInt(malaysianSlang.length)];
-      result = result.replaceFirst('.', ' $slang.');
+    // Determine typing style based on mood
+    double typoChance = 0.15;
+    double slangChance = 0.2;
+    double capsChance = 0.05;
+    double punctuationChance = 0.3;
+    
+    if (mood == '😤' || mood == '😔') { // Frustrated or sad - more typos, shortcuts
+      typoChance = 0.35;
+      slangChance = 0.4;
+      capsChance = 0.2;
+      punctuationChance = 0.5;
+      
+      // Add rage expressions for frustrated mood
+      if (mood == '😤' && _random.nextDouble() < 0.3) {
+        final rage = rageExpressions[_random.nextInt(rageExpressions.length)];
+        result = '$rage $result';
+      }
+    } else if (mood == '😊' || mood == '🤗') { // Happy - more enthusiasm
+      typoChance = 0.08;
+      slangChance = 0.3;
+      capsChance = 0.1;
+      punctuationChance = 0.4;
+      
+      // Add happy expressions
+      if (_random.nextDouble() < 0.25) {
+        final happy = happyExpressions[_random.nextInt(happyExpressions.length)];
+        result = '$result $happy';
+      }
+    } else if (mood == '😴') { // Tired - more shortcuts, less punctuation
+      typoChance = 0.25;
+      slangChance = 0.15;
+      capsChance = 0.02;
+      punctuationChance = 0.15;
     }
     
-    // Apply typos and shortforms (15% chance per word)
+    // Apply typos and shortforms based on mood
     final words = result.split(' ');
     for (int i = 0; i < words.length; i++) {
-      if (_random.nextDouble() < 0.15) {
+      if (_random.nextDouble() < typoChance) {
         final word = words[i].toLowerCase().replaceAll(RegExp(r'[^a-z]'), '');
         if (typosAndShorts.containsKey(word)) {
           final replacements = typosAndShorts[word]!;
@@ -550,16 +755,45 @@ class TestDataGenerator {
         }
       }
     }
-    
     result = words.join(' ');
     
-    // Add casual punctuation style (Malaysian text style)
-    if (_random.nextDouble() < 0.3) {
-      result = result.replaceAll('.', '...');
+    // Add Malaysian slang occasionally
+    if (_random.nextDouble() < slangChance) {
+      final slang = malaysianSlang[_random.nextInt(malaysianSlang.length)];
+      if (result.endsWith('.') || result.endsWith('!') || result.endsWith('?')) {
+        result = result.substring(0, result.length - 1) + ' $slang${result.substring(result.length - 1)}';
+      } else {
+        result = '$result $slang';
+      }
     }
     
-    if (_random.nextDouble() < 0.2) {
-      result = result.replaceAll('!', '!!');
+    // Apply casual punctuation style (Malaysian text style)
+    if (_random.nextDouble() < punctuationChance) {
+      if (_random.nextBool()) {
+        result = result.replaceAll('.', '...');
+      } else {
+        result = result.replaceAll('!', '!!');
+      }
+    }
+    
+    // Add caps for emphasis when frustrated
+    if (mood == '😤' && _random.nextDouble() < capsChance) {
+      final words = result.split(' ');
+      if (words.isNotEmpty) {
+        final randomIndex = _random.nextInt(words.length);
+        words[randomIndex] = words[randomIndex].toUpperCase();
+        result = words.join(' ');
+      }
+    }
+    
+    // Remove punctuation sometimes when tired
+    if (mood == '😴' && _random.nextDouble() < 0.3) {
+      result = result.replaceAll(RegExp(r'[.!?]'), '');
+    }
+    
+    // Add extra dots for thoughtful mood
+    if (mood == '🤔' && _random.nextDouble() < 0.4) {
+      result = result.replaceAll('.', '...');
     }
     
     return result;
@@ -608,14 +842,34 @@ class TestDataGenerator {
         if (content.contains('mom') || content.contains('dad')) baseTags.add('parents');
         if (content.contains('hometown')) baseTags.add('hometown');
         break;
+      case 'health_fitness':
+        baseTags.add('health');
+        if (content.contains('gym') || content.contains('exercise')) baseTags.add('fitness');
+        if (content.contains('food') || content.contains('diet')) baseTags.add('diet');
+        break;
+      case 'travel_adventure':
+        baseTags.add('travel');
+        if (content.contains('trip') || content.contains('tour')) baseTags.add('adventure');
+        if (content.contains('beach') || content.contains('island')) baseTags.add('beach');
+        break;
+      case 'romance_dating':
+        baseTags.add('romance');
+        if (content.contains('date') || content.contains('relationship')) baseTags.add('dating');
+        break;
     }
-    
-    // Add contextual tags based on content
+      // Add contextual tags based on content
     if (content.contains('stress') || content.contains('pressure')) baseTags.add('stress');
     if (content.contains('happy') || content.contains('good') || content.contains('great')) baseTags.add('positive');
     if (content.contains('tired') || content.contains('exhausted')) baseTags.add('tired');
     if (content.contains('coffee') || content.contains('drink')) baseTags.add('drinks');
     if (content.contains('rain') || content.contains('weather')) baseTags.add('weather');
+    if (content.contains('money') || content.contains('budget') || content.contains('expensive')) baseTags.add('financial');
+    if (content.contains('anxiety') || content.contains('nervous')) baseTags.add('anxiety');
+    if (content.contains('achievement') || content.contains('success')) baseTags.add('achievement');
+    if (content.contains('fail') || content.contains('mistake')) baseTags.add('failure');
+    if (content.contains('future') || content.contains('plan')) baseTags.add('planning');
+    if (content.contains('sleep') || content.contains('nap')) baseTags.add('sleep');
+    if (content.contains('motivation') || content.contains('inspired')) baseTags.add('motivation');
     
     // Remove duplicates and limit to 3-5 tags
     final uniqueTags = baseTags.toSet().toList();
