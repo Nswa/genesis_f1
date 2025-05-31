@@ -55,7 +55,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
 
   Future<void> _startAnalysis() async {
     if (_isAnalyzing) return;
-    
     setState(() {
       _isAnalyzing = true;
       _hasAnalyzed = false;
@@ -65,7 +64,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
     try {
       // Get all entries for analysis
       final entries = widget.journalController.entries;
-      
+      debugPrint('[AnalyticsScreen] Number of entries received: \\${entries.length}');
+
       if (entries.isEmpty) {
         setState(() {
           _isAnalyzing = false;
@@ -73,7 +73,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
           _analysisProgress = 'No entries found to analyze';
         });
         return;
-      }      // Start the analysis with progress updates
+      }
+      // Start the analysis with progress updates
       _analyticsService.analysisProgress.listen((progress) {
         if (mounted) {
           setState(() {
@@ -83,7 +84,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
       });
 
       final topics = await _analyticsService.analyzeTopics(entries);
-      
+      debugPrint('[AnalyticsScreen] Number of topics returned: \\${topics.length}');
+
       setState(() {
         _topics = topics;
         _isAnalyzing = false;
@@ -92,7 +94,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>
 
       // Animate in the results
       _fadeController.forward();
-      
+
     } catch (e) {
       debugPrint('Analytics error: $e');
       setState(() {

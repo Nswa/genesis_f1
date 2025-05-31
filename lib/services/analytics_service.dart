@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/entry.dart';
+import '../services/api_key_service.dart'; // Import ApiKeyService
 
 class AnalyticsProgress {
   final double progress;
@@ -61,60 +62,68 @@ class TopicCluster {
 
 class AnalyticsService {
   static const String _baseUrl = 'https://api.deepseek.com/chat/completions';
-  static const String _apiKey = 'sk-8f8b1b0a07ac425ea96a22e5c2f0b2bc'; // Same as DeepSeek service
-  
+  final String _apiKey; // Make apiKey non-static and final
+
   List<TopicCluster> _topics = [];
   bool _isAnalyzing = false;
-  
+
   final StreamController<AnalyticsProgress> _progressController = StreamController<AnalyticsProgress>.broadcast();
   Stream<AnalyticsProgress> get analysisProgress => _progressController.stream;
-  
+
   List<TopicCluster> get topics => List.unmodifiable(_topics);
   bool get isAnalyzing => _isAnalyzing;
+
+  // Constructor to initialize the API key
+  AnalyticsService() : _apiKey = ApiKeyService.getDeepseekApiKey();
+
   Future<List<TopicCluster>> analyzeTopics(List<Entry> entries) async {
     if (_isAnalyzing) return _topics;
-    
+
     _isAnalyzing = true;
     _topics.clear();
-    
+
     try {
       _progressController.add(AnalyticsProgress(
-        progress: 0.1, 
+        progress: 0.1,
         message: 'Analyzing ${entries.length} entries...'
       ));
-      
+
       // Filter out very short or meaningless entries
       final meaningfulEntries = _filterMeaningfulEntries(entries);
-      
+      debugPrint('[AnalyticsService] Number of meaningful entries after filtering: \\${meaningfulEntries.length}');
+
       _progressController.add(AnalyticsProgress(
-        progress: 0.3, 
+        progress: 0.3,
         message: 'Found ${meaningfulEntries.length} meaningful entries...'
       ));
-      
+
       if (meaningfulEntries.length < 3) {
+        debugPrint('[AnalyticsService] Not enough meaningful entries for analysis.');
         _isAnalyzing = false;
         return [];
       }
-      
+
       // Extract topics using AI
       _progressController.add(AnalyticsProgress(
-        progress: 0.6, 
+        progress: 0.6,
         message: 'Discovering topics and themes...'
       ));
       final topicData = await _extractTopicsWithAI(meaningfulEntries);
-      
+      debugPrint('[AnalyticsService] Topic data extracted: \\${topicData.length} topics');
+
       _progressController.add(AnalyticsProgress(
-        progress: 0.8, 
+        progress: 0.8,
         message: 'Organizing entries by topics...'
       ));
       final topics = await _buildTopicClusters(topicData, meaningfulEntries);
-      
+      debugPrint('[AnalyticsService] Final topic clusters built: \\${topics.length}');
+
       _progressController.add(AnalyticsProgress(
-        progress: 1.0, 
+        progress: 1.0,
         message: 'Analysis complete!'
       ));
       _topics = topics;
-      
+
       return topics;
     } catch (e) {
       debugPrint('Analytics error: $e');
@@ -149,12 +158,13 @@ class AnalyticsService {
   Future<List<Map<String, dynamic>>> _extractTopicsWithAI(List<Entry> entries) async {
     try {
       final prompt = _buildTopicExtractionPrompt(entries);
-      
+      debugPrint('[AnalyticsService] AI Prompt: $prompt');
+
       final response = await http.post(
         Uri.parse(_baseUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_apiKey',
+          'Authorization': 'Bearer $_apiKey', // Use the instance variable _apiKey
         },
         body: jsonEncode({
           'model': 'deepseek-chat',
@@ -173,26 +183,48 @@ class AnalyticsService {
         }),
       );
 
+      debugPrint('[AnalyticsService] AI Response Status Code: ${response.statusCode}');
+      debugPrint('[AnalyticsService] AI Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        final content = data['choices'][0]['message']['content'] as String;
-        
-        // Clean and parse JSON
-        final cleanContent = content.trim();
-        final jsonStart = cleanContent.indexOf('[');
-        final jsonEnd = cleanContent.lastIndexOf(']') + 1;
-        
-        if (jsonStart != -1 && jsonEnd > jsonStart) {
-          final jsonString = cleanContent.substring(jsonStart, jsonEnd);
-          final List<dynamic> topicsJson = jsonDecode(jsonString);
-          return topicsJson.cast<Map<String, dynamic>>();
+        // Add null checks and type checks for robustness
+        if (data['choices'] != null && 
+            data['choices'] is List && 
+            (data['choices'] as List).isNotEmpty &&
+            data['choices'][0]['message'] != null &&
+            data['choices'][0]['message']['content'] != null) {
+              
+          final content = data['choices'][0]['message']['content'] as String;
+          debugPrint('[AnalyticsService] AI Response Content: $content');
+          
+          // Clean and parse JSON
+          final cleanContent = content.trim();
+          final jsonStart = cleanContent.indexOf('[');
+          final jsonEnd = cleanContent.lastIndexOf(']') + 1;
+          
+          if (jsonStart != -1 && jsonEnd > jsonStart) {
+            final jsonString = cleanContent.substring(jsonStart, jsonEnd);
+            debugPrint('[AnalyticsService] Extracted JSON String: $jsonString');
+            try {
+              final List<dynamic> topicsJson = jsonDecode(jsonString);
+              return topicsJson.cast<Map<String, dynamic>>();
+            } catch (e) {
+              debugPrint('[AnalyticsService] JSON Parsing Error: $e');
+            }
+          } else {
+            debugPrint('[AnalyticsService] Could not find valid JSON array in AI response content.');
+          }
+        } else {
+          debugPrint('[AnalyticsService] AI response structure is not as expected.');
         }
       }
     } catch (e) {
-      debugPrint('AI topic extraction error: $e');
+      debugPrint('[AnalyticsService] AI topic extraction error: $e');
     }
     
     // Fallback: create topics based on keywords if AI fails
+    debugPrint('[AnalyticsService] Falling back to keyword-based topic extraction.');
     return _createFallbackTopics(entries);
   }
 
