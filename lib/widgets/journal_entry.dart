@@ -413,7 +413,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 120),
             curve: Curves.easeOutQuart,
-            padding: const EdgeInsets.fromLTRB(12, 5, 12, 5),
+            padding: const EdgeInsets.fromLTRB(5, 2, 5, 2),
             decoration: BoxDecoration(
               color: widget.entry.isSelected
                   ? theme.highlightColor

@@ -166,21 +166,23 @@ class _JournalScreenState extends State<JournalScreen>
                                         entryGroup.value,
                                       );
                                     }
-                                  },
-                                  child: Container(
+                                  },                                  child: Container(
                                     color: background,
                                     padding: const EdgeInsets.fromLTRB(
                                       16,
                                       8, // Reduced top padding
-                                      0,
+                                      16,
                                       4, // Reduced bottom padding
                                     ),
-                                    child: Text(
-                                      entryGroup.key,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context).hintColor,
-                                        fontWeight: FontWeight.w600,
+                                    child: Center(
+                                      child: Text(
+                                        entryGroup.key,
+                                        style: TextStyle(
+                                          fontSize: 14, // Smaller font size
+                                          color: Theme.of(context).hintColor,
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: 'IBMPlexSans', // Sans font
+                                        ),
                                       ),
                                     ),
                                   ),

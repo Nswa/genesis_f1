@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../controller/journal_controller.dart';
 import '../utils/mood_utils.dart';
-import '../utils/date_formatter.dart';
-import 'package:collective/services/user_profile_service.dart';
 import 'package:camera/camera.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -315,28 +313,14 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
       } else {
         _emojiBarController.reverse();
       }
-    });
-  }
+    });  }
 
-  String _getTimeOfDayGreeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'morning';
-    if (hour < 17) return 'afternoon';
-    return 'evening';
-  }
   String _getHintText() {
-    final profile = UserProfileService.instance.profile;
-    if (profile != null) {
-      final firstWord = profile.firstName.split(" ")[0];
-      return "${_getTimeOfDayGreeting()}, ${firstWord.toLowerCase()}...";
-    }
-    return "Write your thoughts...";
+    return "something on your mind?";
   }
-
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final theme = Theme.of(context);    final fadeValue = (1 +
+    final theme = Theme.of(context);final fadeValue = (1 +
             (widget.journalController.dragOffsetY /
                 JournalController.swipeThreshold))
         .clamp(0.0, 1.0);
@@ -418,7 +402,51 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                   padding: EdgeInsets.zero,
                                   constraints: const BoxConstraints(),
                                   visualDensity: VisualDensity.compact,
-                                ),                                const Spacer(),                                // Save button - always visible
+                                ),                                const Spacer(),                                // Radio button for voice recording - positioned just to the left of save button
+                                GestureDetector(
+                                  onTapDown: (details) {
+                                    _onTapDown();
+                                  },
+                                  onTapUp: (details) {
+                                    _onTapUp();
+                                  },
+                                  onTapCancel: () {
+                                    _onTapCancel();
+                                  },
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 8),
+                                        child: Icon(
+                                          Icons.radio_button_checked,
+                                          size: 18, // Match other toolbar icons
+                                          color: _isRecording
+                                              ? Colors.red.withOpacity(0.7)
+                                              : theme.iconTheme.color?.withOpacity(0.7),
+                                        ),
+                                      ),
+                                      // Camera preview positioned above the button
+                                      if (_showCameraPreview && _isCameraInitialized && _cameraController != null)
+                                        Positioned(
+                                          bottom: 30, // Position above the button
+                                          right: -50, // Adjust positioning
+                                          child: Container(
+                                            width: 120,
+                                            height: 120,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: Colors.red, width: 3),
+                                            ),
+                                            child: ClipOval(
+                                              child: CameraPreview(_cameraController!),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                // Save button - always visible
                                 Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   child: GestureDetector(
@@ -495,58 +523,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                               hintStyle: TextStyle(color: theme.hintColor),
                                               border: InputBorder.none,
                                               contentPadding: EdgeInsets.zero,
-                                              isDense: true,
-                                            ),
+                                              isDense: true,                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),GestureDetector(
-                                      onTapDown: (details) {
-                                        _onTapDown();
-                                      },
-                                      onTapUp: (details) {
-                                        _onTapUp();
-                                      },
-                                      onTapCancel: () {
-                                        _onTapCancel();
-                                      },
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          AnimatedContainer(
-                                            duration: const Duration(milliseconds: 150),
-                                            curve: Curves.easeInOut,
-                                            transform: _isRecording
-                                                ? Matrix4.translationValues(0, -55, 0)
-                                                : Matrix4.identity(),
-                                            // add small left paddding
-                                            margin: const EdgeInsets.only(left: 8, right: 8, top: 4),
-                                            child: Icon(
-                                              Icons.radio_button_checked,
-                                              size: 28,
-                                              color: _isRecording
-                                                  ? Colors.red.withOpacity(0.7) // Reduced contrast for recording state
-                                                  : theme.iconTheme.color?.withOpacity(0.25), // Lower contrast for idle state
-                                            ),
-                                          ),
-                                          // Camera preview positioned above the button
-                                          if (_showCameraPreview && _isCameraInitialized && _cameraController != null)
-                                            Positioned(
-                                              bottom: 90, // Position above the button
-                                              left: -90, // Center horizontally
-                                              child: Container(
-                                                width: 120,
-                                                height: 120,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(color: Colors.red, width: 3),
-                                                ),
-                                                child: ClipOval(
-                                                  child: CameraPreview(_cameraController!),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
                                       ),
                                     ),
                                   ],
