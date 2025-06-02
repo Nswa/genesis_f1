@@ -170,11 +170,12 @@ class _JournalScreenState extends State<JournalScreen>
                                   },                                  child: Container(
                                     color: Colors.transparent, // Make the full row background transparent
                                     padding: const EdgeInsets.fromLTRB(
-                                      16,
+                                      8, // Reduced left padding to minimize wasted space
                                       8, // Reduced top padding
                                       16,
                                       4, // Reduced bottom padding
-                                    ),                                    child: Center(
+                                    ),child: Align(
+                                      alignment: Alignment.centerLeft,
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(16),
                                         child: BackdropFilter(
@@ -185,7 +186,7 @@ class _JournalScreenState extends State<JournalScreen>
                                               vertical: 2,
                                             ),                                            decoration: BoxDecoration(
                                               color: Theme.of(context).brightness == Brightness.dark
-                                                  ? Colors.black.withOpacity(0.7)
+                                                  ? const Color.fromARGB(255, 37, 37, 37).withOpacity(0.7)
                                                   : Colors.white.withOpacity(0.8),
                                               borderRadius: BorderRadius.circular(16),
                                             ),
