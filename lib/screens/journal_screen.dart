@@ -180,21 +180,21 @@ class _JournalScreenState extends State<JournalScreen>
                                         borderRadius: BorderRadius.circular(16),
                                         child: BackdropFilter(
                                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 2,
+                                          child: Container(                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 6,
+                                              vertical: 1,
                                             ),                                            decoration: BoxDecoration(
                                               color: Theme.of(context).brightness == Brightness.dark
-                                                  ? const Color.fromARGB(255, 37, 37, 37).withOpacity(0.7)
+                                                  ? Colors.black.withOpacity(0.7)
                                                   : Colors.white.withOpacity(0.8),
                                               borderRadius: BorderRadius.circular(16),
                                             ),
                                             child: Text(
-                                              entryGroup.key,
-                                              style: TextStyle(
-                                                fontSize: 14, // Smaller font size
-                                                color: Theme.of(context).hintColor,
+                                              entryGroup.key,                                              style: TextStyle(
+                                                fontSize: 13, // Smaller font size
+                                                color: Theme.of(context).brightness == Brightness.dark
+                                                    ? Colors.white.withOpacity(0.8)
+                                                    : Colors.white.withOpacity(0.9),
                                                 fontWeight: FontWeight.w500,
                                                 fontFamily: 'IBMPlexSans', // Sans font
                                               ),
