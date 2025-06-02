@@ -374,10 +374,11 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
                         return Text(header, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold));
                       },
                     ),
-                    const SizedBox(height: 8),
-                    Card(
+                    const SizedBox(height: 8),                    Card(
                       elevation: 1,
-                      color: theme.colorScheme.primary.withOpacity(0.05),
+                      color: theme.brightness == Brightness.light
+                          ? theme.cardColor.withOpacity(0.8) // Lighter background for light mode
+                          : theme.colorScheme.primary.withOpacity(0.05), // Keep dark mode styling
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -541,7 +542,6 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
       ),
     );
   }
-
   Widget _buildRelatedEntryCard(Entry entry, ThemeData theme, {double elevation = 8, double scale = 1.0, double rotation = 0.0, double yOffset = 0.0, double shadowOpacity = 0.18, VoidCallback? onTap}) {
     return Transform.translate(
       offset: Offset(0, yOffset),
@@ -560,78 +560,65 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
               ),
               child: Card(
                 elevation: elevation,
-                shadowColor: Colors.black.withOpacity(shadowOpacity),
+                shadowColor: theme.shadowColor.withOpacity(shadowOpacity),
                 margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(14),
                   side: BorderSide(color: theme.colorScheme.primary.withOpacity(0.08), width: 1.0),
                 ),
                 color: theme.cardColor,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(shadowOpacity * 0.8),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(14),
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(18),
-                      onTap: onTap,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
-                        child: SingleChildScrollView( // Allows scrolling for very long content
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min, // Key for wrapping content
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    entry.timestamp,
-                                    style: theme.textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: theme.colorScheme.primary,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
-                                    Icon(
-                                      Icons.tag,
-                                      size: 18,
-                                      color: theme.colorScheme.primary.withOpacity(0.5),
-                                    ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              // Directly show full text, AnimatedCrossFade removed
-                              Text(
-                                entry.text,
-                                style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
-                              ),
-                              if (entry.tags.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Wrap(
-                                    spacing: 6,
-                                    runSpacing: 4,
-                                    children: entry.tags.map((tag) => Chip(
-                                      visualDensity: VisualDensity.compact,
-                                      label: Text(tag, style: theme.textTheme.bodySmall),
-                                      backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
-                                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    )).toList(),
-                                  ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(14),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(18),
+                    onTap: onTap,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 10.0),
+                      child: SingleChildScrollView( // Allows scrolling for very long content
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min, // Key for wrapping content
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  entry.timestamp,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: theme.colorScheme.primary,                                  ),
                                 ),
-                            ],
-                          ),
+                                const Spacer(),
+                                if (widget.entry.tags.any((tag) => entry.tags.contains(tag)))
+                                  Icon(
+                                    Icons.tag,
+                                    size: 18,
+                                    color: theme.colorScheme.primary.withOpacity(0.5),
+                                  ),
+                              ],
+                            ),
+                            const SizedBox(height: 6),
+                            // Directly show full text, AnimatedCrossFade removed
+                            Text(
+                              entry.text,
+                              style: theme.textTheme.bodyMedium?.copyWith(fontSize: 15, height: 1.35),
+                            ),
+                            if (entry.tags.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Wrap(
+                                  spacing: 6,
+                                  runSpacing: 4,
+                                  children: entry.tags.map((tag) => Chip(
+                                    visualDensity: VisualDensity.compact,
+                                    label: Text(tag, style: theme.textTheme.bodySmall),
+                                    backgroundColor: theme.colorScheme.primary.withOpacity(0.08),
+                                    padding: const EdgeInsets.symmetric(horizontal: 6),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  )).toList(),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ),
@@ -640,8 +627,7 @@ class _EntryInsightScreenState extends State<EntryInsightScreen> with TickerProv
               ),
             ),
           ),
-        ),
-      ),
+        ),      ),
     );
   }
 }
