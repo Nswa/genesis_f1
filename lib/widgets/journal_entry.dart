@@ -121,16 +121,24 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
         : theme.scaffoldBackgroundColor;
     
     return Stack(
-      children: [        SingleChildScrollView(
-          controller: _tagsScrollController,
-          scrollDirection: Axis.horizontal,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: Text(
-              widget.entry.tags.join(" "),
-              style: style,
-              softWrap: false,
-              maxLines: 1,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 12),
+          child: SingleChildScrollView(
+            controller: _tagsScrollController,
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < widget.entry.tags.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 4),
+                  Text(
+                    widget.entry.tags[i],
+                    style: style,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
             ),
           ),
         ),
@@ -181,7 +189,8 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                 ),
               ),
             ),
-          ),        ),
+          ),
+        ),
       ],
     );
   }
@@ -453,15 +462,31 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                     final timestampStyle = regularStyle?.copyWith(
                       fontSize: ((regularStyle.fontSize ?? 12.0) + 1.0),
                     );
+                      // Build left side metadata (tags and mood)
+                    Widget tagsWidget = const SizedBox.shrink();
+                    Widget moodWidget = const SizedBox.shrink();
                     
-                    // Build left side metadata (tags and mood)
-                    final leftWidgets = <Widget>[];
                     if (widget.entry.tags.isNotEmpty) {
-                      leftWidgets.add(_buildTagsBar(context, regularStyle));
+                      tagsWidget = Flexible(
+                        child: _buildTagsBar(context, regularStyle),
+                      );
                     }
+                    
                     if (widget.entry.mood?.isNotEmpty == true) {
-                      if (leftWidgets.isNotEmpty) leftWidgets.add(Text(' • ', style: regularStyle));
-                      leftWidgets.add(Text(widget.entry.mood!, style: regularStyle));
+                      moodWidget = Padding(
+                        padding: const EdgeInsets.only(left: 4.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(' • ', style: regularStyle),
+                            Text(
+                              widget.entry.mood!,
+                              style: regularStyle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      );
                     }
                     
                     return Row(
@@ -470,16 +495,20 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                       children: [
                         // Left side: tags and mood
                         Expanded(
-                          child: leftWidgets.isNotEmpty 
-                            ? Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: leftWidgets,
-                              )
-                            : const SizedBox.shrink(),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              if (widget.entry.tags.isNotEmpty) tagsWidget,
+                              if (widget.entry.mood?.isNotEmpty == true) moodWidget,
+                            ],
+                          ),
                         ),
                         // Right side: timestamp
-                        Text(widget.entry.timestamp, style: timestampStyle),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(widget.entry.timestamp, style: timestampStyle),
+                        ),
                       ],
                     );
                   },
