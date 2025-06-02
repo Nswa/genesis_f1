@@ -181,57 +181,11 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                 ),
               ),
             ),
-          ),
-        ),
+          ),        ),
       ],
     );
   }
 
-  List<Widget> _buildMetadata(
-    BuildContext context,
-    TextStyle? regularStyle,
-    TextStyle? timestampStyle,
-  ) {
-    final List<Widget?> widgets = [
-      Text(widget.entry.timestamp, style: timestampStyle),
-      widget.entry.mood?.isNotEmpty == true
-          ? Text(widget.entry.mood!, style: regularStyle)
-          : null,
-      widget.entry.tags.isNotEmpty
-          ? Flexible(child: _buildTagsBar(context, regularStyle))
-          : null,
-      widget.entry.wordCount > 0
-          ? Text('${widget.entry.wordCount} words', style: regularStyle)
-          : null,
-    ];
-    // Remove nulls
-    return widgets.whereType<Widget>().toList();
-  }
-
-  Widget _joinWithSeparator(
-    List<Widget> widgets,
-    Widget separator,
-    Widget tagsSpacer,
-  ) {
-    if (widgets.isEmpty) return const SizedBox.shrink();
-    final List<Widget> children = [];
-    for (int i = 0; i < widgets.length; i++) {
-      children.add(widgets[i]);
-      if (i < widgets.length - 1) {
-        // If next is tags, use tagsSpacer
-        if (widgets[i + 1] is Flexible) {
-          children.add(tagsSpacer);
-        } else {
-          children.add(separator);
-        }
-      }
-    }
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: children,
-    );
-  }
   void _showImageViewer(BuildContext context) {
     ImageProvider? imageProvider;
     String? heroTag;
@@ -490,8 +444,7 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
             transformAlignment: Alignment.center,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Builder(
+              children: [                Builder(
                   builder: (context) {
                     final scale = TextScaleController.instance.scale.value;
                     final regularStyle = theme.textTheme.bodySmall?.copyWith(
@@ -500,20 +453,37 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                     final timestampStyle = regularStyle?.copyWith(
                       fontSize: ((regularStyle.fontSize ?? 12.0) + 1.0),
                     );
-                    final separator = Text(' • ', style: regularStyle);
-                    final tagsSpacer = Text(' ', style: regularStyle);
-                    final metadataWidgets = _buildMetadata(
-                      context,
-                      regularStyle,
-                      timestampStyle,
-                    );
-                    return _joinWithSeparator(
-                      metadataWidgets,
-                      separator,
-                      tagsSpacer,
+                    
+                    // Build left side metadata (tags and mood)
+                    final leftWidgets = <Widget>[];
+                    if (widget.entry.tags.isNotEmpty) {
+                      leftWidgets.add(_buildTagsBar(context, regularStyle));
+                    }
+                    if (widget.entry.mood?.isNotEmpty == true) {
+                      if (leftWidgets.isNotEmpty) leftWidgets.add(Text(' • ', style: regularStyle));
+                      leftWidgets.add(Text(widget.entry.mood!, style: regularStyle));
+                    }
+                    
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        // Left side: tags and mood
+                        Expanded(
+                          child: leftWidgets.isNotEmpty 
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: leftWidgets,
+                              )
+                            : const SizedBox.shrink(),
+                        ),
+                        // Right side: timestamp
+                        Text(widget.entry.timestamp, style: timestampStyle),
+                      ],
                     );
                   },
-                ),                if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
+                ),if ((widget.entry.imageUrl != null && widget.entry.imageUrl!.isNotEmpty) ||
                     (widget.entry.localImagePath != null && widget.entry.localImagePath!.isNotEmpty))
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0, bottom: 2.5),
