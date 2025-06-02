@@ -16,6 +16,7 @@ class JournalEntryWidget extends StatefulWidget {
   final VoidCallback? onInsight;
   final bool Function()? isSelectionMode;
   final VoidCallback? onToggleSelection;
+  final String? searchTerm;
 
   const JournalEntryWidget({
     super.key,
@@ -28,6 +29,7 @@ class JournalEntryWidget extends StatefulWidget {
     this.onInsight,
     this.isSelectionMode,
     this.onToggleSelection,
+    this.searchTerm,
   });
 
   @override
@@ -383,6 +385,66 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
     });
   }
 
+  Widget _buildHighlightedText(
+    BuildContext context,
+    String text,
+    String? searchTerm,
+    TextStyle? baseStyle,
+  ) {
+    if (searchTerm == null || searchTerm.isEmpty) {
+      return Text(text, style: baseStyle);
+    }
+
+    final theme = Theme.of(context);
+    final highlightColor = theme.brightness == Brightness.dark
+        ? Colors.yellow.withOpacity(0.3)
+        : Colors.yellow.withOpacity(0.5);
+
+    final matches = searchTerm.toLowerCase();
+    final textLower = text.toLowerCase();
+    final spans = <TextSpan>[];
+    int lastMatchEnd = 0;
+
+    for (int i = 0; i <= textLower.length - matches.length; i++) {
+      if (textLower.substring(i, i + matches.length) == matches) {
+        // Add non-matched text before this match
+        if (i > lastMatchEnd) {
+          spans.add(TextSpan(
+            text: text.substring(lastMatchEnd, i),
+            style: baseStyle,
+          ));
+        }
+
+        // Add matched text with highlight
+        spans.add(TextSpan(
+          text: text.substring(i, i + matches.length),
+          style: baseStyle?.copyWith(
+            backgroundColor: highlightColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ));
+
+        lastMatchEnd = i + matches.length;
+        i += matches.length - 1;
+      }
+    }
+
+    // Add remaining non-matched text
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(lastMatchEnd),
+        style: baseStyle,
+      ));
+    }
+
+    return RichText(
+      text: TextSpan(
+        children: spans,
+        style: baseStyle,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -523,12 +585,14 @@ class _JournalEntryWidgetState extends State<JournalEntryWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                      child: Text(
-                        widget.entry.text,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          fontSize: (theme.textTheme.bodyMedium?.fontSize ?? 14.0) * TextScaleController.instance.scale.value,
+                        child: _buildHighlightedText(
+                          context,
+                          widget.entry.text,
+                          widget.searchTerm,
+                          theme.textTheme.bodyMedium?.copyWith(
+                            fontSize: (theme.textTheme.bodyMedium?.fontSize ?? 14.0) * TextScaleController.instance.scale.value,
+                          ),
                         ),
-                      ),
                     ),
                     const SizedBox(width: 8),
                     GestureDetector(

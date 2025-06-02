@@ -146,7 +146,8 @@ class _JournalScreenState extends State<JournalScreen>
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 300),
                   switchInCurve: Curves.easeOutCubic,
-                  switchOutCurve: Curves.easeInCubic,                  child: CustomScrollView(
+                  switchOutCurve: Curves.easeInCubic,
+                  child: CustomScrollView(
                     key: ValueKey('${jc.isLoading}_${jc.entries.length}_${grouped.length}'),
                     controller: scrollController,
                     slivers:
@@ -166,14 +167,16 @@ class _JournalScreenState extends State<JournalScreen>
                                         entryGroup.value,
                                       );
                                     }
-                                  },                                  child: Container(
+                                  },
+                                  child: Container(
                                     color: Colors.transparent, // Make the full row background transparent
                                     padding: const EdgeInsets.fromLTRB(
                                       2, // Reduced left padding to minimize wasted space
                                       8, // Reduced top padding
                                       16,
                                       4, // Reduced bottom padding
-                                    ),child: Align(
+                                    ),
+                                    child: Align(
                                       alignment: Alignment.centerLeft,
                                       child: Container(
                                         padding: const EdgeInsets.symmetric(
@@ -191,7 +194,8 @@ class _JournalScreenState extends State<JournalScreen>
                                                 : Colors.black.withOpacity(0.05),
                                             width: 0.5,
                                           ),
-                                        ),                                        child: Text(
+                                        ),
+                                        child: Text(
                                           entryGroup.key,
                                           style: TextStyle(
                                             fontSize: 13, // Smaller font size
@@ -205,7 +209,8 @@ class _JournalScreenState extends State<JournalScreen>
                                       ),
                                     ),
                                   ),
-                                ),sliver: SliverList(
+                                ),
+                                sliver: SliverList(
                                   delegate: SliverChildBuilderDelegate(
                                     (context, index) {
                                       return TweenAnimationBuilder<double>(
@@ -220,7 +225,8 @@ class _JournalScreenState extends State<JournalScreen>
                                               child: child,
                                             ),
                                           );
-                                        },                                        child: JournalEntryWidget(
+                                        },
+                                        child: JournalEntryWidget(
                                           key: ValueKey(entryGroup.value[index].localId ?? entryGroup.value[index].firestoreId),
                                           entry: entryGroup.value[index],
                                           onToggleFavorite: jc.toggleFavorite,
@@ -228,6 +234,7 @@ class _JournalScreenState extends State<JournalScreen>
                                           onToggleSelection: () {
                                             setState(() => jc.toggleEntrySelection(entryGroup.value[index]));
                                           },
+                                          searchTerm: _searchController.text,
                                           onInsight: () async {
                                             final entry = entryGroup.value[index];
                                             Navigator.push(
@@ -239,7 +246,8 @@ class _JournalScreenState extends State<JournalScreen>
                                                 ),
                                               ),
                                             );
-                                          },                                          onEdit: () async {
+                                          },
+                                          onEdit: () async {
                                             final entry = entryGroup.value[index];
                                             final result = await Navigator.push<bool>(
                                               context,
@@ -258,7 +266,8 @@ class _JournalScreenState extends State<JournalScreen>
                                                 // through its reactive streams
                                               });
                                             }
-                                          },onDelete: () async {
+                                          },
+                                          onDelete: () async {
                                             final entry = entryGroup.value[index];
                                             final confirm = await CustomDeleteDialog.show(
                                               context,
@@ -306,7 +315,8 @@ class _JournalScreenState extends State<JournalScreen>
                 ? IndeterminateProgressBar(
                     color: Theme.of(context).hintColor,
                     height: 1.5,
-                  )                : FractionallySizedBox(
+                  )
+                : FractionallySizedBox(
                     widthFactor: (-jc.dragOffsetY / JournalController.swipeThreshold).clamp(0.0, 1.0),
                     child: Container(
                       height: 1,
