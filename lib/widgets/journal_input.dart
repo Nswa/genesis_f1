@@ -426,22 +426,39 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                               ? Colors.red.withOpacity(0.7)
                                               : theme.iconTheme.color?.withOpacity(0.6), // Slightly softer than others
                                         ),
-                                      ),
-                                      // Camera preview positioned above the button
+                                      ),                                      // Camera preview positioned above the button
                                       if (_showCameraPreview && _isCameraInitialized && _cameraController != null)
                                         Positioned(
-                                          bottom: 30, // Position above the button
+                                          bottom: 60, // Lifted higher to avoid finger interference
                                           left: -50, // Adjust positioning for new location
-                                          child: Container(
-                                            width: 120,
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              border: Border.all(color: Colors.red, width: 3),
-                                            ),
-                                            child: ClipOval(
-                                              child: CameraPreview(_cameraController!),
-                                            ),
+                                          child: Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              // Circular progress bar
+                                              SizedBox(
+                                                width: 130,
+                                                height: 130,
+                                                child: TweenAnimationBuilder<double>(
+                                                  duration: const Duration(seconds: 5),
+                                                  tween: Tween(begin: 0.0, end: _isRecording ? 1.0 : 0.0),
+                                                  builder: (context, value, child) {
+                                                    return CircularProgressIndicator(
+                                                      value: value,
+                                                      strokeWidth: 4,
+                                                      backgroundColor: Colors.red.withOpacity(0.3),
+                                                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
+                                                    );
+                                                  },
+                                                ),                                              ),
+                                              // Camera preview
+                                              Container(
+                                                width: 120,
+                                                height: 120,
+                                                child: ClipOval(
+                                                  child: CameraPreview(_cameraController!),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                     ],
