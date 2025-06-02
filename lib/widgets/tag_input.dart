@@ -216,41 +216,35 @@ class _TagInputWidgetState extends State<TagInputWidget> {
       _tagController.clear();
       _inputFieldWidth = 60.0;
       print('Debug: Cleared tags in sync with controller');
-    }
-    
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Single scrollable row for tags, input, and suggestions
-          Container(
-            height: 40,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  // Display current tags
-                  ..._currentTags.map((tag) => Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: _buildTagChip(tag, theme),
-                  )),
-                  // Add tag button/input
-                  _buildAddTagButton(theme),
-                  // Inline suggestions with animation
-                  if (_showSuggestions && _suggestedTags.isNotEmpty) ...[
-                    const SizedBox(width: 8),
-                    ..._suggestedTags.map((tag) => Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
-                      child: _buildSuggestionChip(tag, theme),
-                    )),
-                  ],
+    }      return Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // Minimize vertical space
+          children: [
+        // Single scrollable row for tags, input, and suggestions
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+              children: [
+                // Display current tags
+                ..._currentTags.map((tag) => Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: _buildTagChip(tag, theme),
+                )),
+                // Add tag button/input
+                _buildAddTagButton(theme),
+                // Inline suggestions with animation
+                if (_showSuggestions && _suggestedTags.isNotEmpty) ...[
+                  const SizedBox(width: 8),                  ..._suggestedTags.map((tag) => Padding(
+                    padding: const EdgeInsets.only(right: 6.0),
+                    child: _buildSuggestionChip(tag, theme),                  )),
                 ],
-              ),
-            ),
-          ),
+              ],
+            ),          ),
         ],
       ),
-    );
+      );
   }
 
   Widget _buildTagChip(String tag, ThemeData theme) {
