@@ -375,14 +375,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text(
-                                  DateFormatter.formatTime(now),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: theme.hintColor,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                ),
                                 const SizedBox(
                                   width: 8,
                                 ), // Standardized spacing
@@ -448,14 +440,6 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Text(
-                                  DateFormatter.formatFullDate(now),
-                                  style: TextStyle(
-                                    fontSize: 11,
-                                    color: theme.hintColor,
-                                    fontStyle: FontStyle.italic,
                                   ),
                                 ),
                               ],
