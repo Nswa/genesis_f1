@@ -170,41 +170,43 @@ class _JournalScreenState extends State<JournalScreen>
                                   },                                  child: Container(
                                     color: Colors.transparent, // Make the full row background transparent
                                     padding: const EdgeInsets.fromLTRB(
-                                      8, // Reduced left padding to minimize wasted space
+                                      2, // Reduced left padding to minimize wasted space
                                       8, // Reduced top padding
                                       16,
                                       4, // Reduced bottom padding
                                     ),child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: BackdropFilter(
-                                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                          child: Container(                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 6,
-                                              vertical: 1,
-                                            ),                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).brightness == Brightness.dark
-                                                  ? Colors.black.withOpacity(0.7)
-                                                  : Colors.white.withOpacity(0.8),
-                                              borderRadius: BorderRadius.circular(16),
-                                            ),
-                                            child: Text(
-                                              entryGroup.key,                                              style: TextStyle(
-                                                fontSize: 13, // Smaller font size
-                                                color: Theme.of(context).brightness == Brightness.dark
-                                                    ? Colors.white.withOpacity(0.8)
-                                                    : Colors.white.withOpacity(0.9),
-                                                fontWeight: FontWeight.w500,
-                                                fontFamily: 'IBMPlexSans', // Sans font
-                                              ),
-                                            ),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 6,
+                                          vertical: 1,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).brightness == Brightness.dark
+                                              ? const Color.fromARGB(255, 48, 48, 48).withOpacity(0.9)
+                                              : Colors.white.withOpacity(0.95),
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                                ? Colors.white.withOpacity(0.1)
+                                                : Colors.black.withOpacity(0.05),
+                                            width: 0.5,
+                                          ),
+                                        ),                                        child: Text(
+                                          entryGroup.key,
+                                          style: TextStyle(
+                                            fontSize: 13, // Smaller font size
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                                ? Colors.white.withOpacity(0.8)
+                                                : Colors.white.withOpacity(0.9),
+                                            fontWeight: FontWeight.w500,
+                                            fontFamily: 'IBMPlexSans', // Sans font
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),                                sliver: SliverList(
+                                ),sliver: SliverList(
                                   delegate: SliverChildBuilderDelegate(
                                     (context, index) {
                                       return TweenAnimationBuilder<double>(
