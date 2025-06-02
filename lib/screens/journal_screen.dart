@@ -103,8 +103,7 @@ class _JournalScreenState extends State<JournalScreen>
                         await jc.deleteSelectedEntries();
                         // setState is called by jc.onUpdate via deleteSelectedEntries
                       },
-                    )
-                    : JournalToolbar(
+                    )                    : JournalToolbar(
                       isSearching: _isSearching,
                       onToggleSearch: _toggleSearch,
                       searchController: _searchController,
@@ -122,7 +121,7 @@ class _JournalScreenState extends State<JournalScreen>
                           ),
                         );
                       },
-                      onOpenSettings: () {},                      onOpenDatePicker: () {
+                      onOpenDatePicker: () {
                         showCalendarModal(
                           context,
                           jc.entries, // show all entries in calendar, not filtered

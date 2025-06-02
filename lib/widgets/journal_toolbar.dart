@@ -9,19 +9,16 @@ import '../controller/journal_controller.dart';
 class JournalToolbar extends StatelessWidget {
   final bool isSearching;
   final VoidCallback onToggleSearch;  final VoidCallback onToggleFavorites;
-  final VoidCallback onOpenSettings;
   final VoidCallback onOpenDatePicker;
   final VoidCallback onOpenAnalytics;
   final TextEditingController searchController;
   final FocusNode searchFocusNode;
   final ValueChanged<String> onSearchChanged;
-  final SyncStatus syncStatus;
-  const JournalToolbar({
+  final SyncStatus syncStatus;  const JournalToolbar({
     super.key,
     required this.isSearching,
     required this.onToggleSearch,
     required this.onToggleFavorites,
-    required this.onOpenSettings,
     required this.onOpenDatePicker,
     required this.onOpenAnalytics,
     required this.searchController,
@@ -238,24 +235,13 @@ class JournalToolbar extends StatelessWidget {
                           Text('Search'),
                         ],
                       ),
-                    ),
-                    const PopupMenuItem(
+                    ),                    const PopupMenuItem(
                       value: 'favorites',
                       child: Row(
                         children: [
                           Icon(Icons.bookmark_border, size: 20),
                           SizedBox(width: 12),
                           Text('Favorites'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'settings',
-                      child: Row(
-                        children: [
-                          Icon(Icons.settings, size: 20),
-                          SizedBox(width: 12),
-                          Text('Settings'),
                         ],
                       ),
                     ),
@@ -269,17 +255,13 @@ class JournalToolbar extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ],
-                  onSelected: (value) async {
+                  ],                  onSelected: (value) async {
                     switch (value) {
                       case 'search':
                         onToggleSearch();
                         break;
                       case 'favorites':
                         onToggleFavorites();
-                        break;
-                      case 'settings':
-                        onOpenSettings();
                         break;
                       case 'logout':
                         await authManager.signOut();
