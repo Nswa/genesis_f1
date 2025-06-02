@@ -1,4 +1,5 @@
 //
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:collective/widgets/calendar_modal.dart';
@@ -167,21 +168,37 @@ class _JournalScreenState extends State<JournalScreen>
                                       );
                                     }
                                   },                                  child: Container(
-                                    color: background,
+                                    color: Colors.transparent, // Make the full row background transparent
                                     padding: const EdgeInsets.fromLTRB(
                                       16,
                                       8, // Reduced top padding
                                       16,
                                       4, // Reduced bottom padding
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        entryGroup.key,
-                                        style: TextStyle(
-                                          fontSize: 14, // Smaller font size
-                                          color: Theme.of(context).hintColor,
-                                          fontWeight: FontWeight.w500,
-                                          fontFamily: 'IBMPlexSans', // Sans font
+                                    ),                                    child: Center(
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 2,
+                                            ),                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).brightness == Brightness.dark
+                                                  ? Colors.black.withOpacity(0.7)
+                                                  : Colors.white.withOpacity(0.8),
+                                              borderRadius: BorderRadius.circular(16),
+                                            ),
+                                            child: Text(
+                                              entryGroup.key,
+                                              style: TextStyle(
+                                                fontSize: 14, // Smaller font size
+                                                color: Theme.of(context).hintColor,
+                                                fontWeight: FontWeight.w500,
+                                                fontFamily: 'IBMPlexSans', // Sans font
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
