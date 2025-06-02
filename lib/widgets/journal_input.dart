@@ -343,9 +343,8 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
             scale: scaleValue,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+              children: [                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 5, 0), // Remove left padding to eliminate gap
                   child: Opacity(
                     // This opacity is for the drag fade effect
                     opacity: fadeValue,
@@ -355,13 +354,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                         const SizedBox(height: 1),
                         Stack(
                           alignment: Alignment.center,
-                          children: [
-                            Row(
+                          children: [                            Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const SizedBox(
-                                  width: 8,
-                                ), // Standardized spacing
+                              children: [                                // Emoji/Mood button - no padding, controlled by SizedBox
                                 IconButton(
                                   icon:
                                       widget.journalController.selectedMood !=
@@ -381,15 +376,15 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                                 ?.withOpacity(
                                                   0.7,
                                                 ), // Consistent color
-                                          ),
-                                  onPressed: _toggleEmojiBar,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                const SizedBox(
-                                  width: 4,
-                                ), // Standardized spacing
+                                          ),                                  onPressed: _toggleEmojiBar,
+                                  padding: EdgeInsets.zero, // No internal padding
+                                  constraints: const BoxConstraints(
+                                    minWidth: 32,
+                                    minHeight: 32,
+                                  ),
+                                  visualDensity: VisualDensity.compact,                                ),
+                                const SizedBox(width: 4), // Reduced spacing between emoji and add media
+                                // Add media button
                                 IconButton(
                                   icon: Icon(
                                     Icons.add_photo_alternate_outlined,
@@ -399,10 +394,13 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                     ), // Consistent color
                                   ),
                                   onPressed: widget.journalController.pickImage,
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                  visualDensity: VisualDensity.compact,
-                                ),                                const Spacer(),                                // Radio button for voice recording - positioned just to the left of save button
+                                  padding: EdgeInsets.zero, // No internal padding
+                                  constraints: const BoxConstraints(
+                                    minWidth: 32,
+                                    minHeight: 32,
+                                  ),                                  visualDensity: VisualDensity.compact,                                ),
+                                const SizedBox(width: 4), // Reduced spacing between add media and camera
+                                // Camera button for recording
                                 GestureDetector(
                                   onTapDown: (details) {
                                     _onTapDown();
@@ -415,22 +413,25 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                   },
                                   child: Stack(
                                     clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(right: 8),
-                                        child: Icon(
-                                          Icons.radio_button_checked,
-                                          size: 18, // Match other toolbar icons
+                                    children: [                                      Container(
+                                        padding: EdgeInsets.zero, // No internal padding for consistency
+                                        constraints: const BoxConstraints(
+                                          minWidth: 32,
+                                          minHeight: 32,
+                                        ),
+                                        alignment: Alignment.center,                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 18, // Consistent with other icons
                                           color: _isRecording
                                               ? Colors.red.withOpacity(0.7)
-                                              : theme.iconTheme.color?.withOpacity(0.7),
+                                              : theme.iconTheme.color?.withOpacity(0.6), // Slightly softer than others
                                         ),
                                       ),
                                       // Camera preview positioned above the button
                                       if (_showCameraPreview && _isCameraInitialized && _cameraController != null)
                                         Positioned(
                                           bottom: 30, // Position above the button
-                                          right: -50, // Adjust positioning
+                                          left: -50, // Adjust positioning for new location
                                           child: Container(
                                             width: 120,
                                             height: 120,
@@ -445,8 +446,7 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                         ),
                                     ],
                                   ),
-                                ),
-                                // Save button - always visible
+                                ),const Spacer(),                                // Save button - always visible
                                 Container(
                                   margin: const EdgeInsets.only(right: 8),
                                   child: GestureDetector(
@@ -468,20 +468,9 @@ class _JournalInputWidgetState extends State<JournalInputWidget>
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                              ],
-                            ),                            // Only show swipe hint when not in scrolling mode
-                            if (!_needsScrolling)
-                              IgnorePointer(
-                                ignoring: true,
-                                child: Icon(
-                                  Icons.keyboard_double_arrow_up,
-                                  size: 16, // Consistent icon size
-                                  color: theme.iconTheme.color?.withOpacity(0.5),
-                                ),
-                              ),
-                          ],
+                                  ),                                ),                            ],
+                          ),
+                        ],
                         ),
                         const SizedBox(height: 8), // Standardized spacing
                         Row(

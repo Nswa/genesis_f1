@@ -184,7 +184,7 @@ class _JournalScreenState extends State<JournalScreen>
                                         decoration: BoxDecoration(
                                           color: Theme.of(context).brightness == Brightness.dark
                                               ? const Color.fromARGB(255, 48, 48, 48).withOpacity(0.9)
-                                              : Colors.white.withOpacity(0.95),
+                                              : const Color.fromARGB(255, 168, 168, 168).withOpacity(0.95),
                                           borderRadius: BorderRadius.circular(16),
                                           border: Border.all(
                                             color: Theme.of(context).brightness == Brightness.dark
