@@ -1,22 +1,10 @@
-\contentsline {chapter}{Acknowledgements}{v}{chapter*.1}%
-\contentsline {chapter}{List of Tables}{viii}{chapter*.2}%
-\contentsline {chapter}{List of Figures}{ix}{chapter*.3}%
-\contentsline {chapter}{List of Abbreviations}{x}{chapter*.5}%
-\contentsline {chapter}{Abstract (English)}{xi}{chapter*.5}%
-\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{xii}{chapter*.5}%
+\contentsline {chapter}{List of Abbreviations}{ii}{chapter*.2}%
+\contentsline {chapter}{Abstract (English)}{iii}{chapter*.2}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{iv}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
-\contentsline {section}{\numberline {1.1}Title 1}{1}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}Title 2}{1}{subsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1.1}Title 3}{1}{subsubsection.1.1.1.1}%
-\contentsline {chapter}{\numberline {2}Literature Review}{2}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Introduction}{2}{section.2.1}%
-\contentsline {chapter}{\numberline {3}Methodology}{4}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Introduction}{4}{section.3.1}%
-\contentsline {chapter}{\numberline {4}Prototype/ Product Development}{5}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Testing and Result}{6}{chapter.5}%
-\contentsline {chapter}{\numberline {6}Conclusions and Suggestions}{7}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Introduction}{7}{section.6.1}%
-\contentsline {chapter}{References}{8}{section.6.1}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{10}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{10}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{11}{appendix.B}%
+\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Project Background}{1}{section.1.2}%
+\contentsline {chapter}{References}{2}{section.1.2}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{4}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{4}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{5}{appendix.B}%
