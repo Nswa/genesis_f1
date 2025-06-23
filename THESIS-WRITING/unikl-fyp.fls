@@ -272,6 +272,9 @@ INPUT files/chIntroduction.aux
 INPUT ./files/chLiteratureReview.aux
 INPUT ./files/chLiteratureReview.aux
 INPUT files/chLiteratureReview.aux
+INPUT ./files/chMethodology.aux
+INPUT ./files/chMethodology.aux
+INPUT files/chMethodology.aux
 OUTPUT unikl-fyp.aux
 INPUT c:/texlive/2025/texmf-dist/tex/latex/mathdesign/mdacmr.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/mathdesign/mdacmr.fd
@@ -424,6 +427,17 @@ OUTPUT files/chLiteratureReview.aux
 INPUT ./files/chLiteratureReview.tex
 INPUT ./files/chLiteratureReview.tex
 INPUT files/chLiteratureReview.tex
+INPUT ./files/chMethodology.tex
+INPUT ./files/chMethodology.tex
+OUTPUT files/chMethodology.aux
+INPUT ./files/chMethodology.tex
+INPUT ./files/chMethodology.tex
+INPUT files/chMethodology.tex
+INPUT ./files/imgs/RAD.png
+INPUT ./files/imgs/RAD.png
+INPUT ./files/imgs/RAD.png
+INPUT ./files/imgs/RAD.png
+INPUT ./files/imgs/RAD.png
 INPUT ./unikl-fyp.bbl
 INPUT ./unikl-fyp.bbl
 INPUT unikl-fyp.bbl
@@ -447,6 +461,9 @@ INPUT files/chIntroduction.aux
 INPUT ./files/chLiteratureReview.aux
 INPUT ./files/chLiteratureReview.aux
 INPUT files/chLiteratureReview.aux
+INPUT ./files/chMethodology.aux
+INPUT ./files/chMethodology.aux
+INPUT files/chMethodology.aux
 INPUT ./unikl-fyp.out
 INPUT ./unikl-fyp.out
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb
