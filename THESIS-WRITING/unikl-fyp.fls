@@ -443,6 +443,11 @@ INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
+INPUT ./files/imgs/usecase_diagram.png
+INPUT ./files/imgs/usecase_diagram.png
+INPUT ./files/imgs/usecase_diagram.png
+INPUT ./files/imgs/usecase_diagram.png
+INPUT ./files/imgs/usecase_diagram.png
 INPUT ./unikl-fyp.bbl
 INPUT ./unikl-fyp.bbl
 INPUT unikl-fyp.bbl

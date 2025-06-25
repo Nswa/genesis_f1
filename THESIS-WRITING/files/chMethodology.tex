@@ -217,6 +217,67 @@ Additional Devices & Android smartphone for testing \\
 \end{table}
 
 \subsection{Use Case Diagram}\label{subsec:usecaseDiagram}
+
+The use case diagram for the \textbf{Collective} mobile journaling application illustrates the interactions between the user (Writer) and the system. It highlights the various functionalities provided by the application and their relationships. The diagram is shown below:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_diagram.png}
+\caption{Use Case Diagram for Collective Mobile Journaling Application}
+\label{fig:usecase-diagram}
+\end{figure}
+
 \subsection{Use Case Description}\label{subsec:usecaseDescription}
+
+The use case description provides detailed information about the functionalities depicted in the use case diagram. Below is a table summarizing the key use cases:
+
+\begin{table}[H]
+\centering
+\caption{Use Case Description}
+\label{tab:usecase-description}
+\begin{tabular}{|p{4cm}|p{6cm}|p{6cm}|}
+\hline
+\textbf{Actor} & \textbf{Use Case} & \textbf{Use Case Description} \\
+\hline
+\multirow{15}{*}{Writer} & Register & Allows the user to create an account. \\
+\cline{2-3}
+ & Login & Allows the user to log in to the application. \\
+\cline{2-3}
+ & Logout & Allows the user to log out when done. \\
+\cline{2-3}
+ & Write Entry & Enables the user to compose journal entries. \\
+\cline{2-3}
+ & Append Tags & Allows the user to add tags to journal entries. \\
+\cline{2-3}
+ & Set Mood & Enables the user to set mood for journal entries. \\
+\cline{2-3}
+ & Set Bookmark & Allows the user to bookmark entries. \\
+\cline{2-3}
+ & Attach Media & Enables the user to attach media to entries. \\
+\cline{2-3}
+ & Submit Entry & Allows the user to submit journal entries. \\
+\cline{2-3}
+ & Browse Bookmark & Enables the user to browse bookmarked entries. \\
+\cline{2-3}
+ & View Entries & Allows the user to browse through saved entries. \\
+\cline{2-3}
+ & Search & Enables the user to search entries. \\
+\cline{2-3}
+ & Browse Calendar & Allows the user to view entries by calendar. \\
+\cline{2-3}
+ & View Analytics & Provides tools to analyze journal entries. \\
+\cline{2-3}
+ & View AI Insights & Offers AI-based insights for journal entries. \\
+\hline
+\multirow{4}{*}{Backend Services} & View Entries & Handles data storage and retrieval for entries. \\
+\cline{2-3}
+ & Manage Offline & Provides functionality to access entries offline. \\
+\cline{2-3}
+ & Generate Analytics & Offers tools to analyze journal entries. \\
+\cline{2-3}
+ & Generate Insights & Provides insights based on journal entries. \\
+\hline
+\end{tabular}
+\end{table}
 
 \section{User design}\label{sec:userDesign}
