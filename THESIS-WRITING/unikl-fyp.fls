@@ -438,6 +438,11 @@ INPUT ./files/imgs/RAD.png
 INPUT ./files/imgs/RAD.png
 INPUT ./files/imgs/RAD.png
 INPUT ./files/imgs/RAD.png
+INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT c:/texlive/2025/texmf-dist/tex/latex/lm/t1lmtt.fd
+INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/lm/ec-lmtt10.tfm
+INPUT c:/texlive/2025/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc
 INPUT ./unikl-fyp.bbl
 INPUT ./unikl-fyp.bbl
 INPUT unikl-fyp.bbl
@@ -466,6 +471,7 @@ INPUT ./files/chMethodology.aux
 INPUT files/chMethodology.aux
 INPUT ./unikl-fyp.out
 INPUT ./unikl-fyp.out
+INPUT c:/texlive/2025/texmf-dist/fonts/type1/public/lm/lmtt10.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmr8a.pfb
 INPUT c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmri8a.pfb
