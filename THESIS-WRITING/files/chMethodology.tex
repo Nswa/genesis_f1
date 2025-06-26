@@ -292,41 +292,7 @@ Figure \ref{fig:register-flow} shows the registration flow for writers. The writ
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer opens registration screen;
-if (Registration method?) then (Email/Password)
-  :Enter first name, last name, email, password;
-  :Submit registration form;
-  if (Valid credentials?) then (Yes)
-    :Create Firebase account;
-    :Save user profile to Firestore;
-    :Update display name;
-    :Navigate to Journal Screen;
-    stop
-  else (No)
-    :Show error message;
-    :Return to registration form;
-    stop
-  endif
-else (OAuth - Google/X)
-  :Select OAuth provider;
-  :Redirect to OAuth consent screen;
-  if (User grants permission?) then (Yes)
-    :Receive OAuth token;
-    :Create/Link Firebase account;
-    :Save user profile to Firestore;
-    :Navigate to Journal Screen;
-    stop
-  else (No)
-    :Show authentication cancelled;
-    :Return to registration screen;
-    stop
-  endif
-endif
-@enduml
-\end{plantuml}
+
 \caption{Registration Flow for Writer}
 \label{fig:register-flow}
 \end{figure}
@@ -337,37 +303,7 @@ Figure \ref{fig:login-flow} shows the login flow for writers. The writer can aut
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer opens login screen;
-if (Login method?) then (Email/Password)
-  :Enter email and password;
-  :Submit login form;
-  if (Valid credentials?) then (Yes)
-    :Authenticate with Firebase;
-    :Navigate to Journal Screen;
-    stop
-  else (No)
-    :Show error message;
-    :Return to login form;
-    stop
-  endif
-else (OAuth - Google/X)
-  :Select OAuth provider;
-  :Authenticate with provider;
-  if (Authentication successful?) then (Yes)
-    :Sign in with Firebase;
-    :Navigate to Journal Screen;
-    stop
-  else (No)
-    :Show authentication error;
-    :Return to login screen;
-    stop
-  endif
-endif
-@enduml
-\end{plantuml}
+
 \caption{Login Flow for Writer}
 \label{fig:login-flow}
 \end{figure}
@@ -378,49 +314,7 @@ Figure \ref{fig:write-entry-flow} shows the entry creation flow for writers. The
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer opens journal input interface;
-:Compose journal entry text;
-if (Add mood?) then (Yes)
-  :Select mood emoji;
-endif
-if (Add tags?) then (Yes)
-  :Add manual tags;
-endif
-if (Attach media?) then (Yes)
-  if (Media type?) then (Image)
-    :Select image from gallery or camera;
-  else (GIF)
-    :Record video and convert to GIF;
-  endif
-endif
-:Click save button;
-if (Entry has content?) then (Yes)
-  if (Internet available?) then (Yes)
-    :Save to local database;
-    :Upload to Firebase Firestore;
-    if (Has media?) then (Yes)
-      :Upload media to Firebase Storage;
-    endif
-    :Mark as synced;
-  else (No)
-    :Save to local database;
-    :Mark as unsynced;
-    note right: Will sync when online
-  endif
-  :Clear input form;
-  :Update entry list;
-  :Trigger background AI analysis;
-  :Show success indication;
-  stop
-else (No)
-  :Show "Entry cannot be empty" message;
-  stop
-endif
-@enduml
-\end{plantuml}
+
 \caption{Write Entry Flow for Writer}
 \label{fig:write-entry-flow}
 \end{figure}
@@ -431,46 +325,7 @@ Figure \ref{fig:edit-entry-flow} shows the entry editing flow for writers. The w
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer selects entry to edit;
-:Navigate to edit screen;
-:Load existing entry data;
-:Modify text content;
-if (Change mood?) then (Yes)
-  :Update mood selection;
-endif
-if (Modify tags?) then (Yes)
-  :Update tags;
-endif
-if (Change media?) then (Yes)
-  :Replace or remove media;
-endif
-:Click save button;
-if (Changes detected?) then (Yes)
-  if (Internet available?) then (Yes)
-    :Update local database;
-    :Update Firebase Firestore;
-    if (Media changed?) then (Yes)
-      :Delete old media from storage;
-      :Upload new media to Firebase Storage;
-    endif
-    :Mark as synced;
-  else (No)
-    :Update local database;
-    :Mark as unsynced;
-  endif
-  :Navigate back to journal;
-  :Update entry list;
-  :Trigger background AI re-analysis;
-  stop
-else (No)
-  :Navigate back without saving;
-  stop
-endif
-@enduml
-\end{plantuml}
+
 \caption{Edit Entry Flow for Writer}
 \label{fig:edit-entry-flow}
 \end{figure}
@@ -481,35 +336,7 @@ Figure \ref{fig:search-flow} shows the search functionality flow. The writer can
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer clicks search icon;
-:Search interface appears;
-:Enter search query;
-if (Query length > 0?) then (Yes)
-  :Apply fuzzy search algorithm;
-  :Search entry text (70% weight);
-  :Search entry tags (30% weight);
-  :Apply relevance threshold;
-  :Display filtered results;
-  if (Results found?) then (Yes)
-    :Show matching entries;
-    :Highlight search terms;
-  else (No)
-    :Show "No entries found" message;
-  endif
-else (No)
-  :Show all entries;
-endif
-if (Clear search?) then (Yes)
-  :Clear search query;
-  :Return to full entry list;
-  stop
-endif
-stop
-@enduml
-\end{plantuml}
+
 \caption{Search Entries Flow for Writer}
 \label{fig:search-flow}
 \end{figure}
@@ -520,38 +347,7 @@ Figure \ref{fig:analytics-flow} shows the analytics viewing flow. The writer can
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer navigates to Analytics screen;
-if (Cached analytics available?) then (Yes)
-  if (Cache expired?) then (No)
-    :Load cached analytics;
-    :Display topic clusters;
-    :Show emotional patterns;
-    :Display calendar insights;
-    stop
-  endif
-endif
-:Check minimum entries (>3);
-if (Sufficient entries?) then (Yes)
-  :Start AI analysis process;
-  :Show progress indicator;
-  :Filter meaningful entries;
-  :Send to DeepSeek API;
-  :Process topic clustering;
-  :Analyze emotional patterns;
-  :Generate calendar insights;
-  :Cache results;
-  :Display analytics dashboard;
-  stop
-else (No)
-  :Show "Insufficient entries" message;
-  :Display placeholder content;
-  stop
-endif
-@enduml
-\end{plantuml}
+
 \caption{View Analytics Flow for Writer}
 \label{fig:analytics-flow}
 \end{figure}
@@ -562,35 +358,7 @@ Figure \ref{fig:insights-flow} shows the AI insights viewing flow for individual
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Writer selects entry for insights;
-:Navigate to Entry Insight screen;
-if (Cached insights available?) then (Yes)
-  if (Cache expired?) then (No)
-    :Load cached insights;
-    :Display contextual analysis;
-    :Show emotional patterns;
-    :Display related entries;
-    stop
-  endif
-endif
-:Identify related entries by date/content;
-:Send entry + context to DeepSeek API;
-:Generate contextual analysis;
-:Perform emotional sentiment analysis;
-:Identify recurring themes;
-:Generate personalized insights;
-:Cache analysis results;
-:Display insights to writer;
-if (Regenerate insights?) then (Yes)
-  :Clear cache for this entry;
-  :Restart analysis process;
-endif
-stop
-@enduml
-\end{plantuml}
+
 \caption{View AI Insights Flow for Writer}
 \label{fig:insights-flow}
 \end{figure}
@@ -603,34 +371,7 @@ Figure \ref{fig:sync-flow} shows the offline synchronization process. The system
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Monitor connectivity status;
-if (Connection restored?) then (Yes)
-  :Query local unsynced entries;
-  if (Unsynced entries found?) then (Yes)
-    :Begin sync process;
-    :Update sync status to "syncing";
-    while (More entries to sync?) is (Yes)
-      :Upload entry to Firestore;
-      if (Has local media?) then (Yes)
-        :Upload media to Firebase Storage;
-        :Update entry with cloud URL;
-      endif
-      :Mark entry as synced;
-      :Remove local media file;
-    endwhile (No)
-    :Update sync status to "synced";
-    :Refresh UI;
-  endif
-else (No)
-  :Set sync status to "offline";
-  :Continue local operations;
-endif
-stop
-@enduml
-\end{plantuml}
+
 \caption{Offline Synchronization Flow}
 \label{fig:sync-flow}
 \end{figure}
@@ -641,28 +382,7 @@ Figure \ref{fig:ai-processing-flow} shows the background AI processing that occu
 
 \begin{figure}[H]
 \centering
-\begin{plantuml}
-@startuml
-start
-:Entry saved successfully;
-:Trigger background AI processing;
-fork
-  :Extract keywords and themes;
-  :Analyze emotional sentiment;
-  :Identify recurring patterns;
-fork again
-  :Update topic clustering data;
-  :Refresh analytics cache;
-  :Generate related entry suggestions;
-end fork
-:Store analysis results locally;
-if (Significant pattern detected?) then (Yes)
-  :Prepare insight notification;
-  note right: Gentle, non-intrusive
-endif
-stop
-@enduml
-\end{plantuml>
+
 \caption{Background AI Processing Flow}
 \label{fig:ai-processing-flow}
 \end{figure}
