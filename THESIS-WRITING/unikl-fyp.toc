@@ -33,7 +33,7 @@
 \contentsline {subsection}{\numberline {3.3.3}Use Case Diagram}{23}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Use Case Description}{24}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}User design}{26}{section.3.4}%
-\contentsline {chapter}{References}{27}{section.3.4}%
+\contentsline {chapter}{References}{27}{Item.43}%
 \contentsline {chapter}{\numberline {A}Gantt Chart}{29}{appendix.A}%
 \contentsline {section}{\numberline {A.1}Construction of Variables}{29}{section.A.1}%
 \contentsline {chapter}{\numberline {B}Questionnaire Sample}{30}{appendix.B}%
