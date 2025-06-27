@@ -18,8 +18,9 @@
 \usepackage{framed}
 \usepackage{xcolor}
 
-%\usepackage[top=25mm,left=40mm,bottom=25mm,right=25mm]{geometry}
-\usepackage[top=30mm,left=35mm,bottom=30mm,right=35mm]{geometry}
+%\usepackage[top=25mm,left=40mm,bottom=25mm,right=25mm]{geometry} 
+%\usepackage[top=30mm,left=35mm,bottom=30mm,right=35mm]{geometry}
+\usepackage[top=20mm, left=35mm, bottom=20mm, right=20mm]{geometry}
 
 \usepackage{array}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
