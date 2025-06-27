@@ -291,168 +291,198 @@ The Writer is the primary user of the Collective application, responsible for cr
 
 \textbf{i. Register}
 
+
 Figure~\ref{fig:register-flow} shows the registration flow for new users. The writer can register using their email and password or authenticate through Google/X OAuth providers. The system validates the account details and, upon successful registration, redirects the writer to the journal screen where they can begin their journaling experience.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/register_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/register_flow.png}
 \caption{Registration flow for Writer}
 \label{fig:register-flow}
 \end{figure}
+\clearpage
 
 \textbf{ii. Login}
+
 
 Figure~\ref{fig:login-flow} shows the login flow for existing users. The writer can authenticate using their registered email and password or through their previously linked Google/X account. Upon successful authentication, the system validates the credentials and redirects the writer to the main journal screen.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/login_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/login_flow.png}
 \caption{Login flow for Writer}
 \label{fig:login-flow}
 \end{figure}
+\clearpage
 
 \textbf{iii. Write Entry}
+
 
 Figure~\ref{fig:write-entry-flow} shows the entry creation flow for writers. The writer composes their journal entry in a distraction-free interface, optionally adds mood, tags, and media attachments, then saves the entry using the prominently displayed save button. The system processes the entry both locally and in the cloud when connectivity is available.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/write_entry_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/write_entry_flow.png}
 \caption{Write Entry flow for Writer}
 \label{fig:write-entry-flow}
 \end{figure}
+\clearpage
 
 \textbf{iv. Edit Entry}
+
 
 Figure~\ref{fig:edit-entry-flow} shows the entry editing flow for writers. The writer can modify existing entries, update their mood, change tags, or replace media attachments. The system tracks changes and updates both local and cloud storage accordingly.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/edit_entry_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/edit_entry_flow.png}
 \caption{Edit Entry flow for Writer}
 \label{fig:edit-entry-flow}
 \end{figure}
+\clearpage
 
 \textbf{v. Search}
+
 
 Figure~\ref{fig:search-flow} shows the search functionality flow. The writer can search through their entries using fuzzy search algorithms that match both entry content and tags, providing intelligent search results even with partial or approximate queries.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/search_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/search_flow.png}
 \caption{Search flow for Writer}
 \label{fig:search-flow}
 \end{figure}
+\clearpage
 
 \textbf{vi. Analytics}
+
 
 Figure~\ref{fig:analytics-flow} shows the analytics viewing flow. The writer can access AI-generated insights about their journaling patterns, emotional trends, and topic clusters. The system uses cached analytics data when available and generates new analysis when needed.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/analytics_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/analytics_flow.png}
 \caption{Analytics flow for Writer}
 \label{fig:analytics-flow}
 \end{figure}
+\clearpage
 
 \textbf{vii. Insights}
+
 
 Figure~\ref{fig:insights-flow} shows the AI insights viewing flow for individual entries. The writer can access detailed analysis of specific entries, including contextual relationships, emotional analysis, and personalized recommendations.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/insights_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/insights_flow.png}
 \caption{Insights flow for Writer}
 \label{fig:insights-flow}
 \end{figure}
+\clearpage
 
 \textbf{viii. Logout}
+
 
 Figure~\ref{fig:logout-flow} shows the logout process for writers. The system securely terminates the user session, clears authentication tokens, and redirects to the login screen while ensuring local data remains protected.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/logout_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/logout_flow.png}
 \caption{Logout flow for Writer}
 \label{fig:logout-flow}
 \end{figure}
+\clearpage
 
 \textbf{ix. Append Tags}
+
 
 Figure~\ref{fig:append-tags-flow} shows the tag management flow. Writers can add, modify, or remove tags from their entries to improve organization and searchability. The system provides tag suggestions based on entry content and previous usage patterns.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/append_tags_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/append_tags_flow.png}
 \caption{Append Tags flow for Writer}
 \label{fig:append-tags-flow}
 \end{figure}
+\clearpage
 
 \textbf{x. Set Mood}
+
 
 Figure~\ref{fig:set-mood-flow} shows the mood setting functionality. Writers can associate emotional states with their entries, enabling the system to track emotional patterns over time and provide relevant insights.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/set_mood_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/set_mood_flow.png}
 \caption{Set Mood flow for Writer}
 \label{fig:set-mood-flow}
 \end{figure}
+\clearpage
 
 \textbf{xi. Set Bookmark}
+
 
 Figure~\ref{fig:set-bookmark-flow} shows the bookmarking process. Writers can mark important entries for quick access, creating a personalized collection of significant journal entries.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/set_bookmark_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/set_bookmark_flow.png}
 \caption{Set Bookmark flow for Writer}
 \label{fig:set-bookmark-flow}
 \end{figure}
+\clearpage
 
 \textbf{xii. Attach Media}
+
 
 Figure~\ref{fig:attach-media-flow} shows the media attachment process. Writers can enhance their entries with images, GIFs, or other media content, with the system handling compression and storage optimization automatically.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/attach_media_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/attach_media_flow.png}
 \caption{Attach Media flow for Writer}
 \label{fig:attach-media-flow}
 \end{figure}
+\clearpage
 
 \textbf{xiii. Browse Bookmark}
+
 
 Figure~\ref{fig:browse-bookmark-flow} shows the bookmark browsing functionality. Writers can efficiently navigate through their bookmarked entries, with options for sorting and filtering based on various criteria.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/browse_bookmark_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/browse_bookmark_flow.png}
 \caption{Browse Bookmark flow for Writer}
 \label{fig:browse-bookmark-flow}
 \end{figure}
+\clearpage
 
 \textbf{xiv. View Entries}
+
 
 Figure~\ref{fig:view-entries-flow} shows the entry viewing interface. Writers can browse through all their journal entries with various viewing options including list view, timeline view, and calendar integration.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/view_entries_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/view_entries_flow.png}
 \caption{View Entries flow for Writer}
 \label{fig:view-entries-flow}
 \end{figure}
+\clearpage
 
 \textbf{xv. Browse Calendar}
+
 
 Figure~\ref{fig:browse-calendar-flow} shows the calendar browsing functionality. Writers can navigate through their journaling history using an intuitive calendar interface, quickly jumping to entries from specific dates.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{files/imgs/browse_calendar_flow.png}
+\includegraphics[width=0.65\textwidth]{files/imgs/browse_calendar_flow.png}
 \caption{Browse Calendar flow for Writer}
 \label{fig:browse-calendar-flow}
 \end{figure}
+\clearpage
 
 % 3.4.2 Backend Services
 \subsection{Backend Services}\label{subsec:backendServices}
