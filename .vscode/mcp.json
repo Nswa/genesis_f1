@@ -1,0 +1,11 @@
+{
+    "servers": {
+        "umlMcpServer": {
+            "type": "stdio",
+            "command": "C:\\Users\\Administrator\\uml-mcp-server\\uml-mcp-venv\\Scripts\\python.exe",
+            "args": [
+                "C:\\Users\\Administrator\\uml-mcp-server\\uml_mcp_server.py"
+            ]
+        }
+    }
+}
