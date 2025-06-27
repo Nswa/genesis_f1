@@ -33,8 +33,9 @@
 \contentsline {subsection}{\numberline {3.3.3}Use Case Diagram}{20}{subsection.3.3.3}%
 \contentsline {subsection}{\numberline {3.3.4}Use Case Description}{21}{subsection.3.3.4}%
 \contentsline {section}{\numberline {3.4}User design}{23}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Writer}{23}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Backend Services}{38}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.1}Process Flow}{23}{subsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.1}Writer}{23}{subsubsection.3.4.1.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.2}Backend Services}{38}{subsubsection.3.4.1.2}%
 \contentsline {section}{\numberline {3.5}Construction}{42}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}Development Approach}{42}{subsection.3.5.1}%
 \contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{42}{subsection.3.5.2}%
