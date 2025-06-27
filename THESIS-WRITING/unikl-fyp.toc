@@ -35,16 +35,16 @@
 \contentsline {section}{\numberline {3.4}User design}{23}{section.3.4}%
 \contentsline {subsection}{\numberline {3.4.1}Writer}{23}{subsection.3.4.1}%
 \contentsline {subsection}{\numberline {3.4.2}Backend Services}{38}{subsection.3.4.2}%
-\contentsline {section}{\numberline {3.5}Construction}{43}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Development Approach}{43}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{43}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Quality Assurance}{44}{subsection.3.5.3}%
-\contentsline {section}{\numberline {3.6}Cutover}{44}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Pre-Deployment Activities}{44}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Deployment Strategy}{44}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}User Training and Support}{45}{subsection.3.6.3}%
-\contentsline {subsection}{\numberline {3.6.4}Post-Deployment Activities}{45}{subsection.3.6.4}%
-\contentsline {chapter}{References}{46}{Item.71}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{48}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{48}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{49}{appendix.B}%
+\contentsline {section}{\numberline {3.5}Construction}{42}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Development Approach}{42}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{42}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Quality Assurance}{43}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}Cutover}{43}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Pre-Deployment Activities}{43}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Deployment Strategy}{43}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}User Training and Support}{44}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Post-Deployment Activities}{44}{subsection.3.6.4}%
+\contentsline {chapter}{References}{45}{Item.71}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{47}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{47}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{48}{appendix.B}%
