@@ -1,6 +1,6 @@
-\contentsline {chapter}{List of Abbreviations}{iii}{chapter*.2}%
-\contentsline {chapter}{Abstract (English)}{iv}{chapter*.2}%
-\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{v}{chapter*.2}%
+\contentsline {chapter}{List of Abbreviations}{iv}{chapter*.2}%
+\contentsline {chapter}{Abstract (English)}{v}{chapter*.2}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{vi}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Project Background}{2}{section.1.2}%
@@ -36,16 +36,35 @@
 \contentsline {subsection}{\numberline {3.4.1}Process Flow}{23}{subsection.3.4.1}%
 \contentsline {subsubsection}{\numberline {3.4.1.1}Writer}{23}{subsubsection.3.4.1.1}%
 \contentsline {subsubsection}{\numberline {3.4.1.2}Backend Services}{38}{subsubsection.3.4.1.2}%
-\contentsline {section}{\numberline {3.5}Construction}{42}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Development Approach}{42}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{42}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Quality Assurance}{43}{subsection.3.5.3}%
-\contentsline {section}{\numberline {3.6}Cutover}{43}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Pre-Deployment Activities}{43}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Deployment Strategy}{43}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}User Training and Support}{44}{subsection.3.6.3}%
-\contentsline {subsection}{\numberline {3.6.4}Post-Deployment Activities}{44}{subsection.3.6.4}%
-\contentsline {chapter}{References}{45}{Item.71}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{47}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{47}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{48}{appendix.B}%
+\contentsline {subsection}{\numberline {3.4.2}Use Case}{42}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.1}Register}{42}{subsubsection.3.4.2.1}%
+\contentsline {subsubsection}{\numberline {3.4.2.2}Login}{43}{subsubsection.3.4.2.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.3}Logout}{45}{subsubsection.3.4.2.3}%
+\contentsline {subsubsection}{\numberline {3.4.2.4}Write Entry}{46}{subsubsection.3.4.2.4}%
+\contentsline {subsubsection}{\numberline {3.4.2.5}Append Tags}{47}{subsubsection.3.4.2.5}%
+\contentsline {subsubsection}{\numberline {3.4.2.6}Set Mood}{47}{subsubsection.3.4.2.6}%
+\contentsline {subsubsection}{\numberline {3.4.2.7}Set Bookmark}{48}{subsubsection.3.4.2.7}%
+\contentsline {subsubsection}{\numberline {3.4.2.8}Attach Media}{49}{subsubsection.3.4.2.8}%
+\contentsline {subsubsection}{\numberline {3.4.2.9}Submit Entry}{50}{subsubsection.3.4.2.9}%
+\contentsline {subsubsection}{\numberline {3.4.2.10}Browse Bookmark}{51}{subsubsection.3.4.2.10}%
+\contentsline {subsubsection}{\numberline {3.4.2.11}View Entries}{52}{subsubsection.3.4.2.11}%
+\contentsline {subsubsection}{\numberline {3.4.2.12}Search}{53}{subsubsection.3.4.2.12}%
+\contentsline {subsubsection}{\numberline {3.4.2.13}Browse Calendar}{55}{subsubsection.3.4.2.13}%
+\contentsline {subsubsection}{\numberline {3.4.2.14}View Analytics}{56}{subsubsection.3.4.2.14}%
+\contentsline {subsubsection}{\numberline {3.4.2.15}View AI Insights}{57}{subsubsection.3.4.2.15}%
+\contentsline {subsubsection}{\numberline {3.4.2.16}Manage Offline}{58}{subsubsection.3.4.2.16}%
+\contentsline {subsubsection}{\numberline {3.4.2.17}Generate Analytics}{59}{subsubsection.3.4.2.17}%
+\contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{60}{subsubsection.3.4.2.18}%
+\contentsline {section}{\numberline {3.5}Construction}{61}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Development Approach}{61}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{61}{subsection.3.5.2}%
+\contentsline {subsection}{\numberline {3.5.3}Quality Assurance}{62}{subsection.3.5.3}%
+\contentsline {section}{\numberline {3.6}Cutover}{62}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Pre-Deployment Activities}{62}{subsection.3.6.1}%
+\contentsline {subsection}{\numberline {3.6.2}Deployment Strategy}{62}{subsection.3.6.2}%
+\contentsline {subsection}{\numberline {3.6.3}User Training and Support}{63}{subsection.3.6.3}%
+\contentsline {subsection}{\numberline {3.6.4}Post-Deployment Activities}{63}{subsection.3.6.4}%
+\contentsline {chapter}{References}{64}{Item.71}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{66}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{66}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{67}{appendix.B}%

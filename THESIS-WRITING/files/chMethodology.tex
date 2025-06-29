@@ -523,6 +523,622 @@ Figure~\ref{fig:ai-processing-flow} shows the background AI processing that occu
 \end{figure}
 \clearpage
 
+\subsection{Use Case}\label{subsec:useCase}
+
+This subsection presents detailed use case analysis for the Collective mobile journaling application. Each use case includes a visual UML diagram and detailed specification table covering the use case ID, name, purpose, role, and various scenarios. The use cases are organized by functionality and provide comprehensive coverage of all system features available to writers.
+
+\subsubsection{Register}
+
+Figure~\ref{fig:usecase-register} shows the register use case diagram. This use case allows new users to create an account using email/password credentials or through OAuth providers like Google and Twitter/X.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKajF0Z.png}
+\caption{Use Case Register}
+\label{fig:usecase-register}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Register Details}
+\label{tab:usecase-register}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-001 \\
+\hline
+\textbf{Use Case Name} & Register \\
+\hline
+\textbf{Purpose} & To allow writers to register a new account in the Collective application \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer opens the application for the first time \newline 2. Writer selects registration option \newline 3. Writer enters first name, last name, email, and password \newline 4. System validates the provided information \newline 5. System creates user profile in Firebase \newline 6. Writer is redirected to the main journal screen \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer selects Google OAuth registration \newline 2. System redirects to Google authentication \newline 3. Writer authorizes the application \newline 4. System creates user profile using Google information \newline OR \newline 1. Writer selects Twitter/X OAuth registration \newline 2. System redirects to Twitter authentication \newline 3. Writer authorizes the application \newline 4. System creates user profile using Twitter information \\
+\hline
+\textbf{Exception Scenario} & 1. Email already exists in the system - System displays error message \newline 2. Invalid email format - System displays validation error \newline 3. Weak password - System requests stronger password \newline 4. Network connectivity issues - System displays retry option \newline 5. OAuth provider unavailable - System falls back to email registration \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Login}
+
+Figure~\ref{fig:usecase-login} shows the login use case diagram. This use case enables existing users to authenticate and access their journal entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKZrFmp.png}
+\caption{Use Case Login}
+\label{fig:usecase-login}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Login Details}
+\label{tab:usecase-login}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-002 \\
+\hline
+\textbf{Use Case Name} & Login \\
+\hline
+\textbf{Purpose} & To allow writers to login into their existing account \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer opens the application \newline 2. Writer enters registered email and password \newline 3. System validates credentials against Firebase Authentication \newline 4. System loads user profile and preferences \newline 5. Writer is redirected to the main journal screen with access to their entries \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer selects Google OAuth login \newline 2. System authenticates with Google services \newline 3. System validates existing account \newline 4. Writer gains immediate access to their journal \newline OR \newline 1. Writer selects Twitter/X OAuth login \newline 2. System authenticates with Twitter services \newline 3. System validates existing account \newline 4. Writer gains immediate access to their journal \\
+\hline
+\textbf{Exception Scenario} & 1. Incorrect email or password - System displays authentication error \newline 2. Account not found - System suggests registration \newline 3. Account temporarily locked - System displays wait message \newline 4. Network connectivity issues - System enables offline mode \newline 5. OAuth provider authentication fails - System provides alternative login methods \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Logout}
+
+Figure~\ref{fig:usecase-logout} shows the logout use case diagram. This use case allows writers to securely terminate their session.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaazFmp.png}
+\caption{Use Case Logout}
+\label{fig:usecase-logout}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Logout Details}
+\label{tab:usecase-logout}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-003 \\
+\hline
+\textbf{Use Case Name} & Logout \\
+\hline
+\textbf{Purpose} & To allow writers to securely logout from their account \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses logout option from the application menu \newline 2. System confirms logout intent \newline 3. System clears authentication tokens and session data \newline 4. System secures local data storage \newline 5. Writer is redirected to the login screen \\
+\hline
+\textbf{Alternative Scenario} & 1. Automatic logout due to session expiry \newline 2. System automatically clears session \newline 3. System displays session timeout message \newline 4. Writer is redirected to login screen \\
+\hline
+\textbf{Exception Scenario} & 1. Network issues during logout - System performs local logout and attempts sync later \newline 2. Unsaved data exists - System prompts to save before logout \newline 3. System error during logout - System forces local session termination \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Write Entry}
+
+Figure~\ref{fig:usecase-write-entry} shows the write entry use case diagram. This core functionality allows writers to create new journal entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKZjFmp.png}
+\caption{Use Case Write Entry}
+\label{fig:usecase-write-entry}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Write Entry Details}
+\label{tab:usecase-write-entry}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-004 \\
+\hline
+\textbf{Use Case Name} & Write Entry \\
+\hline
+\textbf{Purpose} & To allow writers to create new journal entries with text, mood, and optional media \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer opens the journal input interface \newline 2. Writer composes their thoughts in the text area \newline 3. Writer optionally selects a mood from predefined options \newline 4. Writer optionally adds tags for organization \newline 5. Writer saves the entry using the save action \newline 6. System stores entry locally and syncs to cloud when available \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer attaches an image to the entry \newline 2. System compresses and optimizes the media \newline 3. Writer continues with text composition \newline 4. System saves entry with media attachment \newline OR \newline 1. Writer creates entry while offline \newline 2. System saves entry to local database \newline 3. System queues entry for cloud sync when connectivity returns \\
+\hline
+\textbf{Exception Scenario} & 1. Empty entry attempted - System displays validation message \newline 2. Network failure during save - System saves locally and retries sync \newline 3. Storage space insufficient - System alerts user and suggests cleanup \newline 4. Image attachment too large - System compresses or requests smaller file \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Append Tags}
+
+Figure~\ref{fig:usecase-append-tags} shows the append tags use case diagram. This functionality helps organize entries through tagging.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKh5kmZ.png}
+\caption{Use Case Append Tags}
+\label{fig:usecase-append-tags}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Append Tags Details}
+\label{tab:usecase-append-tags}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-005 \\
+\hline
+\textbf{Use Case Name} & Append Tags \\
+\hline
+\textbf{Purpose} & To allow writers to add organizational tags to their journal entries \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses tag management for an entry \newline 2. System displays existing tags and suggestions \newline 3. Writer selects from suggested tags or creates custom tags \newline 4. Writer applies tags to the entry \newline 5. System updates entry metadata and improves future suggestions \\
+\hline
+\textbf{Alternative Scenario} & 1. AI system analyzes entry content \newline 2. System automatically suggests relevant tags \newline 3. Writer reviews and accepts/modifies suggestions \newline 4. System learns from writer preferences for future entries \\
+\hline
+\textbf{Exception Scenario} & 1. Duplicate tags attempted - System prevents duplicates \newline 2. Tag character limit exceeded - System truncates or requests shorter tag \newline 3. Special characters in tags - System sanitizes input \newline 4. Maximum tag count reached - System displays limit message \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Set Mood}
+
+Figure~\ref{fig:usecase-set-mood} shows the set mood use case diagram. This feature enables emotional tracking within entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKarFma.png}
+\caption{Use Case Set Mood}
+\label{fig:usecase-set-mood}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Set Mood Details}
+\label{tab:usecase-set-mood}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-006 \\
+\hline
+\textbf{Use Case Name} & Set Mood \\
+\hline
+\textbf{Purpose} & To allow writers to associate emotional states with their journal entries \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses mood selection interface during entry creation \newline 2. System displays predefined mood options (happy, sad, anxious, etc.) \newline 3. Writer selects the mood that best represents their emotional state \newline 4. System associates the mood with the entry for pattern analysis \newline 5. System updates emotional tracking data for analytics \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer chooses not to set a mood (optional feature) \newline 2. System saves entry without mood association \newline 3. Entry remains available for mood addition later \newline OR \newline 1. Writer changes mood after initial entry creation \newline 2. System updates mood association \newline 3. System recalculates emotional patterns if needed \\
+\hline
+\textbf{Exception Scenario} & 1. Mood data inconsistency - System uses default neutral mood \newline 2. Multiple mood selections attempted - System uses last selection \newline 3. Invalid mood data - System prompts for re-selection \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Set Bookmark}
+
+Figure~\ref{fig:usecase-set-bookmark} shows the set bookmark use case diagram. This feature allows writers to mark important entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaZzlWp.png}
+\caption{Use Case Set Bookmark}
+\label{fig:usecase-set-bookmark}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Set Bookmark Details}
+\label{tab:usecase-set-bookmark}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-007 \\
+\hline
+\textbf{Use Case Name} & Set Bookmark \\
+\hline
+\textbf{Purpose} & To allow writers to bookmark important entries for quick access \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer identifies an important entry to bookmark \newline 2. Writer selects the bookmark/favorite option \newline 3. System toggles the bookmark status of the entry \newline 4. System updates the entry metadata \newline 5. Entry becomes accessible through the favorites collection \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer removes bookmark from previously bookmarked entry \newline 2. System toggles bookmark status to off \newline 3. Entry is removed from favorites collection but remains in main timeline \\
+\hline
+\textbf{Exception Scenario} & 1. Bookmark data corruption - System resets bookmark status \newline 2. Sync conflict with bookmark status - System uses most recent version \newline 3. Maximum bookmarks reached - System displays limit notification \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Attach Media}
+
+Figure~\ref{fig:usecase-attach-media} shows the attach media use case diagram. This functionality enhances entries with visual content.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKZjhmp.png}
+\caption{Use Case Attach Media}
+\label{fig:usecase-attach-media}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Attach Media Details}
+\label{tab:usecase-attach-media}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-008 \\
+\hline
+\textbf{Use Case Name} & Attach Media \\
+\hline
+\textbf{Purpose} & To allow writers to enhance their entries with images and media content \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer selects media attachment option during entry creation \newline 2. System opens device gallery or camera interface \newline 3. Writer selects or captures an image \newline 4. System compresses and optimizes the media file \newline 5. System associates media with the entry and stores locally \newline 6. System uploads media to cloud storage when connectivity available \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer attaches multiple images to single entry \newline 2. System processes each image individually \newline 3. System creates media gallery for the entry \newline OR \newline 1. Writer removes attached media \newline 2. System removes media association and files \newline 3. System updates entry metadata \\
+\hline
+\textbf{Exception Scenario} & 1. Image file too large - System compresses or requests smaller file \newline 2. Unsupported file format - System displays supported format message \newline 3. Storage space insufficient - System alerts and suggests cleanup \newline 4. Upload failure - System retries upload when connectivity restored \newline 5. Corrupted media file - System displays error and removes attachment \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Submit Entry}
+
+Figure~\ref{fig:usecase-submit-entry} shows the submit entry use case diagram. This finalizes the entry creation process.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaa5Fmp.png}
+\caption{Use Case Submit Entry}
+\label{fig:usecase-submit-entry}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Submit Entry Details}
+\label{tab:usecase-submit-entry}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-009 \\
+\hline
+\textbf{Use Case Name} & Submit Entry \\
+\hline
+\textbf{Purpose} & To allow writers to finalize and save their completed journal entries \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer completes entry composition with text, mood, tags, and media \newline 2. Writer selects save/submit action \newline 3. System validates entry content and metadata \newline 4. System saves entry to local database immediately \newline 5. System updates UI to reflect new entry \newline 6. System queues entry for cloud synchronization \\
+\hline
+\textbf{Alternative Scenario} & 1. Auto-save triggers during entry composition \newline 2. System saves draft entry periodically \newline 3. Writer can continue editing or finalize submission \newline OR \newline 1. Writer submits entry while offline \newline 2. System saves locally with sync pending status \newline 3. System syncs when connectivity restored \\
+\hline
+\textbf{Exception Scenario} & 1. Entry validation fails - System highlights issues and prevents submission \newline 2. Local storage full - System displays storage warning \newline 3. Duplicate entry detected - System asks for confirmation \newline 4. System crash during submission - System recovers draft on restart \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Browse Bookmark}
+
+Figure~\ref{fig:usecase-browse-bookmark} shows the browse bookmark use case diagram. This provides access to favorite entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaarlmZ.png}
+\caption{Use Case Browse Bookmark}
+\label{fig:usecase-browse-bookmark}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Browse Bookmark Details}
+\label{tab:usecase-browse-bookmark}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-010 \\
+\hline
+\textbf{Use Case Name} & Browse Bookmark \\
+\hline
+\textbf{Purpose} & To allow writers to access and browse their bookmarked/favorite entries \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses the favorites/bookmarks section \newline 2. System loads all bookmarked entries \newline 3. System displays entries in chronological or custom order \newline 4. Writer can browse, read, edit, or remove bookmarks \newline 5. Writer can access full entry details and associated media \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer applies date range filter to bookmarks \newline 2. System filters bookmarked entries by specified dates \newline 3. System displays filtered results \newline OR \newline 1. Writer searches within bookmarked entries \newline 2. System performs search only within favorite entries \newline 3. System displays matching bookmarked entries \\
+\hline
+\textbf{Exception Scenario} & 1. No bookmarked entries exist - System displays empty state with guidance \newline 2. Bookmark data corrupted - System attempts recovery or resets bookmarks \newline 3. Loading error - System displays retry option \newline 4. Network issues - System shows cached bookmarks with sync status \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{View Entries}
+
+Figure~\ref{fig:usecase-view-entries} shows the view entries use case diagram. This provides the main interface for browsing all journal entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojah5omZ.png}
+\caption{Use Case View Entries}
+\label{fig:usecase-view-entries}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case View Entries Details}
+\label{tab:usecase-view-entries}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-011 \\
+\hline
+\textbf{Use Case Name} & View Entries \\
+\hline
+\textbf{Purpose} & To allow writers to browse and view all their journal entries in an organized timeline \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer opens the main journal screen \newline 2. System loads all journal entries from local and cloud storage \newline 3. System groups entries by date for organized display \newline 4. System displays entries in reverse chronological order \newline 5. Writer can scroll through timeline and access individual entries \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer filters entries by date range \newline 2. System displays entries within specified timeframe \newline OR \newline 1. Writer sorts entries by different criteria (mood, tags, etc.) \newline 2. System reorganizes display according to selected sorting \\
+\hline
+\textbf{Exception Scenario} & 1. No entries exist - System displays welcome message and entry creation guidance \newline 2. Loading error - System shows cached entries with sync status indicator \newline 3. Large number of entries causes performance issues - System implements pagination \newline 4. Data corruption detected - System attempts recovery and shows error status \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Search}
+
+Figure~\ref{fig:usecase-search} shows the search use case diagram. This enables efficient entry discovery through text matching.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKh5kmZ.png}
+\caption{Use Case Search}
+\label{fig:usecase-search}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Search Details}
+\label{tab:usecase-search}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-012 \\
+\hline
+\textbf{Use Case Name} & Search \\
+\hline
+\textbf{Purpose} & To allow writers to search through their journal entries using keywords and phrases \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer activates search interface \newline 2. Writer enters search keywords or phrases \newline 3. System performs real-time fuzzy text matching across entry content and tags \newline 4. System displays matching entries with highlighted search terms \newline 5. Writer can access full entries from search results \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer searches by specific tags \newline 2. System filters entries containing specified tags \newline 3. System displays tag-filtered results \newline OR \newline 1. Writer uses advanced search with multiple criteria \newline 2. System combines text, tag, mood, and date filters \newline 3. System displays comprehensive filtered results \\
+\hline
+\textbf{Exception Scenario} & 1. No search results found - System displays no results message with search suggestions \newline 2. Search query too short - System requires minimum character count \newline 3. Special characters in search - System sanitizes query and searches \newline 4. Search performance issues - System optimizes query and displays progress indicator \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Browse Calendar}
+
+Figure~\ref{fig:usecase-browse-calendar} shows the browse calendar use case diagram. This provides date-based navigation through entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaarFma.png}
+\caption{Use Case Browse Calendar}
+\label{fig:usecase-browse-calendar}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Browse Calendar Details}
+\label{tab:usecase-browse-calendar}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-013 \\
+\hline
+\textbf{Use Case Name} & Browse Calendar \\
+\hline
+\textbf{Purpose} & To allow writers to navigate their journal entries using a visual calendar interface \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses calendar view from main interface \newline 2. System displays calendar with entry indicators on dates with journal entries \newline 3. Writer navigates through months and years \newline 4. Writer selects specific date with entries \newline 5. System navigates to entries for selected date in main timeline \\
+\hline
+\textbf{Alternative Scenario} & 1. Writer uses calendar to find entries from specific time period \newline 2. System highlights date ranges with entry activity \newline 3. Writer selects date range for filtered viewing \newline OR \newline 1. Calendar displays mood indicators for each date \newline 2. Writer can visualize emotional patterns over time \newline 3. Writer selects dates based on mood indicators \\
+\hline
+\textbf{Exception Scenario} & 1. Calendar fails to load - System displays alternative date navigation \newline 2. Date with no entries selected - System offers to create new entry for that date \newline 3. Performance issues with large date ranges - System implements lazy loading \newline 4. Invalid date selection - System corrects to nearest valid date \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{View Analytics}
+
+Figure~\ref{fig:usecase-view-analytics} shows the view analytics use case diagram. This provides insights into journaling patterns and trends.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaijEmp.png}
+\caption{Use Case View Analytics}
+\label{fig:usecase-view-analytics}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case View Analytics Details}
+\label{tab:usecase-view-analytics}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-014 \\
+\hline
+\textbf{Use Case Name} & View Analytics \\
+\hline
+\textbf{Purpose} & To allow writers to analyze their journaling patterns, topics, and emotional trends \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer accesses analytics section from main interface \newline 2. System analyzes journal entries to identify topic clusters and patterns \newline 3. System generates visualizations showing topic distribution and trends \newline 4. System displays emotional patterns and mood statistics \newline 5. Writer can explore individual topic clusters and associated entries \\
+\hline
+\textbf{Alternative Scenario} & 1. System uses cached analytics when available \newline 2. System displays previously generated insights immediately \newline 3. System updates analytics in background when new entries added \newline OR \newline 1. Writer requests analytics refresh \newline 2. System regenerates analysis with current data \newline 3. System displays updated insights and patterns \\
+\hline
+\textbf{Exception Scenario} & 1. Insufficient data for analytics - System displays message about minimum entry requirements \newline 2. Analytics generation fails - System displays error and retry option \newline 3. Complex analytics take too long - System displays progress and allows backgrounding \newline 4. Analytics data corrupted - System regenerates from source entries \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{View AI Insights}
+
+Figure~\ref{fig:usecase-view-ai-insights} shows the view AI insights use case diagram. This provides detailed AI-powered analysis of individual entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKijEmp.png}
+\caption{Use Case View AI Insights}
+\label{fig:usecase-view-ai-insights}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case View AI Insights Details}
+\label{tab:usecase-view-ai-insights}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-015 \\
+\hline
+\textbf{Use Case Name} & View AI Insights \\
+\hline
+\textbf{Purpose} & To allow writers to access AI-powered insights and analysis for individual journal entries \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. Writer selects AI insights option for a specific entry \newline 2. System analyzes entry content using AI services \newline 3. System generates contextual insights about themes, emotions, and relationships \newline 4. System provides personalized recommendations based on entry content \newline 5. Writer reviews insights and can apply suggestions to future entries \\
+\hline
+\textbf{Alternative Scenario} & 1. System displays cached insights if previously generated \newline 2. System shows processing status for new analysis \newline 3. System updates insights when analysis completes \newline OR \newline 1. Writer requests insight regeneration \newline 2. System reprocesses entry with updated AI models \newline 3. System displays refreshed insights and recommendations \\
+\hline
+\textbf{Exception Scenario} & 1. AI service unavailable - System displays cached insights or error message \newline 2. Entry too short for analysis - System suggests minimum content requirements \newline 3. Analysis fails - System provides basic insights and retry option \newline 4. Rate limiting from AI service - System queues analysis for later processing \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Manage Offline}
+
+Figure~\ref{fig:usecase-manage-offline} shows the manage offline use case diagram. This ensures functionality without internet connectivity.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaa5Fma.png}
+\caption{Use Case Manage Offline}
+\label{fig:usecase-manage-offline}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Manage Offline Details}
+\label{tab:usecase-manage-offline}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-016 \\
+\hline
+\textbf{Use Case Name} & Manage Offline \\
+\hline
+\textbf{Purpose} & To allow writers to use the application fully when internet connectivity is unavailable \\
+\hline
+\textbf{Role} & Writers \\
+\hline
+\textbf{Base Scenario} & 1. System detects loss of internet connectivity \newline 2. System switches to offline mode seamlessly \newline 3. System stores all new entries and changes locally \newline 4. System provides full functionality using local database \newline 5. System detects connectivity restoration and synchronizes changes \\
+\hline
+\textbf{Alternative Scenario} & 1. User manually enables offline mode \newline 2. System prepares for offline operation \newline 3. System caches essential data locally \newline OR \newline 1. Partial connectivity available \newline 2. System optimizes for low-bandwidth operation \newline 3. System prioritizes essential sync operations \\
+\hline
+\textbf{Exception Scenario} & 1. Local storage insufficient for offline data - System alerts user and suggests cleanup \newline 2. Sync conflicts when connectivity restored - System provides conflict resolution interface \newline 3. Local database corruption - System attempts recovery and alerts user \newline 4. Extended offline period - System optimizes local storage and manages capacity \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Generate Analytics}
+
+Figure~\ref{fig:usecase-generate-analytics} shows the generate analytics use case diagram. This backend process creates analytical insights from journal data.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojaazhma.png}
+\caption{Use Case Generate Analytics}
+\label{fig:usecase-generate-analytics}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Generate Analytics Details}
+\label{tab:usecase-generate-analytics}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-017 \\
+\hline
+\textbf{Use Case Name} & Generate Analytics \\
+\hline
+\textbf{Purpose} & To process journal entries and generate analytical insights, patterns, and statistics \\
+\hline
+\textbf{Role} & Backend Services \\
+\hline
+\textbf{Base Scenario} & 1. System receives request for analytics generation \newline 2. System processes all available journal entries \newline 3. System applies AI algorithms to identify topic clusters \newline 4. System calculates statistical patterns and trends \newline 5. System stores generated analytics for user access \newline 6. System caches results for improved performance \\
+\hline
+\textbf{Alternative Scenario} & 1. System performs incremental analytics update \newline 2. System processes only new entries since last analysis \newline 3. System updates existing analytics with new patterns \newline OR \newline 1. System runs scheduled background analytics \newline 2. System automatically updates insights for active users \newline 3. System optimizes processing for system resources \\
+\hline
+\textbf{Exception Scenario} & 1. Insufficient data for meaningful analytics - System provides guidance on minimum requirements \newline 2. Processing timeout due to large dataset - System implements chunked processing \newline 3. AI service unavailable - System falls back to basic statistical analysis \newline 4. Memory or processing constraints - System optimizes algorithms and processes in batches \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Generate Insights}
+
+Figure~\ref{fig:usecase-generate-insights} shows the generate insights use case diagram. This backend process creates personalized AI insights for individual entries.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/usecase_U9ojKijkmZ.png}
+\caption{Use Case Generate Insights}
+\label{fig:usecase-generate-insights}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Use Case Generate Insights Details}
+\label{tab:usecase-generate-insights}
+\begin{tabular}{|p{3cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-018 \\
+\hline
+\textbf{Use Case Name} & Generate Insights \\
+\hline
+\textbf{Purpose} & To create personalized AI-powered insights and recommendations for individual journal entries \\
+\hline
+\textbf{Role} & Backend Services \\
+\hline
+\textbf{Base Scenario} & 1. System receives request for entry-specific insight generation \newline 2. System analyzes entry content using natural language processing \newline 3. System performs emotional and contextual analysis \newline 4. System generates personalized recommendations and insights \newline 5. System stores insights linked to specific entry \newline 6. System provides insights to user interface \\
+\hline
+\textbf{Alternative Scenario} & 1. System uses historical user data to enhance insights \newline 2. System considers user's journaling patterns and preferences \newline 3. System provides more personalized and relevant recommendations \newline OR \newline 1. System batches multiple entries for efficient processing \newline 2. System generates insights for multiple entries simultaneously \newline 3. System optimizes AI service usage and costs \\
+\hline
+\textbf{Exception Scenario} & 1. AI service rate limiting - System queues requests and processes when capacity available \newline 2. Entry content insufficient for analysis - System provides general insights and suggestions \newline 3. Processing failure - System logs error and provides retry mechanism \newline 4. User privacy restrictions - System processes locally or uses anonymized analysis \\
+\hline
+\end{tabular}
+\end{table}
+
 \section{Construction}\label{sec:construction}
 
 The construction phase is the third phase of the RAD methodology where the actual development of the \textbf{Collective} mobile journaling application takes place. This phase involves implementing the designs and specifications defined in the user design phase. The development follows an iterative approach with continuous testing and refinement based on user feedback and technical requirements.
