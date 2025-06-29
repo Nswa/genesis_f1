@@ -102,7 +102,9 @@
 \contentsline {subsection}{\numberline {4.4.6}Favorites and Collections}{84}{subsection.4.4.6}%
 \contentsline {subsubsection}{\numberline {4.4.6.1}Favorites Screen}{84}{subsubsection.4.4.6.1}%
 \contentsline {chapter}{\numberline {5}Testing and Result}{86}{chapter.5}%
-\contentsline {chapter}{References}{87}{chapter.5}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{89}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{89}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{90}{appendix.B}%
+\contentsline {section}{\numberline {5.1}Introduction}{86}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Test Objective}{87}{section.5.2}%
+\contentsline {chapter}{References}{88}{section.5.2}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{90}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{90}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{91}{appendix.B}%
