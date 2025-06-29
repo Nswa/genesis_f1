@@ -1,0 +1,156 @@
+\subsubsection{Authentication and User Management Functions}
+
+The authentication system provides secure user access control with multiple authentication methods. These functions ensure user identity verification and session management.
+
+\begin{table}[H]
+\centering
+\caption{Authentication Functions}
+\label{tab:auth-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F001 & Register & Allow new users to create accounts using email/password, Google OAuth, or Twitter/X OAuth with validation and secure profile creation & Writer \\
+\hline
+F002 & Login & Enable existing users to authenticate through email/password or OAuth providers with credential validation and interface redirection & Writer \\
+\hline
+F003 & Logout & Allow users to securely terminate sessions, clear authentication data, and return to login screen & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Core Journaling Functions}
+
+\begin{table}[H]
+\centering
+\caption{Core Journaling Functions}
+\label{tab:core-journaling-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F004 & Write Entry & Provide minimalist, distraction-free writing interface with text composition, automatic word count tracking, real-time editing, auto-save functionality, and maintained writing focus & Writer \\
+\hline
+F005 & Submit Entry & Allow users to finalize and save completed entries with content validation, immediate local database storage, cloud synchronization queueing, and visual save confirmation & Writer \\
+\hline
+F006 & Edit Entry & Enable modification of existing journal entries while preserving original timestamps, tracking edit history, supporting text/mood/media modifications, and maintaining data integrity & Writer \\
+\hline
+F007 & Delete Entry & Enable removal of unwanted journal entries with confirmation dialogs, permanent deletion from local and cloud storage, and updated entry statistics & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Content Enhancement Functions}
+
+\begin{table}[H]
+\centering
+\caption{Content Enhancement Functions}
+\label{tab:content-enhancement-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F008 & Set Mood & Allow users to associate emotional states with entries using predefined mood options with emoji representations, enabling mood selection during or after entry creation for emotional pattern tracking & Writer \\
+\hline
+F009 & Append Tags & Enable manual categorization of journal entries with custom tag creation, AI-powered tag suggestions based on content, thematic organization, and efficient search facilitation & Writer \\
+\hline
+F010 & Attach Media & Support image attachment from device gallery, direct photo capture, automatic compression for storage efficiency, local and cloud storage management, and media display within entries & Writer \\
+\hline
+F011 & Set Bookmark & Allow marking of important entries for quick access with visual indicators, bookmark management, and organized favorites collection & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Content Management and Retrieval Functions}
+
+\begin{table}[H]
+\centering
+\caption{Content Management and Retrieval Functions}
+\label{tab:content-management-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F012 & View Entries & Display all journal entries in chronological order with date grouping, infinite scrolling for large collections, entry previews with timestamps and metadata, and bulk operation support & Writer \\
+\hline
+F013 & Search Entries & Enable text-based search across all entry content with fuzzy search capability, tag and metadata searching, real-time results, and search term highlighting & Writer \\
+\hline
+F014 & Browse Calendar & Display entries organized by calendar dates with visual indicators for entry days, quick date navigation, entry count tracking, and date range filtering & Writer \\
+\hline
+F015 & Browse Bookmarks & Display all bookmarked entries in dedicated view with quick access to important content, bookmark organization, and removal capabilities & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{AI-Powered Analysis Functions}
+
+\begin{table}[H]
+\centering
+\caption{AI-Powered Analysis Functions}
+\label{tab:ai-analysis-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F016 & Generate Insights & Create personalized AI-powered insights for individual entries using natural language processing, emotional and contextual analysis, personalized recommendations, and entry-specific pattern identification & Backend \\
+\hline
+F017 & View AI Insights & Display AI-generated insights for individual entries with detailed content analysis, emotional patterns, thematic connections, personalized recommendations, and sharing capabilities & Writer \\
+\hline
+F018 & Generate Analytics & Process journal entries for analytical insights, identify topic clusters and thematic patterns, calculate statistical trends, generate emotional tracking, and provide comprehensive behavior analytics & Backend \\
+\hline
+F019 & View Analytics & Display comprehensive analytics dashboard with topic clusters, content distribution, emotional trends, mood statistics, journaling pattern visualization, and topic area exploration & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Data Management and Synchronization Functions}
+
+\begin{table}[H]
+\centering
+\caption{Data Management and Synchronization Functions}
+\label{tab:data-management-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F020 & Store Entries & Securely store journal entries in local database with data integrity maintenance, immediate storage for offline capability, sensitive data encryption, and storage optimization & Backend \\
+\hline
+F021 & Retrieve Entries & Efficiently load journal entries from storage with fast retrieval for optimal performance, large dataset pagination, session consistency, and data recovery mechanisms & Backend \\
+\hline
+F022 & Manage Offline & Enable full functionality without internet connectivity through automatic detection, local action storage, seamless offline-to-online transitions, and synchronization integrity & Backend \\
+\hline
+F023 & Cloud Sync & Synchronize local data with Firebase cloud storage including conflict resolution, incremental sync for bandwidth efficiency, multi-device consistency, and automatic/manual sync triggers & Backend \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{User Interface and System Functions}
+
+\begin{table}[H]
+\centering
+\caption{User Interface and System Functions}
+\label{tab:ui-system-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
+\hline
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
+\hline
+F024 & Selection Mode & Enable multi-entry selection for bulk operations with visual feedback, batch deletion, date range selection, and maintained selection state during navigation & Writer \\
+\hline
+F025 & Theme Management & Provide automatic light/dark theme switching responding to system preferences with consistent visual design, readability optimization, and accessibility support & Writer \\
+\hline
+F026 & Responsive Design & Adapt interface layout to different screen sizes with device orientation support, optimized touch targets, consistent cross-platform experience, and accessibility features & Writer \\
+\hline
+F027 & Progress Feedback & Provide visual indicators for ongoing operations including sync status, connectivity information, loading states, completion confirmations, and system status indicators & Writer \\
+\hline
+F028 & Error Handling & Gracefully handle system errors and exceptions with meaningful user messages, automatic recovery mechanisms, debugging logs, and application stability maintenance & Backend \\
+\hline
+F029 & Data Validation & Validate user input for data integrity, enforce business rules and constraints, prevent malformed data entry, provide immediate validation feedback, and maintain data quality & Backend \\
+\hline
+F030 & Performance Optimization & Optimize application performance for mobile devices with efficient data loading, caching strategies, battery/memory usage minimization, smooth animations, and responsive interactions & Backend \\
+\hline
+F031 & Security Management & Implement secure authentication and authorization, encrypt sensitive data at rest and in transit, protect against vulnerabilities, manage privacy compliance, and secure API communications & Backend \\
+\hline
+\end{tabular}
+\end{table}
+
+These 31 functional requirements collectively form the comprehensive feature set of the \textbf{Collective} mobile journaling application, ensuring a complete and user-friendly journaling experience while maintaining the simplicity and focus that distinguishes the application from traditional digital journaling platforms.

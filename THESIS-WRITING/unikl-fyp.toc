@@ -57,7 +57,7 @@
 \contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{60}{subsubsection.3.4.2.18}%
 \contentsline {subsection}{\numberline {3.4.3}Product Functions}{61}{subsection.3.4.3}%
 \contentsline {subsubsection}{\numberline {3.4.3.1}Authentication and User Management Functions}{62}{subsubsection.3.4.3.1}%
-\contentsline {chapter}{References}{74}{table.caption.84}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{76}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{76}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{77}{appendix.B}%
+\contentsline {chapter}{References}{66}{table.caption.83}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{68}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{68}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{69}{appendix.B}%

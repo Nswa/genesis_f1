@@ -692,8 +692,6 @@ Figure~\ref{fig:usecase-append-tags} shows the append tags use case diagram. Thi
 \hline
 \textbf{Alternative Scenario} & 1. AI system analyzes entry content \newline 2. System automatically suggests relevant tags \newline 3. Writer reviews and accepts/modifies suggestions \newline 4. System learns from writer preferences for future entries \\
 \hline
-\textbf{Exception Scenario} & 1. Duplicate tags attempted - System prevents duplicates \newline 2. Tag character limit exceeded - System truncates or requests shorter tag \newline 3. Special characters in tags - System sanitizes input \newline 4. Maximum tag count reached - System displays limit message \\
-\hline
 \end{tabular}
 \end{table}
 
@@ -1147,7 +1145,7 @@ This section presents a comprehensive overview of the functional requirements fo
 \centering
 \caption{Functional Requirements Summary}
 \label{tab:function-summary}
-\begin{tabular}{|p{2cm}|p{5cm}|p{6cm}|}
+\begin{tabular}{|p{2.5cm}|p{3cm}|p{7.5cm}|}
 \hline
 \textbf{Category} & \textbf{Function Range} & \textbf{Description} \\
 \hline
@@ -1180,76 +1178,36 @@ The authentication system provides secure user access control with multiple auth
 \centering
 \caption{Authentication Functions}
 \label{tab:auth-functions}
-\begin{tabular}{|p{1cm}|p{2.5cm}|p{8.5cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
 \hline
-F001 & Register & To allow new users to create accounts using email/password, Google OAuth, or Twitter/X OAuth with validation and secure profile creation & Writer \\
+F001 & Register & Allow new users to create accounts using email/password, Google OAuth, or Twitter/X OAuth with validation and secure profile creation & Writer \\
 \hline
-F002 & Login & To enable existing users to authenticate through email/password or OAuth providers with credential validation and interface redirection & Writer \\
+F002 & Login & Enable existing users to authenticate through email/password or OAuth providers with credential validation and interface redirection & Writer \\
 \hline
-F003 & Logout & To allow users to securely terminate sessions, clear authentication data, and return to login screen & Writer \\
+F003 & Logout & Allow users to securely terminate sessions, clear authentication data, and return to login screen & Writer \\
 \hline
 \end{tabular}
 \end{table}
 
 \textbf{Core Journaling Functions}
 
-\vspace{-15pt}
 \begin{table}[H]
 \centering
-\vspace{-10pt}
-\caption{Core Journaling Functions - Part 1}
-\label{tab:core-journaling-functions-1}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\caption{Core Journaling Functions}
+\label{tab:core-journaling-functions}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
-\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
 \hline
-F004 & Write Entry & 
-\begin{itemize}
-\item To provide a minimalist, distraction-free writing interface
-\item To enable text composition with automatic word count tracking
-\item To support real-time text editing and formatting
-\item To auto-save content locally during composition
-\item To maintain writing focus without interruption
-\end{itemize} & Writer \\
+F004 & Write Entry & Provide minimalist, distraction-free writing interface with text composition, automatic word count tracking, real-time editing, auto-save functionality, and maintained writing focus & Writer \\
 \hline
-F005 & Submit Entry & 
-\begin{itemize}
-\item To allow users to finalize and save completed entries
-\item To validate entry content before submission
-\item To save entries to local database immediately
-\item To queue entries for cloud synchronization
-\item To provide visual feedback on successful save
-\end{itemize} & Writer \\
+F005 & Submit Entry & Allow users to finalize and save completed entries with content validation, immediate local database storage, cloud synchronization queueing, and visual save confirmation & Writer \\
 \hline
-\end{tabular}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{Core Journaling Functions - Part 2}
-\label{tab:core-journaling-functions-2}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+F006 & Edit Entry & Enable modification of existing journal entries while preserving original timestamps, tracking edit history, supporting text/mood/media modifications, and maintaining data integrity & Writer \\
 \hline
-\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
-\hline
-F006 & Edit Entry & 
-\begin{itemize}
-\item To allow modification of existing journal entries
-\item To preserve original timestamps while tracking edit history
-\item To support text, mood, and media modifications
-\item To maintain data integrity during updates
-\item To sync changes across local and cloud storage
-\end{itemize} & Writer \\
-\hline
-F007 & Delete Entry & 
-\begin{itemize}
-\item To enable removal of unwanted journal entries
-\item To provide confirmation dialogs for accidental deletion prevention
-\item To permanently remove entries from local and cloud storage
-\item To update entry counts and statistics accordingly
-\end{itemize} & Writer \\
+F007 & Delete Entry & Enable removal of unwanted journal entries with confirmation dialogs, permanent deletion from local and cloud storage, and updated entry statistics & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1260,27 +1218,13 @@ F007 & Delete Entry &
 \centering
 \caption{Content Enhancement Functions - Part 1}
 \label{tab:content-enhancement-functions-1}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F008 & Set Mood & 
-\begin{itemize}
-\item To allow users to associate emotional states with entries
-\item To provide predefined mood options with emoji representations
-\item To enable mood selection during or after entry creation
-\item To track emotional patterns over time for analytics
-\item To support optional mood assignment (not required)
-\end{itemize} & Writer \\
+F008 & Set Mood & Allow users to associate emotional states with entries using predefined mood options with emoji representations, enabling mood selection during or after entry creation for emotional pattern tracking & Writer \\
 \hline
-F009 & Append Tags & 
-\begin{itemize}
-\item To enable manual categorization of journal entries
-\item To support custom tag creation and management
-\item To provide tag suggestions based on entry content
-\item To organize entries by thematic categories
-\item To facilitate efficient search and retrieval
-\end{itemize} & Writer \\
+F009 & Append Tags & Enable manual categorization of journal entries with custom tag creation, AI-powered tag suggestions based on content, thematic organization, and efficient search facilitation & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1289,26 +1233,13 @@ F009 & Append Tags &
 \centering
 \caption{Content Enhancement Functions - Part 2}
 \label{tab:content-enhancement-functions-2}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F010 & Attach Media & 
-\begin{itemize}
-\item To support image attachment from device gallery
-\item To enable photo capture directly within the app
-\item To compress images automatically for storage efficiency
-\item To provide local and cloud storage for media files
-\item To display media content within entry view
-\end{itemize} & Writer \\
+F010 & Attach Media & Support image attachment from device gallery, direct photo capture, automatic compression for storage efficiency, local and cloud storage management, and media display within entries & Writer \\
 \hline
-F011 & Set Bookmark & 
-\begin{itemize}
-\item To allow marking of important or significant entries
-\item To create quick access to meaningful journal content
-\item To provide visual indicators for bookmarked entries
-\item To enable bookmark management and organization
-\end{itemize} & Writer \\
+F011 & Set Bookmark & Allow marking of important entries for quick access with visual indicators, bookmark management, and organized favorites collection & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1319,27 +1250,13 @@ F011 & Set Bookmark &
 \centering
 \caption{Content Management and Retrieval Functions - Part 1}
 \label{tab:content-management-functions-1}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F012 & View Entries & 
-\begin{itemize}
-\item To display all journal entries in chronological order
-\item To group entries by date for organized browsing
-\item To provide infinite scrolling for large entry collections
-\item To show entry previews with timestamps and metadata
-\item To support entry selection for bulk operations
-\end{itemize} & Writer \\
+F012 & View Entries & Display all journal entries in chronological order with date grouping, infinite scrolling for large collections, entry previews with timestamps and metadata, and bulk operation support & Writer \\
 \hline
-F013 & Search Entries & 
-\begin{itemize}
-\item To enable text-based search across all entry content
-\item To support fuzzy search for approximate matches
-\item To search within tags and metadata fields
-\item To provide real-time search results as user types
-\item To highlight search terms in results
-\end{itemize} & Writer \\
+F013 & Search Entries & Enable text-based search across all entry content with fuzzy search capability, tag and metadata searching, real-time results, and search term highlighting & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1348,26 +1265,13 @@ F013 & Search Entries &
 \centering
 \caption{Content Management and Retrieval Functions - Part 2}
 \label{tab:content-management-functions-2}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F014 & Browse Calendar & 
-\begin{itemize}
-\item To display entries organized by calendar dates
-\item To provide visual indicators for days with entries
-\item To enable quick navigation to specific dates
-\item To show entry count per day for productivity tracking
-\item To support date range filtering
-\end{itemize} & Writer \\
+F014 & Browse Calendar & Display entries organized by calendar dates with visual indicators for entry days, quick date navigation, entry count tracking, and date range filtering & Writer \\
 \hline
-F015 & Browse Bookmarks & 
-\begin{itemize}
-\item To display all bookmarked entries in dedicated view
-\item To provide quick access to important journal content
-\item To maintain bookmark organization and management
-\item To support bookmark removal and modification
-\end{itemize} & Writer \\
+F015 & Browse Bookmarks & Display all bookmarked entries in dedicated view with quick access to important content, bookmark organization, and removal capabilities & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1378,45 +1282,17 @@ F015 & Browse Bookmarks &
 \centering
 \caption{AI-Powered Analysis Functions}
 \label{tab:ai-analysis-functions}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F016 & Generate Insights & 
-\begin{itemize}
-\item To create personalized AI-powered insights for individual entries
-\item To analyze entry content using natural language processing
-\item To perform emotional and contextual analysis
-\item To generate personalized recommendations and observations
-\item To provide entry-specific insights and patterns
-\end{itemize} & Backend Services \\
+F016 & Generate Insights & Create personalized AI-powered insights for individual entries using natural language processing, emotional and contextual analysis, personalized recommendations, and entry-specific pattern identification & Backend Services \\
 \hline
-F017 & View AI Insights & 
-\begin{itemize}
-\item To display AI-generated insights for individual entries
-\item To provide detailed analysis of entry content and context
-\item To show emotional patterns and thematic connections
-\item To offer personalized recommendations for reflection
-\item To enable insight sharing and export capabilities
-\end{itemize} & Writer \\
+F017 & View AI Insights & Display AI-generated insights for individual entries with detailed content analysis, emotional patterns, thematic connections, personalized recommendations, and sharing capabilities & Writer \\
 \hline
-F018 & Generate Analytics & 
-\begin{itemize}
-\item To process journal entries for analytical insights
-\item To identify topic clusters and thematic patterns
-\item To calculate statistical patterns and trends
-\item To generate emotional tracking and mood analysis
-\item To provide comprehensive journaling behavior analytics
-\end{itemize} & Backend Services \\
+F018 & Generate Analytics & Process journal entries for analytical insights, identify topic clusters and thematic patterns, calculate statistical trends, generate emotional tracking, and provide comprehensive behavior analytics & Backend Services \\
 \hline
-F019 & View Analytics & 
-\begin{itemize}
-\item To display comprehensive analytics dashboard
-\item To show topic clusters and content distribution
-\item To provide emotional trends and mood statistics
-\item To visualize journaling patterns over time
-\item To enable exploration of individual topic areas
-\end{itemize} & Writer \\
+F019 & View Analytics & Display comprehensive analytics dashboard with topic clusters, content distribution, emotional trends, mood statistics, journaling pattern visualization, and topic area exploration & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1427,27 +1303,13 @@ F019 & View Analytics &
 \centering
 \caption{Data Management and Synchronization Functions - Part 1}
 \label{tab:data-management-functions-1}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F020 & Store Entries & 
-\begin{itemize}
-\item To securely store journal entries in local database
-\item To maintain data integrity and consistency
-\item To provide immediate storage for offline capability
-\item To encrypt sensitive user data for privacy protection
-\item To manage storage optimization and cleanup
-\end{itemize} & Backend Services \\
+F020 & Store Entries & Securely store journal entries in local database with data integrity maintenance, immediate storage for offline capability, sensitive data encryption, and storage optimization & Backend Services \\
 \hline
-F021 & Retrieve Entries & 
-\begin{itemize}
-\item To efficiently load journal entries from storage
-\item To support fast retrieval for optimal performance
-\item To handle large datasets with pagination
-\item To maintain data consistency across sessions
-\item To provide fallback mechanisms for data recovery
-\end{itemize} & Backend Services \\
+F021 & Retrieve Entries & Efficiently load journal entries from storage with fast retrieval for optimal performance, large dataset pagination, session consistency, and data recovery mechanisms & Backend Services \\
 \hline
 \end{tabular}
 \end{table}
@@ -1456,27 +1318,13 @@ F021 & Retrieve Entries &
 \centering
 \caption{Data Management and Synchronization Functions - Part 2}
 \label{tab:data-management-functions-2}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F022 & Manage Offline & 
-\begin{itemize}
-\item To enable full functionality without internet connectivity
-\item To automatically detect connectivity changes
-\item To store all user actions locally during offline periods
-\item To provide seamless offline-to-online transitions
-\item To maintain data synchronization integrity
-\end{itemize} & Backend Services \\
+F022 & Manage Offline & Enable full functionality without internet connectivity through automatic detection, local action storage, seamless offline-to-online transitions, and synchronization integrity & Backend Services \\
 \hline
-F023 & Cloud Synchronization & 
-\begin{itemize}
-\item To synchronize local data with Firebase cloud storage
-\item To handle conflict resolution for simultaneous edits
-\item To provide incremental sync for bandwidth efficiency
-\item To maintain data consistency across multiple devices
-\item To support automatic and manual sync triggers
-\end{itemize} & Backend Services \\
+F023 & Cloud Synchronization & Synchronize local data with Firebase cloud storage including conflict resolution, incremental sync for bandwidth efficiency, multi-device consistency, and automatic/manual sync triggers & Backend Services \\
 \hline
 \end{tabular}
 \end{table}
@@ -1487,45 +1335,17 @@ F023 & Cloud Synchronization &
 \centering
 \caption{User Interface and Experience Functions}
 \label{tab:ui-ux-functions}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F024 & Selection Mode & 
-\begin{itemize}
-\item To enable multi-entry selection for bulk operations
-\item To provide visual feedback for selected items
-\item To support batch deletion and bulk actions
-\item To offer selection by date ranges and criteria
-\item To maintain selection state during navigation
-\end{itemize} & Writer \\
+F024 & Selection Mode & Enable multi-entry selection for bulk operations with visual feedback, batch deletion, date range selection, and maintained selection state during navigation & Writer \\
 \hline
-F025 & Theme Management & 
-\begin{itemize}
-\item To provide automatic light/dark theme switching
-\item To respond to system theme preferences
-\item To maintain consistent visual design across themes
-\item To optimize readability in different lighting conditions
-\item To support accessibility requirements
-\end{itemize} & Writer \\
+F025 & Theme Management & Provide automatic light/dark theme switching responding to system preferences with consistent visual design, readability optimization, and accessibility support & Writer \\
 \hline
-F026 & Responsive Design & 
-\begin{itemize}
-\item To adapt interface layout to different screen sizes
-\item To maintain usability across various device orientations
-\item To optimize touch targets for mobile interaction
-\item To provide consistent experience across Android and iOS
-\item To support accessibility features and font scaling
-\end{itemize} & Writer \\
+F026 & Responsive Design & Adapt interface layout to different screen sizes with device orientation support, optimized touch targets, consistent cross-platform experience, and accessibility features & Writer \\
 \hline
-F027 & Progress Feedback & 
-\begin{itemize}
-\item To provide visual indicators for ongoing operations
-\item To show sync status and connectivity information
-\item To display loading states during data processing
-\item To offer completion confirmations for user actions
-\item To indicate system status and error conditions
-\end{itemize} & Writer \\
+F027 & Progress Feedback & Provide visual indicators for ongoing operations including sync status, connectivity information, loading states, completion confirmations, and system status indicators & Writer \\
 \hline
 \end{tabular}
 \end{table}
@@ -1536,27 +1356,13 @@ F027 & Progress Feedback &
 \centering
 \caption{System Utility Functions - Part 1}
 \label{tab:system-utility-functions-1}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F028 & Error Handling & 
-\begin{itemize}
-\item To gracefully handle system errors and exceptions
-\item To provide meaningful error messages to users
-\item To implement automatic recovery mechanisms
-\item To log errors for debugging and improvement
-\item To maintain application stability under adverse conditions
-\end{itemize} & Backend Services \\
+F028 & Error Handling & Gracefully handle system errors and exceptions with meaningful user messages, automatic recovery mechanisms, debugging logs, and application stability maintenance & Backend Services \\
 \hline
-F029 & Data Validation & 
-\begin{itemize}
-\item To validate user input for data integrity
-\item To enforce business rules and constraints
-\item To prevent malformed data from entering the system
-\item To provide immediate feedback on validation errors
-\item To maintain data quality and consistency
-\end{itemize} & Backend Services \\
+F029 & Data Validation & Validate user input for data integrity, enforce business rules and constraints, prevent malformed data entry, provide immediate validation feedback, and maintain data quality & Backend Services \\
 \hline
 \end{tabular}
 \end{table}
@@ -1565,27 +1371,13 @@ F029 & Data Validation &
 \centering
 \caption{System Utility Functions - Part 2}
 \label{tab:system-utility-functions-2}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{0.8cm}|p{2.2cm}|p{9.5cm}|p{1.5cm}|}
 \hline
 \textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
 \hline
-F030 & Performance Optimization & 
-\begin{itemize}
-\item To optimize application performance for mobile devices
-\item To implement efficient data loading and caching strategies
-\item To minimize battery and memory usage
-\item To provide smooth animations and transitions
-\item To ensure responsive user interface interactions
-\end{itemize} & Backend Services \\
+F030 & Performance Optimization & Optimize application performance for mobile devices with efficient data loading, caching strategies, battery/memory usage minimization, smooth animations, and responsive interactions & Backend Services \\
 \hline
-F031 & Security Management & 
-\begin{itemize}
-\item To implement secure authentication and authorization
-\item To encrypt sensitive data at rest and in transit
-\item To protect against common security vulnerabilities
-\item To manage user privacy and data protection compliance
-\item To provide secure API communications
-\end{itemize} & Backend Services \\
+F031 & Security Management & Implement secure authentication and authorization, encrypt sensitive data at rest and in transit, protect against vulnerabilities, manage privacy compliance, and secure API communications & Backend Services \\
 \hline
 \end{tabular}
 \end{table}
