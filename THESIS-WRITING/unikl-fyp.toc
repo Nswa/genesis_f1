@@ -1,0 +1,107 @@
+\contentsline {chapter}{List of Abbreviations}{v}{chapter*.2}%
+\contentsline {chapter}{Abstract (English)}{vi}{chapter*.2}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{vii}{chapter*.2}%
+\contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Project Background}{2}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Problem Statement}{4}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Limitations of Traditional Paper Journaling}{4}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Cognitive Overload in Digital Journaling Platforms}{4}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Lack of Intelligent Organization and Insights}{5}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}Time Constraints and Accessibility Barriers}{5}{subsection.1.3.4}%
+\contentsline {section}{\numberline {1.4}Objectives}{6}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Research Objectives}{6}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Project Objectives}{6}{subsection.1.4.2}%
+\contentsline {section}{\numberline {1.5}Project Scope}{7}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Included Features}{7}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Project Limitations}{8}{subsection.1.5.2}%
+\contentsline {chapter}{\numberline {2}Literature Review}{10}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Introduction}{10}{section.2.1}%
+\contentsline {section}{\numberline {2.2}The Impact of Technology on Journaling: A Transition and Its Implications}{10}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Cognitive Considerations in Journaling: Handwritten vs. Digital}{11}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Expressive Writing and Its Impact on Physical and Mental Well-Being}{12}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Integration of AI in Journaling Platforms}{12}{section.2.5}%
+\contentsline {section}{\numberline {2.6}Study of Existing Journaling Systems}{13}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Comparison Summary}{14}{section.2.7}%
+\contentsline {section}{\numberline {2.8}Findings and Conclusion}{15}{section.2.8}%
+\contentsline {chapter}{\numberline {3}Methodology}{17}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Introduction}{17}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Rapid Application Development (RAD) Methodology}{17}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Requirement planning}{18}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Software Requirements}{18}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Hardware Requirements}{20}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Use Case Diagram}{20}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Use Case Description}{21}{subsection.3.3.4}%
+\contentsline {subsection}{\numberline {3.3.5}Constraints}{23}{subsection.3.3.5}%
+\contentsline {subsubsection}{\numberline {3.3.5.1}Development Constraints}{23}{subsubsection.3.3.5.1}%
+\contentsline {subsubsection}{\numberline {3.3.5.2}Technical Constraints}{23}{subsubsection.3.3.5.2}%
+\contentsline {subsubsection}{\numberline {3.3.5.3}Privacy and Legal Constraints}{23}{subsubsection.3.3.5.3}%
+\contentsline {section}{\numberline {3.4}User design}{24}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Process Flow}{24}{subsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.1}Writer}{24}{subsubsection.3.4.1.1}%
+\contentsline {subsubsection}{\numberline {3.4.1.2}Backend Services}{39}{subsubsection.3.4.1.2}%
+\contentsline {subsection}{\numberline {3.4.2}Use Case}{43}{subsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.1}Register}{43}{subsubsection.3.4.2.1}%
+\contentsline {subsubsection}{\numberline {3.4.2.2}Login}{44}{subsubsection.3.4.2.2}%
+\contentsline {subsubsection}{\numberline {3.4.2.3}Logout}{46}{subsubsection.3.4.2.3}%
+\contentsline {subsubsection}{\numberline {3.4.2.4}Write Entry}{47}{subsubsection.3.4.2.4}%
+\contentsline {subsubsection}{\numberline {3.4.2.5}Append Tags}{48}{subsubsection.3.4.2.5}%
+\contentsline {subsubsection}{\numberline {3.4.2.6}Set Mood}{48}{subsubsection.3.4.2.6}%
+\contentsline {subsubsection}{\numberline {3.4.2.7}Set Bookmark}{49}{subsubsection.3.4.2.7}%
+\contentsline {subsubsection}{\numberline {3.4.2.8}Attach Media}{50}{subsubsection.3.4.2.8}%
+\contentsline {subsubsection}{\numberline {3.4.2.9}Submit Entry}{51}{subsubsection.3.4.2.9}%
+\contentsline {subsubsection}{\numberline {3.4.2.10}Browse Bookmark}{52}{subsubsection.3.4.2.10}%
+\contentsline {subsubsection}{\numberline {3.4.2.11}View Entries}{53}{subsubsection.3.4.2.11}%
+\contentsline {subsubsection}{\numberline {3.4.2.12}Search}{54}{subsubsection.3.4.2.12}%
+\contentsline {subsubsection}{\numberline {3.4.2.13}Browse Calendar}{56}{subsubsection.3.4.2.13}%
+\contentsline {subsubsection}{\numberline {3.4.2.14}View Analytics}{57}{subsubsection.3.4.2.14}%
+\contentsline {subsubsection}{\numberline {3.4.2.15}View AI Insights}{58}{subsubsection.3.4.2.15}%
+\contentsline {subsubsection}{\numberline {3.4.2.16}Manage Offline}{59}{subsubsection.3.4.2.16}%
+\contentsline {subsubsection}{\numberline {3.4.2.17}Generate Analytics}{60}{subsubsection.3.4.2.17}%
+\contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{61}{subsubsection.3.4.2.18}%
+\contentsline {subsection}{\numberline {3.4.3}Product Functions}{62}{subsection.3.4.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.1}Authentication and User Management Functions}{63}{subsubsection.3.4.3.1}%
+\contentsline {subsubsection}{\numberline {3.4.3.2}Core Journaling Functions}{63}{subsubsection.3.4.3.2}%
+\contentsline {subsubsection}{\numberline {3.4.3.3}Content Enhancement Functions}{64}{subsubsection.3.4.3.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.4}Content Management and Retrieval Functions}{64}{subsubsection.3.4.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.3.5}AI-Powered Analysis Functions}{65}{subsubsection.3.4.3.5}%
+\contentsline {subsubsection}{\numberline {3.4.3.6}Data Management and Synchronization Functions}{65}{subsubsection.3.4.3.6}%
+\contentsline {subsubsection}{\numberline {3.4.3.7}User Interface and System Functions}{66}{subsubsection.3.4.3.7}%
+\contentsline {section}{\numberline {3.5}Construction}{67}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Cutover}{68}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Project Resources}{68}{subsection.3.6.1}%
+\contentsline {subsubsection}{\numberline {3.6.1.1}Resource List}{68}{subsubsection.3.6.1.1}%
+\contentsline {subsection}{\numberline {3.6.2}Conclusion}{69}{subsection.3.6.2}%
+\contentsline {chapter}{\numberline {4}Prototype/ Product Development}{70}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{70}{section.4.1}%
+\contentsline {section}{\numberline {4.2}System Prototype}{70}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Development Environment Setup}{71}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Collective Journaling Application Interface}{71}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Authentication System}{71}{subsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.1.1}Login Screen}{71}{subsubsection.4.4.1.1}%
+\contentsline {subsubsection}{\numberline {4.4.1.2}Registration Screen}{73}{subsubsection.4.4.1.2}%
+\contentsline {subsubsection}{\numberline {4.4.1.3}Google OAuth Integration}{75}{subsubsection.4.4.1.3}%
+\contentsline {subsubsection}{\numberline {4.4.1.4}Twitter/X OAuth Integration}{77}{subsubsection.4.4.1.4}%
+\contentsline {subsection}{\numberline {4.4.2}Main Journal Interface}{77}{subsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.2.1}Journal Home Screen}{77}{subsubsection.4.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.4.2.2}Journal Input Interface}{78}{subsubsection.4.4.2.2}%
+\contentsline {subsection}{\numberline {4.4.3}Entry Management}{78}{subsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.1}Entry Insight Screen}{78}{subsubsection.4.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.4.3.2}Edit Entry Screen}{79}{subsubsection.4.4.3.2}%
+\contentsline {subsection}{\numberline {4.4.4}Analytics and Insights}{79}{subsection.4.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.4.1}Analytics Dashboard}{79}{subsubsection.4.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.4.2}Topic Clustering Visualization}{80}{subsubsection.4.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.5}Favorites and Collections}{80}{subsection.4.4.5}%
+\contentsline {subsubsection}{\numberline {4.4.5.1}Favorites Screen}{80}{subsubsection.4.4.5.1}%
+\contentsline {section}{\numberline {4.5}Technical Implementation Details}{80}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Frontend Architecture}{80}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Backend Integration}{80}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}AI Service Integration}{81}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Multimedia Handling}{81}{subsection.4.5.4}%
+\contentsline {section}{\numberline {4.6}User Experience Design}{81}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Quality Assurance and Testing}{81}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Summary}{82}{section.4.8}%
+\contentsline {chapter}{References}{83}{section.4.8}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{85}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{85}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{86}{appendix.B}%
