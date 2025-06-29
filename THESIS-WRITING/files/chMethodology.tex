@@ -1141,51 +1141,64 @@ Figure~\ref{fig:usecase-generate-insights} shows the generate insights use case 
 
 \subsection{Product Functions}\label{subsec:productFunctions}
 
-This section presents a comprehensive overview of the functional requirements for the \textbf{Collective} mobile journaling application. Each function is detailed with a unique identifier, feature name, description, and accessible user role. The functions are organized by categories covering authentication, journaling core features, content management, AI-powered features, and system utilities.
-
-\textbf{Authentication and User Management Functions}
+This section presents a comprehensive overview of the functional requirements for the \textbf{Collective} mobile journaling application. Each function is detailed with a unique identifier, feature name, description, and accessible user role. The functions are organized by categories covering authentication, journaling core features, content management, AI-powered features, and system utilities. Table~\ref{tab:function-summary} provides an overview of all 31 functional requirements.
 
 \begin{table}[H]
 \centering
-\caption{Authentication and User Management Functions}
+\caption{Functional Requirements Summary}
+\label{tab:function-summary}
+\begin{tabular}{|p{2cm}|p{5cm}|p{6cm}|}
+\hline
+\textbf{Category} & \textbf{Function Range} & \textbf{Description} \\
+\hline
+Authentication & F001 - F003 & User registration, login, and logout functionality \\
+\hline
+Core Journaling & F004 - F007 & Entry creation, editing, deletion, and submission \\
+\hline
+Content Enhancement & F008 - F011 & Mood setting, tagging, media attachment, bookmarking \\
+\hline
+Content Management & F012 - F015 & Entry viewing, searching, calendar browsing, bookmark management \\
+\hline
+AI Analysis & F016 - F019 & AI insights generation and analytics viewing \\
+\hline
+Data Management & F020 - F023 & Data storage, retrieval, offline management, synchronization \\
+\hline
+User Interface & F024 - F027 & Selection modes, themes, responsive design, progress feedback \\
+\hline
+System Utilities & F028 - F031 & Error handling, validation, performance, security \\
+\hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+\subsubsection{Authentication and User Management Functions}
+
+The authentication system provides secure user access control with multiple authentication methods. These functions ensure user identity verification and session management.
+
+\begin{table}[H]
+\centering
+\caption{Authentication Functions}
 \label{tab:auth-functions}
-\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\begin{tabular}{|p{1cm}|p{2.5cm}|p{8.5cm}|p{2cm}|}
 \hline
-\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\textbf{ID} & \textbf{Function} & \textbf{Description} & \textbf{Role} \\
 \hline
-F001 & Register & 
-\begin{itemize}
-\item To allow new users to create accounts using email and password
-\item To enable registration through Google OAuth integration
-\item To support Twitter/X OAuth authentication
-\item To validate email format and password strength
-\item To create secure user profiles in Firebase Authentication
-\end{itemize} & Writer \\
+F001 & Register & To allow new users to create accounts using email/password, Google OAuth, or Twitter/X OAuth with validation and secure profile creation & Writer \\
 \hline
-F002 & Login & 
-\begin{itemize}
-\item To allow existing users to authenticate with email/password
-\item To enable login through previously linked Google accounts
-\item To support Twitter/X OAuth authentication
-\item To validate credentials against Firebase Authentication
-\item To redirect authenticated users to main journal interface
-\end{itemize} & Writer \\
+F002 & Login & To enable existing users to authenticate through email/password or OAuth providers with credential validation and interface redirection & Writer \\
 \hline
-F003 & Logout & 
-\begin{itemize}
-\item To allow users to securely end their session
-\item To clear authentication tokens and user data
-\item To return users to the login screen
-\item To ensure data security when switching users
-\end{itemize} & Writer \\
+F003 & Logout & To allow users to securely terminate sessions, clear authentication data, and return to login screen & Writer \\
 \hline
 \end{tabular}
 \end{table}
 
 \textbf{Core Journaling Functions}
 
+\vspace{-15pt}
 \begin{table}[H]
 \centering
+\vspace{-10pt}
 \caption{Core Journaling Functions - Part 1}
 \label{tab:core-journaling-functions-1}
 \begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
@@ -1577,4 +1590,4 @@ F031 & Security Management &
 \end{tabular}
 \end{table}
 
-These functions collectively form the comprehensive feature set of the \textbf{Collective} mobile journaling application, ensuring a complete and user-friendly journaling experience while maintaining the simplicity and focus that distinguishes the application from traditional digital journaling platforms.
+These 31 functional requirements collectively form the comprehensive feature set of the \textbf{Collective} mobile journaling application, ensuring a complete and user-friendly journaling experience while maintaining the simplicity and focus that distinguishes the application from traditional digital journaling platforms.
