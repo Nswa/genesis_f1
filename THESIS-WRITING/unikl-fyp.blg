@@ -1,48 +1,50 @@
 This is BibTeX, Version 0.99d (TeX Live 2025)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: unikl-fyp.aux
-I found no \citation commands---while reading file unikl-fyp.aux
-I found no \bibdata command---while reading file unikl-fyp.aux
-I found no \bibstyle command---while reading file unikl-fyp.aux
-You've used 0 entries,
-            0 wiz_defined-function locations,
-            83 strings with 492 characters,
-and the built_in function-call counts, 0 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 0
-:= -- 0
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
-chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 0
-format.name$ -- 0
-if$ -- 0
-int.to.chr$ -- 0
+A level-1 auxiliary file: files/chIntroduction.aux
+A level-1 auxiliary file: files/chLiteratureReview.aux
+A level-1 auxiliary file: files/chMethodology.aux
+A level-1 auxiliary file: files/chProtoDevelop.aux
+The style file: apalike.bst
+Database file #1: bib/thesis.bib
+You've used 7 entries,
+            1935 wiz_defined-function locations,
+            530 strings with 5215 characters,
+and the built_in function-call counts, 3098 in all, are:
+= -- 310
+> -- 126
+< -- 5
++ -- 46
+- -- 42
+* -- 277
+:= -- 527
+add.period$ -- 21
+call.type$ -- 7
+change.case$ -- 56
+chr.to.int$ -- 7
+cite$ -- 7
+duplicate$ -- 107
+empty$ -- 212
+format.name$ -- 57
+if$ -- 603
+int.to.chr$ -- 1
 int.to.str$ -- 0
-missing$ -- 0
-newline$ -- 0
-num.names$ -- 0
-pop$ -- 0
-preamble$ -- 0
-purify$ -- 0
+missing$ -- 7
+newline$ -- 38
+num.names$ -- 21
+pop$ -- 40
+preamble$ -- 1
+purify$ -- 56
 quote$ -- 0
-skip$ -- 0
+skip$ -- 87
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 257
+swap$ -- 16
+text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
+type$ -- 42
 warning$ -- 0
-while$ -- 0
+while$ -- 28
 width$ -- 0
-write$ -- 0
-(There were 3 error messages)
+write$ -- 93
