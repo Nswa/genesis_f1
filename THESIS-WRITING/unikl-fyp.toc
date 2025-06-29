@@ -72,7 +72,33 @@
 \contentsline {subsection}{\numberline {3.6.1}Project Resources}{68}{subsection.3.6.1}%
 \contentsline {subsubsection}{\numberline {3.6.1.1}Resource List}{68}{subsubsection.3.6.1.1}%
 \contentsline {subsection}{\numberline {3.6.2}Conclusion}{69}{subsection.3.6.2}%
-\contentsline {chapter}{References}{70}{subsection.3.6.2}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{72}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{72}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{73}{appendix.B}%
+\contentsline {chapter}{\numberline {4}Prototype/ Product Development}{70}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Introduction}{70}{section.4.1}%
+\contentsline {section}{\numberline {4.2}System Prototype}{70}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Development Environment Setup}{71}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Collective Journaling Application Interface}{71}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Authentication System}{71}{subsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.1.1}Authentication Screen}{71}{subsubsection.4.4.1.1}%
+\contentsline {subsection}{\numberline {4.4.2}Main Journal Interface}{72}{subsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.2.1}Journal Home Screen}{72}{subsubsection.4.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.4.2.2}Journal Input Interface}{72}{subsubsection.4.4.2.2}%
+\contentsline {subsection}{\numberline {4.4.3}Entry Management}{73}{subsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.1}Entry Insight Screen}{73}{subsubsection.4.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.4.3.2}Edit Entry Screen}{73}{subsubsection.4.4.3.2}%
+\contentsline {subsection}{\numberline {4.4.4}Analytics and Insights}{74}{subsection.4.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.4.1}Analytics Dashboard}{74}{subsubsection.4.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.4.2}Topic Clustering Visualization}{74}{subsubsection.4.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.5}Favorites and Collections}{74}{subsection.4.4.5}%
+\contentsline {subsubsection}{\numberline {4.4.5.1}Favorites Screen}{74}{subsubsection.4.4.5.1}%
+\contentsline {section}{\numberline {4.5}Technical Implementation Details}{75}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Frontend Architecture}{75}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Backend Integration}{75}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}AI Service Integration}{75}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}Multimedia Handling}{75}{subsection.4.5.4}%
+\contentsline {section}{\numberline {4.6}User Experience Design}{76}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Quality Assurance and Testing}{76}{section.4.7}%
+\contentsline {section}{\numberline {4.8}Summary}{76}{section.4.8}%
+\contentsline {chapter}{References}{77}{section.4.8}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{79}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{79}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{80}{appendix.B}%

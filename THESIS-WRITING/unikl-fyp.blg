@@ -4,11 +4,12 @@ The top-level auxiliary file: unikl-fyp.aux
 A level-1 auxiliary file: files/chIntroduction.aux
 A level-1 auxiliary file: files/chLiteratureReview.aux
 A level-1 auxiliary file: files/chMethodology.aux
+A level-1 auxiliary file: files/chProtoDevelop.aux
 The style file: apalike.bst
 Database file #1: bib/thesis.bib
 You've used 7 entries,
             1935 wiz_defined-function locations,
-            529 strings with 5191 characters,
+            530 strings with 5215 characters,
 and the built_in function-call counts, 3098 in all, are:
 = -- 310
 > -- 126
