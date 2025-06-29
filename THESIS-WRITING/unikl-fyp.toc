@@ -67,7 +67,12 @@
 \contentsline {subsubsection}{\numberline {3.4.3.5}AI-Powered Analysis Functions}{65}{subsubsection.3.4.3.5}%
 \contentsline {subsubsection}{\numberline {3.4.3.6}Data Management and Synchronization Functions}{65}{subsubsection.3.4.3.6}%
 \contentsline {subsubsection}{\numberline {3.4.3.7}User Interface and System Functions}{66}{subsubsection.3.4.3.7}%
-\contentsline {chapter}{References}{68}{table.caption.82}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{70}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{70}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{71}{appendix.B}%
+\contentsline {section}{\numberline {3.5}Construction}{67}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Cutover}{68}{section.3.6}%
+\contentsline {subsection}{\numberline {3.6.1}Project Resources}{68}{subsection.3.6.1}%
+\contentsline {subsubsection}{\numberline {3.6.1.1}Resource List}{68}{subsubsection.3.6.1.1}%
+\contentsline {subsection}{\numberline {3.6.2}Conclusion}{69}{subsection.3.6.2}%
+\contentsline {chapter}{References}{70}{subsection.3.6.2}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{72}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{72}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{73}{appendix.B}%
