@@ -32,25 +32,27 @@ The project structure follows Flutter best practices with organized directories 
 
 The login screen presents users with a clean, minimalist interface for accessing their existing accounts. The screen features the Collective logo and brand name prominently displayed at the top, establishing brand identity immediately upon app launch. Users can enter their email and password credentials in dedicated input fields with real-time validation feedback. The login form includes a "Forgot password?" link for password recovery and maintains consistent styling with rounded input fields and appropriate visual feedback for user interactions.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_login.jpeg}
 \caption{Login screen interface}
 \label{fig:login-screen}
 \end{figure}
+\end{samepage}
 
 \subsubsection{Registration Screen}
 
 The registration screen expands the authentication interface to include additional fields for new user account creation. Users provide their first name, last name, email address, and password, with all fields featuring real-time validation to ensure data integrity and provide immediate feedback. The registration process includes email validation, password strength requirements, and clear visual indicators for required fields. Users can easily toggle between login and registration modes using the text link at the bottom of the screen.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_register.jpeg}
 \caption{Registration screen with user details form}
 \label{fig:registration-screen}
 \end{figure}
+\end{samepage}
 
 \subsubsection{Google OAuth Integration}
 
@@ -83,25 +85,27 @@ The Twitter/X OAuth integration offers an alternative social authentication meth
 
 The journal home screen represents the core interface where users interact with their entries. The design prioritizes content over navigation, featuring a clean timeline view of journal entries organized by date. Each entry is displayed as a card with the date, content preview, mood indicator, and associated tags. The interface includes a search functionality and selection mode for batch operations like favoriting or deleting entries. The screen includes a toolbar with options for creating new entries, searching through existing content, and accessing analytics. Entries are grouped by date with sticky headers for easy navigation. The interface supports infinite scrolling and includes loading states with shimmer effects for smooth user experience.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/journal_screen.jpeg}
 \caption{Journal home screen showing entry timeline}
 \label{fig:journal-screen}
 \end{figure}
+\end{samepage}
 
 \subsubsection{Journal Input Interface}
 
 The journal input interface emphasizes distraction-free writing with a minimalist text editor that expands as users type. The interface includes subtle features like mood selection through emoji picker, tag input with AI-powered suggestions, and multimedia attachment capabilities including camera integration for photos and GIF creation. The interface includes automatic saving to prevent data loss and provides visual feedback for all user actions.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/journal_input_basic.jpeg}
 \caption{Basic journal input interface for writing entries}
 \label{fig:journal-input-basic}
 \end{figure}
+\end{samepage}
 
 \paragraph{Emoji Selection Interface}
 
@@ -174,13 +178,14 @@ The tag suggestion system utilizes AI analysis to recommend relevant tags based 
 
 The search functionality enables users to quickly locate specific journal entries based on content, tags, mood, or date ranges. The search interface features a prominent search bar that supports both text-based queries and advanced filtering options. Users can search through their entire journal history with real-time results that highlight matching content within entries.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/search_interface.jpeg}
 \caption{Search interface for finding journal entries}
 \label{fig:search-interface}
 \end{figure}
+\end{samepage}
 
 The search system implements intelligent filtering that considers entry content, associated tags, mood indicators, and temporal patterns. Results are displayed in a familiar timeline format with highlighted search terms, allowing users to quickly identify relevant entries and navigate to full content.
 
@@ -188,13 +193,14 @@ The search system implements intelligent filtering that considers entry content,
 
 The calendar browsing feature provides a visual overview of journaling activity across time periods. Users can access a monthly calendar view that displays entry indicators for each day, allowing for quick navigation to specific dates and visual recognition of journaling patterns. The calendar interface integrates seamlessly with the main journal timeline.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/calendar_browsing.jpeg}
 \caption{Calendar browsing interface for date-based navigation}
 \label{fig:calendar-browsing}
 \end{figure}
+\end{samepage}
 
 The calendar view includes visual indicators for entry density, mood patterns, and special annotations. Users can tap on any date to navigate directly to entries from that day, providing an intuitive way to browse historical content and identify temporal patterns in their journaling habits.
 
@@ -204,25 +210,27 @@ The calendar view includes visual indicators for entry density, mood patterns, a
 
 The entry insight screen provides detailed analysis of individual journal entries using AI-powered insights from DeepSeek API. The screen displays the full entry content along with AI-generated insights that help users understand patterns in their writing and emotional state. Related entries are suggested based on content similarity and themes. The insights are presented in markdown format with smooth loading animations and caching for offline access. The screen includes navigation to related entries and maintains a history of viewed insights for quick reference.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/entry_insight_screen.jpeg}
 \caption{Entry insight screen with AI analysis}
 \label{fig:entry-insight-screen}
 \end{figure}
+\end{samepage}
 
 \subsubsection{Edit Entry Screen}
 
 The edit entry screen allows users to modify existing journal entries while maintaining the original creation timestamp. The interface provides the same rich editing capabilities as the input widget, including mood modification, tag editing, and image management. Changes are tracked and saved automatically with visual feedback. The screen includes options to add or remove images, modify mood settings, and update tags. All changes are validated and synchronized with both local and cloud storage.
 
-\nopagebreak
+\begin{samepage}
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/edit_entry_screen.jpeg}
 \caption{Edit entry screen for modifying entries}
 \label{fig:edit-entry-screen}
 \end{figure}
+\end{samepage}
 
 \subsection{Analytics and Insights}
 
