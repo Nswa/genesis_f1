@@ -28,21 +28,69 @@ The project structure follows Flutter best practices with organized directories 
 
 \subsection{Authentication System}
 
-\subsubsection{Authentication Screen}
+\subsubsection{Login Screen}
 
-The authentication screen serves as the primary entry point for users, combining login and registration functionality in a single interface. The screen features a minimalist design with the Collective logo and brand name prominently displayed. Users can toggle between login and registration modes seamlessly. The interface supports multiple authentication methods including email/password, Google OAuth, and Twitter/X OAuth integration.
+The login screen presents users with a clean, minimalist interface for accessing their existing accounts. The screen features the Collective logo and brand name prominently displayed at the top, establishing brand identity immediately upon app launch. Users can enter their email and password credentials in dedicated input fields with real-time validation feedback.
 
-Figure~\ref{fig:auth-screen} shows the authentication screen interface with its clean, minimalist design and multiple authentication options.
+Figure~\ref{fig:login-screen} shows the login interface with email and password input fields, along with the forgot password option.
 
 % Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/auth_screen.png}
-% \caption{Authentication screen with login and registration options}
-% \label{fig:auth-screen}
-% \end{figure}
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_login.jpeg}
+ \caption{Login screen interface}
+ \label{fig:login-screen}
+ \end{figure}
 
-The registration process includes fields for first name, last name, email, and password, with real-time validation and user-friendly error messages. Social authentication buttons are prominently displayed, allowing users to sign in with Google or Twitter/X accounts. The interface adapts to both light and dark themes automatically based on system preferences.
+The login form includes a "Forgot password?" link for password recovery and maintains consistent styling with rounded input fields and appropriate visual feedback for user interactions.
+
+\subsubsection{Registration Screen}
+
+The registration screen expands the authentication interface to include additional fields for new user account creation. Users provide their first name, last name, email address, and password, with all fields featuring real-time validation to ensure data integrity and provide immediate feedback.
+
+As demonstrated in Figure~\ref{fig:registration-screen}, the registration interface maintains the same clean design while accommodating the additional input requirements.
+
+% Figure placeholder - path to be provided
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_registration.jpeg}
+ \caption{Registration screen with user details form}
+ \label{fig:registration-screen}
+ \end{figure}
+
+The registration process includes email validation, password strength requirements, and clear visual indicators for required fields. Users can easily toggle between login and registration modes using the text link at the bottom of the screen.
+
+\subsubsection{Google OAuth Integration}
+
+The Google OAuth integration provides seamless authentication using existing Google accounts. The interface displays a dedicated button with the Google logo and clear labeling, allowing users to authenticate with a single tap without manual credential entry.
+
+Figure~\ref{fig:google-oauth} illustrates the Google OAuth authentication flow within the application interface.
+
+% Figure placeholder - path to be provided
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_google.jpeg}
+ \caption{Google OAuth authentication interface}
+ \label{fig:google-oauth}
+ \end{figure}
+
+The Google sign-in process leverages Firebase Authentication's OAuth provider, ensuring secure credential handling and automatic user profile creation upon successful authentication.
+
+\subsubsection{Twitter/X OAuth Integration}
+
+The Twitter/X OAuth integration offers an alternative social authentication method for users who prefer using their Twitter/X credentials. The interface includes a dedicated button with the Twitter/X logo, maintaining visual consistency with the Google OAuth option.
+
+As shown in Figure~\ref{fig:twitter-oauth}, the Twitter/X authentication option is prominently displayed alongside the Google OAuth button.
+
+% Figure placeholder - path to be provided
+ \begin{figure}[H]
+ \centering
+ \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_twitter.jpeg}
+ \caption{Twitter/X OAuth authentication interface}
+ \label{fig:twitter-oauth}
+ \end{figure}
+
+The Twitter/X integration utilizes Firebase's OAuthProvider functionality with custom plugin modifications to ensure compatibility across different device configurations and handle edge cases in the authentication flow.
 
 \subsection{Main Journal Interface}
 
