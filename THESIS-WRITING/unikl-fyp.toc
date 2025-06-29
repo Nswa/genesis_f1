@@ -87,29 +87,21 @@
 \contentsline {subsubsection}{\numberline {4.4.2.2}Journal Input Interface}{75}{subsubsection.4.4.2.2}%
 \contentsline {paragraph}{\numberline {4.4.2.2.1}Emoji Selection Interface}{76}{paragraph.4.4.2.2.1}%
 \contentsline {paragraph}{\numberline {4.4.2.2.2}Photo Attachment Interface}{77}{paragraph.4.4.2.2.2}%
-\contentsline {paragraph}{\numberline {4.4.2.2.3}Camera Integration}{77}{paragraph.4.4.2.2.3}%
-\contentsline {paragraph}{\numberline {4.4.2.2.4}GIF Recording Functionality}{78}{paragraph.4.4.2.2.4}%
-\contentsline {paragraph}{\numberline {4.4.2.2.5}AI-Powered Tag Suggestions}{79}{paragraph.4.4.2.2.5}%
-\contentsline {subsection}{\numberline {4.4.3}Navigation and Discovery}{79}{subsection.4.4.3}%
-\contentsline {subsubsection}{\numberline {4.4.3.1}Search Functionality}{79}{subsubsection.4.4.3.1}%
-\contentsline {subsubsection}{\numberline {4.4.3.2}Calendar Browsing Interface}{80}{subsubsection.4.4.3.2}%
-\contentsline {subsection}{\numberline {4.4.4}Entry Management}{80}{subsection.4.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.4.1}Entry Insight Screen}{80}{subsubsection.4.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.4.2}Edit Entry Screen}{81}{subsubsection.4.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.5}Analytics and Insights}{82}{subsection.4.4.5}%
-\contentsline {subsubsection}{\numberline {4.4.5.1}Analytics Dashboard}{82}{subsubsection.4.4.5.1}%
-\contentsline {subsubsection}{\numberline {4.4.5.2}Topic Clustering Visualization}{83}{subsubsection.4.4.5.2}%
-\contentsline {subsection}{\numberline {4.4.6}Favorites and Collections}{84}{subsection.4.4.6}%
-\contentsline {subsubsection}{\numberline {4.4.6.1}Favorites Screen}{84}{subsubsection.4.4.6.1}%
-\contentsline {section}{\numberline {4.5}Technical Implementation Details}{85}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Frontend Architecture}{85}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Backend Integration}{86}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}AI Service Integration}{86}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}Multimedia Handling}{86}{subsection.4.5.4}%
-\contentsline {section}{\numberline {4.6}User Experience Design}{86}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Quality Assurance and Testing}{87}{section.4.7}%
-\contentsline {section}{\numberline {4.8}Summary}{87}{section.4.8}%
-\contentsline {chapter}{References}{88}{section.4.8}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{90}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{90}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{91}{appendix.B}%
+\contentsline {paragraph}{\numberline {4.4.2.2.3}Camera Integration}{78}{paragraph.4.4.2.2.3}%
+\contentsline {paragraph}{\numberline {4.4.2.2.4}GIF Recording Functionality}{79}{paragraph.4.4.2.2.4}%
+\contentsline {paragraph}{\numberline {4.4.2.2.5}AI-Powered Tag Suggestions}{80}{paragraph.4.4.2.2.5}%
+\contentsline {subsection}{\numberline {4.4.3}Navigation and Discovery}{80}{subsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.3.1}Search Functionality}{80}{subsubsection.4.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.4.3.2}Calendar Browsing Interface}{81}{subsubsection.4.4.3.2}%
+\contentsline {subsection}{\numberline {4.4.4}Entry Management}{81}{subsection.4.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.4.1}Entry Insight Screen}{81}{subsubsection.4.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.4.2}Edit Entry Screen}{82}{subsubsection.4.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.5}Analytics and Insights}{83}{subsection.4.4.5}%
+\contentsline {subsubsection}{\numberline {4.4.5.1}Analytics Dashboard}{83}{subsubsection.4.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.4.5.2}Topic Clustering Visualization}{84}{subsubsection.4.4.5.2}%
+\contentsline {subsection}{\numberline {4.4.6}Favorites and Collections}{85}{subsection.4.4.6}%
+\contentsline {subsubsection}{\numberline {4.4.6.1}Favorites Screen}{85}{subsubsection.4.4.6.1}%
+\contentsline {chapter}{References}{87}{figure.caption.100}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{89}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{89}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{90}{appendix.B}%

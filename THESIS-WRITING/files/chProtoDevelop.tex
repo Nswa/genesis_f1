@@ -32,6 +32,7 @@ The project structure follows Flutter best practices with organized directories 
 
 The login screen presents users with a clean, minimalist interface for accessing their existing accounts. The screen features the Collective logo and brand name prominently displayed at the top, establishing brand identity immediately upon app launch. Users can enter their email and password credentials in dedicated input fields with real-time validation feedback. The login form includes a "Forgot password?" link for password recovery and maintains consistent styling with rounded input fields and appropriate visual feedback for user interactions.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_login.jpeg}
@@ -43,6 +44,7 @@ The login screen presents users with a clean, minimalist interface for accessing
 
 The registration screen expands the authentication interface to include additional fields for new user account creation. Users provide their first name, last name, email address, and password, with all fields featuring real-time validation to ensure data integrity and provide immediate feedback. The registration process includes email validation, password strength requirements, and clear visual indicators for required fields. Users can easily toggle between login and registration modes using the text link at the bottom of the screen.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_register.jpeg}
@@ -81,6 +83,7 @@ The Twitter/X OAuth integration offers an alternative social authentication meth
 
 The journal home screen represents the core interface where users interact with their entries. The design prioritizes content over navigation, featuring a clean timeline view of journal entries organized by date. Each entry is displayed as a card with the date, content preview, mood indicator, and associated tags. The interface includes a search functionality and selection mode for batch operations like favoriting or deleting entries. The screen includes a toolbar with options for creating new entries, searching through existing content, and accessing analytics. Entries are grouped by date with sticky headers for easy navigation. The interface supports infinite scrolling and includes loading states with shimmer effects for smooth user experience.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/journal_screen.jpeg}
@@ -92,6 +95,7 @@ The journal home screen represents the core interface where users interact with 
 
 The journal input interface emphasizes distraction-free writing with a minimalist text editor that expands as users type. The interface includes subtle features like mood selection through emoji picker, tag input with AI-powered suggestions, and multimedia attachment capabilities including camera integration for photos and GIF creation. The interface includes automatic saving to prevent data loss and provides visual feedback for all user actions.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/journal_input_basic.jpeg}
@@ -170,6 +174,7 @@ The tag suggestion system utilizes AI analysis to recommend relevant tags based 
 
 The search functionality enables users to quickly locate specific journal entries based on content, tags, mood, or date ranges. The search interface features a prominent search bar that supports both text-based queries and advanced filtering options. Users can search through their entire journal history with real-time results that highlight matching content within entries.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/search_interface.jpeg}
@@ -183,6 +188,7 @@ The search system implements intelligent filtering that considers entry content,
 
 The calendar browsing feature provides a visual overview of journaling activity across time periods. Users can access a monthly calendar view that displays entry indicators for each day, allowing for quick navigation to specific dates and visual recognition of journaling patterns. The calendar interface integrates seamlessly with the main journal timeline.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/calendar_browsing.jpeg}
@@ -198,6 +204,7 @@ The calendar view includes visual indicators for entry density, mood patterns, a
 
 The entry insight screen provides detailed analysis of individual journal entries using AI-powered insights from DeepSeek API. The screen displays the full entry content along with AI-generated insights that help users understand patterns in their writing and emotional state. Related entries are suggested based on content similarity and themes. The insights are presented in markdown format with smooth loading animations and caching for offline access. The screen includes navigation to related entries and maintains a history of viewed insights for quick reference.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/entry_insight_screen.jpeg}
@@ -209,6 +216,7 @@ The entry insight screen provides detailed analysis of individual journal entrie
 
 The edit entry screen allows users to modify existing journal entries while maintaining the original creation timestamp. The interface provides the same rich editing capabilities as the input widget, including mood modification, tag editing, and image management. Changes are tracked and saved automatically with visual feedback. The screen includes options to add or remove images, modify mood settings, and update tags. All changes are validated and synchronized with both local and cloud storage.
 
+\nopagebreak
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.4\textwidth]{files/imgs/prototype/edit_entry_screen.jpeg}
@@ -252,37 +260,3 @@ The favorites screen displays a curated collection of entries that users have ma
 \caption{Favorites screen showing curated entries}
 \label{fig:favorites-screen}
 \end{figure}
-
-\section{Technical Implementation Details}
-
-\subsection{Frontend Architecture}
-
-The Flutter frontend implements a controller-based architecture using JournalController as the central state management system. The UI components follow Material Design 3 principles while incorporating custom styling that reflects the application's focus on simplicity and elegance. Animation controllers are properly managed to prevent memory leaks and ensure smooth transitions.
-
-\subsection{Backend Integration}
-
-Firebase integration provides seamless authentication, cloud storage for images and data, and real-time synchronization capabilities. The system implements intelligent caching strategies to minimize data usage while ensuring offline functionality remains robust. Local storage uses Sembast database for structured data and file system for images.
-
-\subsection{AI Service Integration}
-
-DeepSeek API integration follows a streaming response pattern, providing real-time insights as analysis occurs. The system implements comprehensive fallback mechanisms for API failures, ensuring the core journaling functionality remains unaffected by external service availability. Insights are cached both in memory and persistent storage to improve performance.
-
-\subsection{Multimedia Handling}
-
-The application includes sophisticated camera integration with support for both photo capture and GIF creation using FFmpeg. Images are processed and compressed for optimal storage while maintaining quality. The system supports both local and cloud storage with automatic synchronization.
-
-\section{User Experience Design}
-
-The interface design prioritizes simplicity and focus, removing unnecessary navigation elements and feature complexity that typically overwhelms users in digital journaling applications. The use of consistent spacing, typography, and color schemes creates a cohesive experience that feels familiar and comfortable.
-
-System theme integration ensures the application feels native to each user's device preferences, while careful attention to loading states and animations maintains engagement during processing operations. The offline-first approach ensures users never lose their writing due to connectivity issues.
-
-\section{Quality Assurance and Testing}
-
-The prototype undergoes continuous testing through multiple approaches including unit testing for core functionality, integration testing for service interactions, and user acceptance testing with target demographics. Performance testing ensures smooth operation across various mobile devices and operating system versions.
-
-Specific attention is paid to edge cases such as network interruptions, device storage limitations, and API service outages to ensure robust operation in real-world conditions.
-
-\section{Summary}
-
-The Collective journaling application prototype successfully demonstrates the integration of traditional journaling intimacy with modern digital capabilities. Through careful interface design and intelligent feature implementation, the system addresses the identified problems of digital journaling complexity while maintaining the personal, reflective nature that makes journaling valuable. The technical architecture ensures reliability, privacy, and accessibility across platforms while providing sophisticated AI-powered insights that enhance rather than replace the human journaling experience.
