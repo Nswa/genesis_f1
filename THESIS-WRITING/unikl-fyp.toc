@@ -55,7 +55,8 @@
 \contentsline {subsubsection}{\numberline {3.4.2.16}Manage Offline}{58}{subsubsection.3.4.2.16}%
 \contentsline {subsubsection}{\numberline {3.4.2.17}Generate Analytics}{59}{subsubsection.3.4.2.17}%
 \contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{60}{subsubsection.3.4.2.18}%
-\contentsline {chapter}{References}{61}{table.caption.70}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{63}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{63}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{64}{appendix.B}%
+\contentsline {subsection}{\numberline {3.4.3}Product Functions}{61}{subsection.3.4.3}%
+\contentsline {chapter}{References}{75}{table.caption.83}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{77}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{77}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{78}{appendix.B}%

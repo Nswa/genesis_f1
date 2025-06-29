@@ -1138,3 +1138,443 @@ Figure~\ref{fig:usecase-generate-insights} shows the generate insights use case 
 \hline
 \end{tabular}
 \end{table}
+
+\subsection{Product Functions}\label{subsec:productFunctions}
+
+This section presents a comprehensive overview of the functional requirements for the \textbf{Collective} mobile journaling application. Each function is detailed with a unique identifier, feature name, description, and accessible user role. The functions are organized by categories covering authentication, journaling core features, content management, AI-powered features, and system utilities.
+
+\textbf{Authentication and User Management Functions}
+
+\begin{table}[H]
+\centering
+\caption{Authentication and User Management Functions}
+\label{tab:auth-functions}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F001 & Register & 
+\begin{itemize}
+\item To allow new users to create accounts using email and password
+\item To enable registration through Google OAuth integration
+\item To support Twitter/X OAuth authentication
+\item To validate email format and password strength
+\item To create secure user profiles in Firebase Authentication
+\end{itemize} & Writer \\
+\hline
+F002 & Login & 
+\begin{itemize}
+\item To allow existing users to authenticate with email/password
+\item To enable login through previously linked Google accounts
+\item To support Twitter/X OAuth authentication
+\item To validate credentials against Firebase Authentication
+\item To redirect authenticated users to main journal interface
+\end{itemize} & Writer \\
+\hline
+F003 & Logout & 
+\begin{itemize}
+\item To allow users to securely end their session
+\item To clear authentication tokens and user data
+\item To return users to the login screen
+\item To ensure data security when switching users
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Core Journaling Functions}
+
+\begin{table}[H]
+\centering
+\caption{Core Journaling Functions - Part 1}
+\label{tab:core-journaling-functions-1}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F004 & Write Entry & 
+\begin{itemize}
+\item To provide a minimalist, distraction-free writing interface
+\item To enable text composition with automatic word count tracking
+\item To support real-time text editing and formatting
+\item To auto-save content locally during composition
+\item To maintain writing focus without interruption
+\end{itemize} & Writer \\
+\hline
+F005 & Submit Entry & 
+\begin{itemize}
+\item To allow users to finalize and save completed entries
+\item To validate entry content before submission
+\item To save entries to local database immediately
+\item To queue entries for cloud synchronization
+\item To provide visual feedback on successful save
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Core Journaling Functions - Part 2}
+\label{tab:core-journaling-functions-2}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F006 & Edit Entry & 
+\begin{itemize}
+\item To allow modification of existing journal entries
+\item To preserve original timestamps while tracking edit history
+\item To support text, mood, and media modifications
+\item To maintain data integrity during updates
+\item To sync changes across local and cloud storage
+\end{itemize} & Writer \\
+\hline
+F007 & Delete Entry & 
+\begin{itemize}
+\item To enable removal of unwanted journal entries
+\item To provide confirmation dialogs for accidental deletion prevention
+\item To permanently remove entries from local and cloud storage
+\item To update entry counts and statistics accordingly
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Content Enhancement Functions}
+
+\begin{table}[H]
+\centering
+\caption{Content Enhancement Functions - Part 1}
+\label{tab:content-enhancement-functions-1}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F008 & Set Mood & 
+\begin{itemize}
+\item To allow users to associate emotional states with entries
+\item To provide predefined mood options with emoji representations
+\item To enable mood selection during or after entry creation
+\item To track emotional patterns over time for analytics
+\item To support optional mood assignment (not required)
+\end{itemize} & Writer \\
+\hline
+F009 & Append Tags & 
+\begin{itemize}
+\item To enable manual categorization of journal entries
+\item To support custom tag creation and management
+\item To provide tag suggestions based on entry content
+\item To organize entries by thematic categories
+\item To facilitate efficient search and retrieval
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Content Enhancement Functions - Part 2}
+\label{tab:content-enhancement-functions-2}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F010 & Attach Media & 
+\begin{itemize}
+\item To support image attachment from device gallery
+\item To enable photo capture directly within the app
+\item To compress images automatically for storage efficiency
+\item To provide local and cloud storage for media files
+\item To display media content within entry view
+\end{itemize} & Writer \\
+\hline
+F011 & Set Bookmark & 
+\begin{itemize}
+\item To allow marking of important or significant entries
+\item To create quick access to meaningful journal content
+\item To provide visual indicators for bookmarked entries
+\item To enable bookmark management and organization
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Content Management and Retrieval Functions}
+
+\begin{table}[H]
+\centering
+\caption{Content Management and Retrieval Functions - Part 1}
+\label{tab:content-management-functions-1}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F012 & View Entries & 
+\begin{itemize}
+\item To display all journal entries in chronological order
+\item To group entries by date for organized browsing
+\item To provide infinite scrolling for large entry collections
+\item To show entry previews with timestamps and metadata
+\item To support entry selection for bulk operations
+\end{itemize} & Writer \\
+\hline
+F013 & Search Entries & 
+\begin{itemize}
+\item To enable text-based search across all entry content
+\item To support fuzzy search for approximate matches
+\item To search within tags and metadata fields
+\item To provide real-time search results as user types
+\item To highlight search terms in results
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Content Management and Retrieval Functions - Part 2}
+\label{tab:content-management-functions-2}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F014 & Browse Calendar & 
+\begin{itemize}
+\item To display entries organized by calendar dates
+\item To provide visual indicators for days with entries
+\item To enable quick navigation to specific dates
+\item To show entry count per day for productivity tracking
+\item To support date range filtering
+\end{itemize} & Writer \\
+\hline
+F015 & Browse Bookmarks & 
+\begin{itemize}
+\item To display all bookmarked entries in dedicated view
+\item To provide quick access to important journal content
+\item To maintain bookmark organization and management
+\item To support bookmark removal and modification
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{AI-Powered Analysis Functions}
+
+\begin{table}[H]
+\centering
+\caption{AI-Powered Analysis Functions}
+\label{tab:ai-analysis-functions}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F016 & Generate Insights & 
+\begin{itemize}
+\item To create personalized AI-powered insights for individual entries
+\item To analyze entry content using natural language processing
+\item To perform emotional and contextual analysis
+\item To generate personalized recommendations and observations
+\item To provide entry-specific insights and patterns
+\end{itemize} & Backend Services \\
+\hline
+F017 & View AI Insights & 
+\begin{itemize}
+\item To display AI-generated insights for individual entries
+\item To provide detailed analysis of entry content and context
+\item To show emotional patterns and thematic connections
+\item To offer personalized recommendations for reflection
+\item To enable insight sharing and export capabilities
+\end{itemize} & Writer \\
+\hline
+F018 & Generate Analytics & 
+\begin{itemize}
+\item To process journal entries for analytical insights
+\item To identify topic clusters and thematic patterns
+\item To calculate statistical patterns and trends
+\item To generate emotional tracking and mood analysis
+\item To provide comprehensive journaling behavior analytics
+\end{itemize} & Backend Services \\
+\hline
+F019 & View Analytics & 
+\begin{itemize}
+\item To display comprehensive analytics dashboard
+\item To show topic clusters and content distribution
+\item To provide emotional trends and mood statistics
+\item To visualize journaling patterns over time
+\item To enable exploration of individual topic areas
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{Data Management and Synchronization Functions}
+
+\begin{table}[H]
+\centering
+\caption{Data Management and Synchronization Functions - Part 1}
+\label{tab:data-management-functions-1}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F020 & Store Entries & 
+\begin{itemize}
+\item To securely store journal entries in local database
+\item To maintain data integrity and consistency
+\item To provide immediate storage for offline capability
+\item To encrypt sensitive user data for privacy protection
+\item To manage storage optimization and cleanup
+\end{itemize} & Backend Services \\
+\hline
+F021 & Retrieve Entries & 
+\begin{itemize}
+\item To efficiently load journal entries from storage
+\item To support fast retrieval for optimal performance
+\item To handle large datasets with pagination
+\item To maintain data consistency across sessions
+\item To provide fallback mechanisms for data recovery
+\end{itemize} & Backend Services \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Data Management and Synchronization Functions - Part 2}
+\label{tab:data-management-functions-2}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F022 & Manage Offline & 
+\begin{itemize}
+\item To enable full functionality without internet connectivity
+\item To automatically detect connectivity changes
+\item To store all user actions locally during offline periods
+\item To provide seamless offline-to-online transitions
+\item To maintain data synchronization integrity
+\end{itemize} & Backend Services \\
+\hline
+F023 & Cloud Synchronization & 
+\begin{itemize}
+\item To synchronize local data with Firebase cloud storage
+\item To handle conflict resolution for simultaneous edits
+\item To provide incremental sync for bandwidth efficiency
+\item To maintain data consistency across multiple devices
+\item To support automatic and manual sync triggers
+\end{itemize} & Backend Services \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{User Interface and Experience Functions}
+
+\begin{table}[H]
+\centering
+\caption{User Interface and Experience Functions}
+\label{tab:ui-ux-functions}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F024 & Selection Mode & 
+\begin{itemize}
+\item To enable multi-entry selection for bulk operations
+\item To provide visual feedback for selected items
+\item To support batch deletion and bulk actions
+\item To offer selection by date ranges and criteria
+\item To maintain selection state during navigation
+\end{itemize} & Writer \\
+\hline
+F025 & Theme Management & 
+\begin{itemize}
+\item To provide automatic light/dark theme switching
+\item To respond to system theme preferences
+\item To maintain consistent visual design across themes
+\item To optimize readability in different lighting conditions
+\item To support accessibility requirements
+\end{itemize} & Writer \\
+\hline
+F026 & Responsive Design & 
+\begin{itemize}
+\item To adapt interface layout to different screen sizes
+\item To maintain usability across various device orientations
+\item To optimize touch targets for mobile interaction
+\item To provide consistent experience across Android and iOS
+\item To support accessibility features and font scaling
+\end{itemize} & Writer \\
+\hline
+F027 & Progress Feedback & 
+\begin{itemize}
+\item To provide visual indicators for ongoing operations
+\item To show sync status and connectivity information
+\item To display loading states during data processing
+\item To offer completion confirmations for user actions
+\item To indicate system status and error conditions
+\end{itemize} & Writer \\
+\hline
+\end{tabular}
+\end{table}
+
+\textbf{System Utility Functions}
+
+\begin{table}[H]
+\centering
+\caption{System Utility Functions - Part 1}
+\label{tab:system-utility-functions-1}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F028 & Error Handling & 
+\begin{itemize}
+\item To gracefully handle system errors and exceptions
+\item To provide meaningful error messages to users
+\item To implement automatic recovery mechanisms
+\item To log errors for debugging and improvement
+\item To maintain application stability under adverse conditions
+\end{itemize} & Backend Services \\
+\hline
+F029 & Data Validation & 
+\begin{itemize}
+\item To validate user input for data integrity
+\item To enforce business rules and constraints
+\item To prevent malformed data from entering the system
+\item To provide immediate feedback on validation errors
+\item To maintain data quality and consistency
+\end{itemize} & Backend Services \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{System Utility Functions - Part 2}
+\label{tab:system-utility-functions-2}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Feature ID} & \textbf{Feature} & \textbf{Description} & \textbf{Accessible Role} \\
+\hline
+F030 & Performance Optimization & 
+\begin{itemize}
+\item To optimize application performance for mobile devices
+\item To implement efficient data loading and caching strategies
+\item To minimize battery and memory usage
+\item To provide smooth animations and transitions
+\item To ensure responsive user interface interactions
+\end{itemize} & Backend Services \\
+\hline
+F031 & Security Management & 
+\begin{itemize}
+\item To implement secure authentication and authorization
+\item To encrypt sensitive data at rest and in transit
+\item To protect against common security vulnerabilities
+\item To manage user privacy and data protection compliance
+\item To provide secure API communications
+\end{itemize} & Backend Services \\
+\hline
+\end{tabular}
+\end{table}
+
+These functions collectively form the comprehensive feature set of the \textbf{Collective} mobile journaling application, ensuring a complete and user-friendly journaling experience while maintaining the simplicity and focus that distinguishes the application from traditional digital journaling platforms.
