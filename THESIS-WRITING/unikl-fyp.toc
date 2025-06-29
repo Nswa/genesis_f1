@@ -1,6 +1,6 @@
-\contentsline {chapter}{List of Abbreviations}{iii}{chapter*.2}%
-\contentsline {chapter}{Abstract (English)}{iv}{chapter*.2}%
-\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{v}{chapter*.2}%
+\contentsline {chapter}{List of Abbreviations}{iv}{chapter*.2}%
+\contentsline {chapter}{Abstract (English)}{v}{chapter*.2}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{vi}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Project Background}{2}{section.1.2}%
@@ -57,7 +57,13 @@
 \contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{60}{subsubsection.3.4.2.18}%
 \contentsline {subsection}{\numberline {3.4.3}Product Functions}{61}{subsection.3.4.3}%
 \contentsline {subsubsection}{\numberline {3.4.3.1}Authentication and User Management Functions}{62}{subsubsection.3.4.3.1}%
-\contentsline {chapter}{References}{66}{table.caption.83}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{68}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{68}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{69}{appendix.B}%
+\contentsline {subsubsection}{\numberline {3.4.3.2}Core Journaling Functions}{62}{subsubsection.3.4.3.2}%
+\contentsline {subsubsection}{\numberline {3.4.3.3}Content Enhancement Functions}{63}{subsubsection.3.4.3.3}%
+\contentsline {subsubsection}{\numberline {3.4.3.4}Content Management and Retrieval Functions}{63}{subsubsection.3.4.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.3.5}AI-Powered Analysis Functions}{64}{subsubsection.3.4.3.5}%
+\contentsline {subsubsection}{\numberline {3.4.3.6}Data Management and Synchronization Functions}{64}{subsubsection.3.4.3.6}%
+\contentsline {subsubsection}{\numberline {3.4.3.7}User Interface and System Functions}{65}{subsubsection.3.4.3.7}%
+\contentsline {chapter}{References}{67}{table.caption.82}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{69}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{69}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{70}{appendix.B}%
