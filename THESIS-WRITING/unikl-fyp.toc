@@ -1,6 +1,6 @@
-\contentsline {chapter}{List of Abbreviations}{iv}{chapter*.2}%
-\contentsline {chapter}{Abstract (English)}{v}{chapter*.2}%
-\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{vi}{chapter*.2}%
+\contentsline {chapter}{List of Abbreviations}{iii}{chapter*.2}%
+\contentsline {chapter}{Abstract (English)}{iv}{chapter*.2}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{v}{chapter*.2}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Project Background}{2}{section.1.2}%
@@ -55,16 +55,7 @@
 \contentsline {subsubsection}{\numberline {3.4.2.16}Manage Offline}{58}{subsubsection.3.4.2.16}%
 \contentsline {subsubsection}{\numberline {3.4.2.17}Generate Analytics}{59}{subsubsection.3.4.2.17}%
 \contentsline {subsubsection}{\numberline {3.4.2.18}Generate Insights}{60}{subsubsection.3.4.2.18}%
-\contentsline {section}{\numberline {3.5}Construction}{61}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Development Approach}{61}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Technical Implementation}{61}{subsection.3.5.2}%
-\contentsline {subsection}{\numberline {3.5.3}Quality Assurance}{62}{subsection.3.5.3}%
-\contentsline {section}{\numberline {3.6}Cutover}{62}{section.3.6}%
-\contentsline {subsection}{\numberline {3.6.1}Pre-Deployment Activities}{62}{subsection.3.6.1}%
-\contentsline {subsection}{\numberline {3.6.2}Deployment Strategy}{62}{subsection.3.6.2}%
-\contentsline {subsection}{\numberline {3.6.3}User Training and Support}{63}{subsection.3.6.3}%
-\contentsline {subsection}{\numberline {3.6.4}Post-Deployment Activities}{63}{subsection.3.6.4}%
-\contentsline {chapter}{References}{64}{Item.71}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{66}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{66}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{67}{appendix.B}%
+\contentsline {chapter}{References}{61}{table.caption.70}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{63}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{63}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{64}{appendix.B}%
