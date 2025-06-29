@@ -30,185 +30,138 @@ The project structure follows Flutter best practices with organized directories 
 
 \subsubsection{Login Screen}
 
-The login screen presents users with a clean, minimalist interface for accessing their existing accounts. The screen features the Collective logo and brand name prominently displayed at the top, establishing brand identity immediately upon app launch. Users can enter their email and password credentials in dedicated input fields with real-time validation feedback.
+The login screen presents users with a clean, minimalist interface for accessing their existing accounts. The screen features the Collective logo and brand name prominently displayed at the top, establishing brand identity immediately upon app launch. Users can enter their email and password credentials in dedicated input fields with real-time validation feedback. The login form includes a "Forgot password?" link for password recovery and maintains consistent styling with rounded input fields and appropriate visual feedback for user interactions.
 
-Figure~\ref{fig:login-screen} shows the login interface with email and password input fields, along with the forgot password option.
-
-% Figure placeholder - path to be provided
- \begin{figure}[H]
- \centering
- \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_login.jpeg}
- \caption{Login screen interface}
- \label{fig:login-screen}
- \end{figure}
-
-The login form includes a "Forgot password?" link for password recovery and maintains consistent styling with rounded input fields and appropriate visual feedback for user interactions.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_login.jpeg}
+\caption{Login screen interface}
+\label{fig:login-screen}
+\end{figure}
 
 \subsubsection{Registration Screen}
 
-The registration screen expands the authentication interface to include additional fields for new user account creation. Users provide their first name, last name, email address, and password, with all fields featuring real-time validation to ensure data integrity and provide immediate feedback.
+The registration screen expands the authentication interface to include additional fields for new user account creation. Users provide their first name, last name, email address, and password, with all fields featuring real-time validation to ensure data integrity and provide immediate feedback. The registration process includes email validation, password strength requirements, and clear visual indicators for required fields. Users can easily toggle between login and registration modes using the text link at the bottom of the screen.
 
-As demonstrated in Figure~\ref{fig:registration-screen}, the registration interface maintains the same clean design while accommodating the additional input requirements.
-
-% Figure placeholder - path to be provided
- \begin{figure}[H]
- \centering
- \includegraphics[width=0.7\textwidth]{files/imgs/prototype/auth_register.jpeg}
- \caption{Registration screen with user details form}
- \label{fig:registration-screen}
- \end{figure}
-
-The registration process includes email validation, password strength requirements, and clear visual indicators for required fields. Users can easily toggle between login and registration modes using the text link at the bottom of the screen.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.35\textwidth]{files/imgs/prototype/auth_register.jpeg}
+\caption{Registration screen with user details form}
+\label{fig:registration-screen}
+\end{figure}
 
 \subsubsection{Google OAuth Integration}
 
-The Google OAuth integration provides seamless authentication using existing Google accounts. The interface displays a dedicated button with the Google logo and clear labeling, allowing users to authenticate with a single tap without manual credential entry.
-
-Figure~\ref{fig:google-oauth} illustrates the Google OAuth authentication flow within the application interface.
-
-% Figure placeholder - path to be provided
- \begin{figure}[H]
- \centering
- \includegraphics[width=0.7\textwidth]{files/imgs/prototype/google_oauth.jpeg}
- \caption{Google OAuth authentication interface}
- \label{fig:google-oauth}
- \end{figure}
-
-The Google sign-in process leverages Firebase Authentication's OAuth provider, ensuring secure credential handling and automatic user profile creation upon successful authentication.
+The Google OAuth integration provides seamless authentication using existing Google accounts. The interface displays a dedicated button with the Google logo and clear labeling, allowing users to authenticate with a single tap without manual credential entry. The Google sign-in process leverages Firebase Authentication's OAuth provider, ensuring secure credential handling and automatic user profile creation upon successful authentication.
 
 \subsubsection{Twitter/X OAuth Integration}
 
-The Twitter/X OAuth integration offers an alternative social authentication method for users who prefer using their Twitter/X credentials. The interface includes a dedicated button with the Twitter/X logo, maintaining visual consistency with the Google OAuth option.
+The Twitter/X OAuth integration offers an alternative social authentication method for users who prefer using their Twitter/X credentials. The interface includes a dedicated button with the Twitter/X logo, maintaining visual consistency with the Google OAuth option. The Twitter/X integration utilizes Firebase's OAuthProvider functionality with custom plugin modifications to ensure compatibility across different device configurations and handle edge cases in the authentication flow.
 
-As shown in Figure~\ref{fig:twitter-oauth}, the Twitter/X authentication option is prominently displayed alongside the Google OAuth button.
-
-% Figure placeholder - path to be provided
- \begin{figure}[H]
- \centering
- \includegraphics[width=0.7\textwidth]{files/imgs/prototype/x_oauth.jpeg}
- \caption{Twitter/X OAuth authentication interface}
- \label{fig:twitter-oauth}
- \end{figure}
-
-The Twitter/X integration utilizes Firebase's OAuthProvider functionality with custom plugin modifications to ensure compatibility across different device configurations and handle edge cases in the authentication flow.
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.4\textwidth}
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/prototype/google_oauth.jpeg}
+\caption{Google OAuth authentication}
+\label{fig:google-oauth}
+\end{minipage}
+\hfill
+\begin{minipage}{0.4\textwidth}
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/prototype/x_oauth.jpeg}
+\caption{Twitter/X OAuth authentication}
+\label{fig:twitter-oauth}
+\end{minipage}
+\end{figure}
 
 \subsection{Main Journal Interface}
 
 \subsubsection{Journal Home Screen}
 
-The journal home screen represents the core interface where users interact with their entries. The design prioritizes content over navigation, featuring a clean timeline view of journal entries organized by date. Each entry is displayed as a card with the date, content preview, mood indicator, and associated tags. The interface includes a search functionality and selection mode for batch operations like favoriting or deleting entries.
+The journal home screen represents the core interface where users interact with their entries. The design prioritizes content over navigation, featuring a clean timeline view of journal entries organized by date. Each entry is displayed as a card with the date, content preview, mood indicator, and associated tags. The interface includes a search functionality and selection mode for batch operations like favoriting or deleting entries. The screen includes a toolbar with options for creating new entries, searching through existing content, and accessing analytics. Entries are grouped by date with sticky headers for easy navigation. The interface supports infinite scrolling and includes loading states with shimmer effects for smooth user experience.
 
-Figure~\ref{fig:journal-screen} illustrates the main journal interface showing the timeline view with entry cards organized by date.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/journal_screen.png}
-% \caption{Journal home screen showing entry timeline}
-% \label{fig:journal-screen}
-% \end{figure}
-
-The screen includes a toolbar with options for creating new entries, searching through existing content, and accessing analytics. Entries are grouped by date with sticky headers for easy navigation. The interface supports infinite scrolling and includes loading states with shimmer effects for smooth user experience.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{path/to/journal_screen.png}
+\caption{Journal home screen showing entry timeline}
+\label{fig:journal-screen}
+\end{figure}
 
 \subsubsection{Journal Input Interface}
 
-The journal input interface emphasizes distraction-free writing with a minimalist text editor that expands as users type. The interface includes subtle features like mood selection through emoji picker, tag input with AI-powered suggestions, and multimedia attachment capabilities including camera integration for photos and GIF creation.
+The journal input interface emphasizes distraction-free writing with a minimalist text editor that expands as users type. The interface includes subtle features like mood selection through emoji picker, tag input with AI-powered suggestions, and multimedia attachment capabilities including camera integration for photos and GIF creation. The input widget features an expandable emoji bar for mood selection, camera integration for capturing moments, and tag input functionality. Users can attach images either by taking photos or selecting from gallery. The interface includes automatic saving to prevent data loss and provides visual feedback for all user actions.
 
-As demonstrated in Figure~\ref{fig:journal-input}, the input interface provides a clean writing environment with expandable functionality for mood selection and multimedia attachment.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/journal_input.png}
-% \caption{Journal input interface for writing entries}
-% \label{fig:journal-input}
-% \end{figure}
-
-The input widget features an expandable emoji bar for mood selection, camera integration for capturing moments, and tag input functionality. Users can attach images either by taking photos or selecting from gallery. The interface includes automatic saving to prevent data loss and provides visual feedback for all user actions.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{path/to/journal_input.png}
+\caption{Journal input interface for writing entries}
+\label{fig:journal-input}
+\end{figure}
 
 \subsection{Entry Management}
 
 \subsubsection{Entry Insight Screen}
 
-The entry insight screen provides detailed analysis of individual journal entries using AI-powered insights from DeepSeek API. The screen displays the full entry content along with AI-generated insights that help users understand patterns in their writing and emotional state. Related entries are suggested based on content similarity and themes.
-
-Figure~\ref{fig:entry-insight-screen} presents the entry insight interface showing AI-generated analysis and related entry suggestions.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/entry_insight_screen.png}
-% \caption{Entry insight screen with AI analysis}
-% \label{fig:entry-insight-screen}
-% \end{figure}
-
-The insights are presented in markdown format with smooth loading animations and caching for offline access. The screen includes navigation to related entries and maintains a history of viewed insights for quick reference.
+The entry insight screen provides detailed analysis of individual journal entries using AI-powered insights from DeepSeek API. The screen displays the full entry content along with AI-generated insights that help users understand patterns in their writing and emotional state. Related entries are suggested based on content similarity and themes. The insights are presented in markdown format with smooth loading animations and caching for offline access. The screen includes navigation to related entries and maintains a history of viewed insights for quick reference.
 
 \subsubsection{Edit Entry Screen}
 
-The edit entry screen allows users to modify existing journal entries while maintaining the original creation timestamp. The interface provides the same rich editing capabilities as the input widget, including mood modification, tag editing, and image management. Changes are tracked and saved automatically with visual feedback.
+The edit entry screen allows users to modify existing journal entries while maintaining the original creation timestamp. The interface provides the same rich editing capabilities as the input widget, including mood modification, tag editing, and image management. Changes are tracked and saved automatically with visual feedback. The screen includes options to add or remove images, modify mood settings, and update tags. All changes are validated and synchronized with both local and cloud storage.
 
-Figure~\ref{fig:edit-entry-screen} displays the edit entry interface with options for modifying text, mood, tags, and attached media.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/edit_entry_screen.png}
-% \caption{Edit entry screen for modifying existing entries}
-% \label{fig:edit-entry-screen}
-% \end{figure}
-
-The screen includes options to add or remove images, modify mood settings, and update tags. All changes are validated and synchronized with both local and cloud storage.
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.45\textwidth}
+\centering
+\includegraphics[width=0.85\textwidth]{path/to/entry_insight_screen.png}
+\caption{Entry insight screen with AI analysis}
+\label{fig:entry-insight-screen}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\centering
+\includegraphics[width=0.85\textwidth]{path/to/edit_entry_screen.png}
+\caption{Edit entry screen for modifying entries}
+\label{fig:edit-entry-screen}
+\end{minipage}
+\end{figure}
 
 \subsection{Analytics and Insights}
 
 \subsubsection{Analytics Dashboard}
 
-The analytics screen presents comprehensive insights into journaling patterns and trends using visual representations of data. The interface includes calendar views showing journaling frequency, topic clustering analysis, and mood tracking over time. The analytics are generated using AI analysis of journal content while maintaining user privacy.
+The analytics screen presents comprehensive insights into journaling patterns and trends using visual representations of data. The interface includes calendar views showing journaling frequency, topic clustering analysis, and mood tracking over time. The analytics are generated using AI analysis of journal content while maintaining user privacy. Key features include topic clustering cards that group related entries, calendar heat maps showing writing frequency, and insights panels with AI-generated observations about writing patterns. The analytics cache intelligently to reduce processing time and API usage.
 
-Figure~\ref{fig:analytics-screen} shows the analytics dashboard with calendar heat maps, topic clusters, and insights panels for pattern analysis.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/analytics_screen.png}
-% \caption{Analytics dashboard showing journaling patterns}
-% \label{fig:analytics-screen}
-% \end{figure}
-
-Key features include topic clustering cards that group related entries, calendar heat maps showing writing frequency, and insights panels with AI-generated observations about writing patterns. The analytics cache intelligently to reduce processing time and API usage.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{path/to/analytics_screen.png}
+\caption{Analytics dashboard showing journaling patterns}
+\label{fig:analytics-screen}
+\end{figure}
 
 \subsubsection{Topic Clustering Visualization}
 
 The topic clustering feature automatically groups journal entries by themes and subjects using AI analysis. Each cluster is presented as a card showing the main topic, number of entries, and key themes. Users can explore clusters to find related content across different time periods.
 
-As illustrated in Figure~\ref{fig:topic-clustering}, the topic clustering visualization organizes entries into thematic groups for easy content discovery.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/topic_clustering.png}
-% \caption{Topic clustering visualization}
-% \label{fig:topic-clustering}
-% \end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{path/to/topic_clustering.png}
+\caption{Topic clustering visualization}
+\label{fig:topic-clustering}
+\end{figure}
 
 \subsection{Favorites and Collections}
 
 \subsubsection{Favorites Screen}
 
-The favorites screen displays a curated collection of entries that users have marked as favorites. The interface follows the same design patterns as the main journal screen but filters to show only favorited content. Entries maintain their original date grouping and include all standard interaction options.
+The favorites screen displays a curated collection of entries that users have marked as favorites. The interface follows the same design patterns as the main journal screen but filters to show only favorited content. Entries maintain their original date grouping and include all standard interaction options. Users can easily unfavorite entries and access all entry details and insights from this screen. The interface provides quick access to frequently referenced content.
 
-Figure~\ref{fig:favorites-screen} demonstrates the favorites interface showing the curated collection of user-selected entries.
-
-% Figure placeholder - path to be provided
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width=0.7\textwidth]{path/to/favorites_screen.png}
-% \caption{Favorites screen showing curated entries}
-% \label{fig:favorites-screen}
-% \end{figure}
-
-Users can easily unfavorite entries and access all entry details and insights from this screen. The interface provides quick access to frequently referenced content.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\textwidth]{path/to/favorites_screen.png}
+\caption{Favorites screen showing curated entries}
+\label{fig:favorites-screen}
+\end{figure}
 
 \section{Technical Implementation Details}
 
