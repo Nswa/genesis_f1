@@ -5,11 +5,6 @@ Allahyari, M., Pouriyeh, S., Assefi, M., Safaei, S., Trippe, E.~D., Gutierrez, J
 \newblock Text summarization techniques: A brief survey.
 \newblock {\em International Journal of Advanced Computer Science and Applications}, 8(10):397--405.
 
-\bibitem[Baikadi et~al., 2016]{baikadi2016exploring}
-Baikadi, A., Epp, C., and Schunn, C.~D. (2016).
-\newblock Exploring the impact of digital journaling tools on reflective writing.
-\newblock {\em Journal of Educational Technology \& Society}, 19(3):129--141.
-
 \bibitem[Chung and Pennebaker, 2011]{chung2011expressive}
 Chung, C.~K. and Pennebaker, J.~W. (2011).
 \newblock Expressive writing: Connections to physical and mental health.
@@ -29,10 +24,5 @@ Mueller, P.~A. and Oppenheimer, D.~M. (2014).
 Pennebaker, J.~W. and Seagal, J.~D. (1999).
 \newblock Forming a story: The health benefits of narrative.
 \newblock {\em Journal of Clinical Psychology}, 55(10):1243--1254.
-
-\bibitem[Sloan et~al., 2015]{sloan2015efficacy}
-Sloan, D.~M., Feinstein, B.~A., and Gallagher, M.~W. (2015).
-\newblock The efficacy of online expressive writing interventions: A meta-analysis.
-\newblock {\em Computers in Human Behavior}, 52:1--11.
 
 \end{thebibliography}
