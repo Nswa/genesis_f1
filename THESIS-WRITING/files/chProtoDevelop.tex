@@ -24,6 +24,179 @@ The development environment utilizes Flutter SDK with the following key dependen
 
 The project structure follows Flutter best practices with organized directories for screens, services, models, widgets, and utilities. Custom plugins are maintained in the local\_plugins directory to address specific compatibility requirements, particularly for social authentication features.
 
+\section{Database Design}\label{sec:database-design}
+
+The database design for the Collective journaling application implements a dual-database architecture to support both offline functionality and cloud synchronization. This section details the database schema, entity relationships, and data management strategies that enable seamless user experience across online and offline states.
+
+\subsection{Database Architecture Overview}\label{subsec:db-architecture}
+
+The Collective application employs a hybrid database approach combining local storage with cloud synchronization to ensure data availability and consistency. The architecture consists of two primary components:
+
+\begin{itemize}
+    \item \textbf{Local Database}: Sembast database for offline storage and immediate data access
+    \item \textbf{Cloud Database}: Firebase Firestore for data synchronization and backup
+\end{itemize}
+
+This dual-database strategy enables the application to function completely offline while providing cloud backup and multi-device synchronization when connectivity is available. The offline-first approach ensures that users can continue journaling without interruption regardless of network availability.
+
+
+\subsection{Local Database Schema (Sembast)}\label{subsec:local-schema}
+
+The Sembast local database implementation uses a document-based approach with multiple stores to organize different data types. Each store maintains specific data structures optimized for mobile performance and offline access.
+
+\begin{table}[H]
+\centering
+\caption{Local Database Store Structure}
+\label{tab:local-db-stores}
+\begin{tabular}{|p{3cm}|p{5cm}|p{6cm}|}
+\hline
+\textbf{Store Name} & \textbf{Purpose} & \textbf{Key Fields} \\
+\hline
+entries & Journal entries storage & localId, content, mood, tags, imageUrl, timestamp, isSynced \\
+\hline
+user\_profiles & User profile information & userId, name, email, preferences, createdAt \\
+\hline
+sync\_queue & Pending synchronization operations & operationType, entityId, timestamp, retryCount \\
+\hline
+app\_settings & Application configuration & themeMode, aiEnabled, offlineMode, lastSyncTime \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Entry Data Structure}
+
+The Entry entity represents individual journal entries with comprehensive metadata to support search, organization, and AI analysis features.
+
+\begin{table}[H]
+\centering
+\caption{Entry Entity Schema}
+\label{tab:entry-schema}
+\begin{tabular}{|p{3cm}|p{2cm}|p{8cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Description} \\
+\hline
+localId & String & Unique identifier for local storage \\
+\hline
+firestoreId & String? & Firebase document ID (null if not synced) \\
+\hline
+content & String & Main journal entry text content \\
+\hline
+mood & String? & Selected mood emoji or identifier \\
+\hline
+tags & List<String> & User-defined and AI-suggested tags \\
+\hline
+imageUrl & String? & Cloud storage URL for attached image \\
+\hline
+localImagePath & String? & Local file path for offline image access \\
+\hline
+timestamp & DateTime & Entry creation timestamp \\
+\hline
+lastModified & DateTime & Last modification timestamp \\
+\hline
+isFavorite & Boolean & Bookmark status for quick access \\
+\hline
+isSynced & Boolean & Cloud synchronization status \\
+\hline
+wordCount & Integer & Calculated word count for analytics \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Cloud Database Schema (Firebase Firestore)}\label{subsec:cloud-schema}
+
+The Firebase Firestore implementation uses a collection-based structure optimized for real-time synchronization and scalable cloud storage. The schema design supports efficient queries while maintaining data security through Firestore security rules.
+
+\begin{table}[H]
+\centering
+\caption{Firestore Collection Structure}
+\label{tab:firestore-collections}
+\begin{tabular}{|p{3cm}|p{5cm}|p{6cm}|}
+\hline
+\textbf{Collection} & \textbf{Document Structure} & \textbf{Purpose} \\
+\hline
+users & /users/\{userId\} & User profile and authentication data \\
+\hline
+entries & /users/\{userId\}/entries/\{entryId\} & User's journal entries (subcollection) \\
+\hline
+analytics & /users/\{userId\}/analytics/\{period\} & Cached AI analysis results \\
+\hline
+user\_settings & /users/\{userId\}/settings/preferences & User preferences and configuration \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsubsection{User Document Schema}
+
+\begin{table}[H]
+\centering
+\caption{User Document Fields}
+\label{tab:user-document}
+\begin{tabular}{|p{3cm}|p{2cm}|p{8cm}|}
+\hline
+\textbf{Field Name} & \textbf{Data Type} & \textbf{Description} \\
+\hline
+userId & String & Firebase Authentication UID \\
+\hline
+email & String & User email address \\
+\hline
+displayName & String & User's display name \\
+\hline
+photoURL & String? & Profile picture URL (optional) \\
+\hline
+createdAt & Timestamp & Account creation timestamp \\
+\hline
+lastLoginAt & Timestamp & Last login timestamp \\
+\hline
+entryCount & Number & Total number of journal entries \\
+\hline
+preferences & Map & User preferences and settings \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Data Flow and Synchronization}\label{subsec:data-sync}
+
+The data synchronization strategy implements a queue-based approach that handles offline operations and resolves conflicts when connectivity is restored. The synchronization process maintains data integrity while providing real-time updates when possible.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{files/imgs/mermaid_diagram.png}
+\caption{Data Synchronization Flow Process}
+\label{fig:data-sync-flow}
+\end{figure}
+
+Figure~\ref{fig:data-sync-flow} demonstrates the complete data synchronization workflow from user action to final UI update. The process ensures that all user operations are preserved locally before attempting cloud synchronization, providing seamless offline functionality with automatic conflict resolution.
+
+\subsubsection{Performance Optimization}
+
+Database performance optimization focuses on minimizing synchronization overhead and ensuring responsive user interactions. Key strategies include:
+
+\begin{itemize}
+\item \textbf{Lazy Loading:} Journal entries load incrementally to reduce initial load times
+\item \textbf{Batch Operations:} Multiple database changes grouped into single transactions
+\item \textbf{Index Management:} Optimized queries using Sembast indexing for date and tag searches
+\item \textbf{Cache Strategy:} Frequently accessed data cached locally with TTL expiration
+\item \textbf{Background Sync:} Non-critical synchronization operations performed during idle periods
+\end{itemize}
+
+\subsection{Data Security and Privacy Considerations}\label{subsec:data-security}
+
+Data security is implemented at multiple levels to protect user privacy and ensure compliance with data protection regulations.
+
+\subsubsection{Local Data Protection}
+
+\begin{itemize}
+    \item \textbf{Database Encryption}: Sembast database is encrypted using device-specific keys
+\end{itemize}
+
+\subsubsection{Cloud Data Security}
+
+\begin{itemize}
+    \item \textbf{Firebase Security Rules}: Strict rules ensure users can only access their own data
+    \item \textbf{Transport Encryption}: All data transmission uses HTTPS/TLS encryption
+    \item \textbf{Authentication Requirements}: All cloud operations require valid Firebase Auth tokens
+\end{itemize}
+
 \section{Collective Journaling Application Interface}
 
 \subsection{Authentication System}

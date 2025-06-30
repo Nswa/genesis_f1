@@ -44,31 +44,35 @@
 \contentsline {table}{\numberline {3.40}{\ignorespaces System Utility Functions}}{67}{table.caption.85}%
 \contentsline {table}{\numberline {3.41}{\ignorespaces Project Resource List}}{69}{table.caption.86}%
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Local Database Store Structure}}{72}{table.caption.87}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Entry Entity Schema}}{73}{table.caption.88}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Firestore Collection Structure}}{73}{table.caption.89}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces User Document Fields}}{74}{table.caption.90}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Risks and Contingencies for Collective Mobile Journaling Application Testing}}{89}{table.caption.105}%
-\contentsline {table}{\numberline {5.2}{\ignorespaces Hardware Requirements for Collective Mobile App Testing}}{90}{table.caption.106}%
-\contentsline {table}{\numberline {5.3}{\ignorespaces Software Requirements for Collective Mobile App Testing}}{91}{table.caption.107}%
-\contentsline {table}{\numberline {5.4}{\ignorespaces Testing Group for Collective Mobile Journaling Application}}{92}{table.caption.108}%
-\contentsline {table}{\numberline {5.5}{\ignorespaces Test Case Login Authentication}}{95}{table.caption.109}%
-\contentsline {table}{\numberline {5.6}{\ignorespaces Test Case Registration}}{96}{table.caption.110}%
-\contentsline {table}{\numberline {5.7}{\ignorespaces Test Case Journal Entry Creation}}{96}{table.caption.111}%
-\contentsline {table}{\numberline {5.8}{\ignorespaces Test Case Journal Entry Editing}}{97}{table.caption.112}%
-\contentsline {table}{\numberline {5.9}{\ignorespaces Test Case AI Insights Generation}}{97}{table.caption.113}%
-\contentsline {table}{\numberline {5.10}{\ignorespaces Test Case Offline Functionality}}{98}{table.caption.114}%
-\contentsline {table}{\numberline {5.11}{\ignorespaces Test Case Data Synchronization}}{98}{table.caption.115}%
-\contentsline {table}{\numberline {5.12}{\ignorespaces Test Case Search Functionality}}{99}{table.caption.116}%
-\contentsline {table}{\numberline {5.13}{\ignorespaces Test Case Bookmark Management}}{99}{table.caption.117}%
-\contentsline {table}{\numberline {5.14}{\ignorespaces Test Case User Profile Management}}{100}{table.caption.118}%
-\contentsline {table}{\numberline {5.15}{\ignorespaces Test Case Image Attachment}}{100}{table.caption.119}%
-\contentsline {table}{\numberline {5.16}{\ignorespaces Test Case Analytics Dashboard}}{101}{table.caption.120}%
-\contentsline {table}{\numberline {5.17}{\ignorespaces Test Case Social Authentication}}{101}{table.caption.121}%
-\contentsline {table}{\numberline {5.18}{\ignorespaces Test Case Theme Switching}}{102}{table.caption.122}%
-\contentsline {table}{\numberline {5.19}{\ignorespaces Test Case Performance Testing}}{102}{table.caption.123}%
-\contentsline {table}{\numberline {5.20}{\ignorespaces Test Case Security Testing}}{103}{table.caption.124}%
-\contentsline {table}{\numberline {5.21}{\ignorespaces Test Case Usability Testing}}{103}{table.caption.125}%
-\contentsline {table}{\numberline {5.22}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{104}{table.caption.126}%
-\contentsline {table}{\numberline {5.23}{\ignorespaces Rating Scale for Usability Evaluation}}{104}{table.caption.127}%
-\contentsline {table}{\numberline {5.24}{\ignorespaces Summary of Usability Testing Results}}{110}{table.caption.138}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Risks and Contingencies for Collective Mobile Journaling Application Testing}}{94}{table.caption.110}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Hardware Requirements for Collective Mobile App Testing}}{95}{table.caption.111}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Software Requirements for Collective Mobile App Testing}}{96}{table.caption.112}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Testing Group for Collective Mobile Journaling Application}}{97}{table.caption.113}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Test Case Login Authentication}}{100}{table.caption.114}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces Test Case Registration}}{101}{table.caption.115}%
+\contentsline {table}{\numberline {5.7}{\ignorespaces Test Case Journal Entry Creation}}{101}{table.caption.116}%
+\contentsline {table}{\numberline {5.8}{\ignorespaces Test Case Journal Entry Editing}}{102}{table.caption.117}%
+\contentsline {table}{\numberline {5.9}{\ignorespaces Test Case AI Insights Generation}}{102}{table.caption.118}%
+\contentsline {table}{\numberline {5.10}{\ignorespaces Test Case Offline Functionality}}{103}{table.caption.119}%
+\contentsline {table}{\numberline {5.11}{\ignorespaces Test Case Data Synchronization}}{103}{table.caption.120}%
+\contentsline {table}{\numberline {5.12}{\ignorespaces Test Case Search Functionality}}{104}{table.caption.121}%
+\contentsline {table}{\numberline {5.13}{\ignorespaces Test Case Bookmark Management}}{104}{table.caption.122}%
+\contentsline {table}{\numberline {5.14}{\ignorespaces Test Case User Profile Management}}{105}{table.caption.123}%
+\contentsline {table}{\numberline {5.15}{\ignorespaces Test Case Image Attachment}}{105}{table.caption.124}%
+\contentsline {table}{\numberline {5.16}{\ignorespaces Test Case Analytics Dashboard}}{106}{table.caption.125}%
+\contentsline {table}{\numberline {5.17}{\ignorespaces Test Case Social Authentication}}{106}{table.caption.126}%
+\contentsline {table}{\numberline {5.18}{\ignorespaces Test Case Theme Switching}}{107}{table.caption.127}%
+\contentsline {table}{\numberline {5.19}{\ignorespaces Test Case Performance Testing}}{107}{table.caption.128}%
+\contentsline {table}{\numberline {5.20}{\ignorespaces Test Case Security Testing}}{108}{table.caption.129}%
+\contentsline {table}{\numberline {5.21}{\ignorespaces Test Case Usability Testing}}{108}{table.caption.130}%
+\contentsline {table}{\numberline {5.22}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{109}{table.caption.131}%
+\contentsline {table}{\numberline {5.23}{\ignorespaces Rating Scale for Usability Evaluation}}{109}{table.caption.132}%
+\contentsline {table}{\numberline {5.24}{\ignorespaces Summary of Usability Testing Results}}{115}{table.caption.143}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {1}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{122}{table.caption.147}%
-\contentsline {table}{\numberline {2}{\ignorespaces Rating Scale for Usability Evaluation Form}}{123}{table.caption.149}%
+\contentsline {table}{\numberline {1}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{127}{table.caption.152}%
+\contentsline {table}{\numberline {2}{\ignorespaces Rating Scale for Usability Evaluation Form}}{128}{table.caption.154}%

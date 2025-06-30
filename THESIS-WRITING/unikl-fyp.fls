@@ -710,6 +710,11 @@ OUTPUT files/chProtoDevelop.aux
 INPUT ./files/chProtoDevelop.tex
 INPUT ./files/chProtoDevelop.tex
 INPUT files/chProtoDevelop.tex
+INPUT ./files/imgs/mermaid_diagram.png
+INPUT ./files/imgs/mermaid_diagram.png
+INPUT ./files/imgs/mermaid_diagram.png
+INPUT ./files/imgs/mermaid_diagram.png
+INPUT ./files/imgs/mermaid_diagram.png
 INPUT ./files/imgs/prototype/auth_login.jpeg
 INPUT ./files/imgs/prototype/auth_login.jpeg
 INPUT ./files/imgs/prototype/auth_login.jpeg
