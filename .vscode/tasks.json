@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build JTEC Paper",
+			"type": "shell",
+			"command": "pdflatex",
+			"args": [
+				"-interaction=nonstopmode",
+				"main.tex"
+			],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [
+				"$latex"
+			]
+		}
+	]
+}
