@@ -1,9 +1,9 @@
 \contentsline {chapter}{Acknowledgements}{v}{chapter*.1}%
 \contentsline {chapter}{List of Tables}{x}{chapter*.2}%
 \contentsline {chapter}{List of Figures}{xii}{chapter*.3}%
-\contentsline {chapter}{List of Abbreviations}{xiv}{chapter*.5}%
-\contentsline {chapter}{Abstract (English)}{xv}{chapter*.5}%
-\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{xvi}{chapter*.5}%
+\contentsline {chapter}{List of Abbreviations}{xv}{chapter*.5}%
+\contentsline {chapter}{Abstract (English)}{xvi}{chapter*.5}%
+\contentsline {chapter}{Abstrak(Bahasa Malaysia)}{xvii}{chapter*.5}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Introduction}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Project Background}{2}{section.1.2}%
@@ -132,6 +132,5 @@
 \contentsline {subsection}{\numberline {6.3.4}Security and Privacy Enhancements}{116}{subsection.6.3.4}%
 \contentsline {section}{\numberline {6.4}Conclusion}{116}{section.6.4}%
 \contentsline {chapter}{References}{118}{section.6.4}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{120}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{120}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{121}{appendix.B}%
+\contentsline {chapter}{Appendix A}{120}{appendix*.140}%
+\contentsline {chapter}{Appendix B}{122}{appendix*.144}%
