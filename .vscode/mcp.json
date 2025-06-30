@@ -6,6 +6,16 @@
             "args": [
                 "C:\\Users\\Administrator\\uml-mcp-server\\uml_mcp_server.py"
             ]
+        },
+        "mcp-mermaid": {
+            "type": "stdio",
+            "command": "cmd",
+            "args": [
+                "/c",
+                "npx",
+                "-y",
+                "mcp-mermaid"
+            ]
         }
     }
 }
