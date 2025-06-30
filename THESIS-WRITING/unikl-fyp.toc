@@ -107,7 +107,13 @@
 \contentsline {section}{\numberline {5.3}Test Process}{87}{section.5.3}%
 \contentsline {subsection}{\numberline {5.3.1}Risk and Contingencies}{88}{subsection.5.3.1}%
 \contentsline {subsection}{\numberline {5.3.2}Test Environment}{90}{subsection.5.3.2}%
-\contentsline {chapter}{References}{93}{table.caption.105}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{95}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{95}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{96}{appendix.B}%
+\contentsline {section}{\numberline {5.4}Testing Plan and Testing Approach}{92}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Testing Approach}{92}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Unit Testing}{93}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Integration Testing}{93}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}System Testing}{93}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}User Acceptance Testing}{94}{subsection.5.4.5}%
+\contentsline {chapter}{References}{104}{table.caption.122}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{106}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{106}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{107}{appendix.B}%

@@ -184,3 +184,560 @@ Integration Testing & WAN AMINNUR RASHEED \\
 \hline
 \end{tabular}
 \end{table}
+
+\section{Testing Plan and Testing Approach}\label{sec:testingPlan}
+
+In software development, testing is crucial to ensure the system meets client requirements and functions correctly. This section outlines the tests conducted for the Collective mobile journaling application, including unit testing, integration testing, system testing, and user acceptance testing.
+
+\subsection{Testing Approach}\label{sec:testingApproach}
+
+In this testing planning, there are two types of test approaches that are used:
+
+\textbf{i. Preventive Approach:} A quick design check approach test was employed to swiftly review the design. At the outset of development, user requirements were gathered, identified, and scrutinized to eliminate any ambiguities in the system requirements. This approach ensures that potential issues are identified and resolved during the design phase before implementation begins.
+
+\textbf{ii. Reactive Approach:} After programming, a concept test is conducted to assess the system's functionality. This test involves executing the code to ensure that the Collective mobile journaling application functions correctly across different Android devices and usage scenarios.
+
+\subsection{Unit Testing}\label{sec:unitTesting}
+
+Unit testing for the Collective mobile journaling application will be split into two phases. The first phase will encompass the initial 60\% of module development, addressing core features such as user authentication, journal entry creation, local database storage, and basic AI integration. The second phase will cover the remaining 40\% of module development, encompassing advanced features including offline synchronization, analytics dashboard, bookmark management, and enhanced AI insights functionality.
+
+\subsection{Integration Testing}\label{sec:integrationTesting}
+
+Integration testing assesses the integration of modules with one another within the Collective mobile journaling application. This involves checking modules such as Firebase authentication for integration with local Sembast database storage, ensuring they successfully link with cloud services and AI APIs without errors. The testing reviews all components to ensure seamless integration between the Flutter frontend, Firebase backend services, DeepSeek AI API, and local storage systems. Key integration points include user authentication flow, data synchronization between local and cloud storage, AI service connectivity, and image attachment processing.
+
+\subsection{System Testing}\label{sec:systemTesting}
+
+System testing aims to uncover defects that are only evident when testing the entire integrated Collective mobile journaling application or a significant portion of it. While it typically addresses performance, security, and validation concerns, this project primarily focuses on functional validation, efficiency, and load testing across different Android devices. The testing will ensure each component behaves as intended, including verifying that user interface elements respond correctly to touch interactions, data entry functions work seamlessly, and AI-powered insights generate accurately. Additionally, it will assess the interaction between the mobile interface and both local and cloud databases, ensuring data processing yields the expected outcomes, synchronization works correctly, and retrieved information is accurate across online and offline scenarios.
+
+\subsection{User Acceptance Testing}\label{sec:userAcceptanceTesting}
+
+User acceptance testing for the Collective mobile journaling application involves comprehensive validation with target users to ensure the application meets their journaling needs and expectations. The primary objective is to verify that the application successfully provides a simplified, distraction-free digital journaling experience that bridges traditional and digital journaling approaches. The testing focuses on real-world usage scenarios, enabling users to verify that the application meets their requirements for daily journaling, AI-powered insights, and seamless user experience.
+
+Test cases are developed from user acceptance criteria and business use cases to thoroughly evaluate and validate the application before final acceptance and deployment. They focus on real-life scenarios such as daily journal entry creation, mood tracking, image attachment, AI insights generation, and offline usage patterns. The application has been designed to meet typical journaling requirements with potential for further enhancements based on user feedback. The details of the test cases are shown in tables~\ref{tab:test-case-login} through~\ref{tab:test-case-usability}.
+
+\begin{table}[H]
+\centering
+\caption{Test Case Login Authentication}
+\label{tab:test-case-login}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC01 \\
+\hline
+\textbf{Test Case Name} & Login Authentication \\
+\hline
+\textbf{Test Case Details} & To test the Login module to verify user authentication functionality for the Collective mobile journaling application. Users login to gain access to journaling features and personal data. It will authenticate users and redirect to the main journal interface. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Email/password login, Google authentication, Twitter/X authentication \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users fill the login details (email, password) or select social login & 1. Display login form with email/password fields and social login options. \newline 2. Display error notification if credentials are invalid. \newline 3. If credentials are valid, authenticate user and redirect to main journal interface. \newline 4. For social login, redirect to respective OAuth provider and return with authentication. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to login screen. \newline 2. Users select authentication method (email/password, Google, or Twitter/X). \newline 3. Users fill up the login form or complete social authentication. \newline 4. Users tap the login button or confirm social login. \newline 5. If invalid credentials, display error and return to step 2. \newline 6. User successfully logs into the Collective application and accesses journal interface.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Registration}
+\label{tab:test-case-registration}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC02 \\
+\hline
+\textbf{Test Case Name} & User Registration \\
+\hline
+\textbf{Test Case Details} & To test the registration module for new users to create accounts in the Collective mobile journaling application. Users provide necessary information to create their journaling account. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Email registration, password validation, account creation, Firebase user creation \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users fill registration form (email, password, confirm password) & 1. Display registration form with required fields. \newline 2. Validate email format and password strength. \newline 3. Display error if passwords don't match or email exists. \newline 4. Create user account and redirect to journal interface. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to registration screen. \newline 2. Users fill in email and password fields. \newline 3. Users confirm password in confirmation field. \newline 4. Users tap register button. \newline 5. If validation fails, display error and return to step 2. \newline 6. User account successfully created and user is logged in.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Journal Entry Creation}
+\label{tab:test-case-journal-creation}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC03 \\
+\hline
+\textbf{Test Case Name} & Journal Entry Creation \\
+\hline
+\textbf{Test Case Details} & To test the core functionality of creating new journal entries with text content, mood selection, and optional image attachments. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Text input, mood selection, image attachment, save functionality, local storage \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users write journal text, select mood, optionally attach image & 1. Display clean writing interface. \newline 2. Accept text input and mood selection. \newline 3. Allow image attachment from gallery or camera. \newline 4. Save entry to local database and sync to cloud. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to new entry screen. \newline 2. Users type journal content in text field. \newline 3. Users select mood from available options. \newline 4. Users optionally attach image via camera or gallery. \newline 5. Users tap save button. \newline 6. Entry is saved locally and queued for cloud sync.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Journal Entry Editing}
+\label{tab:test-case-journal-editing}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC04 \\
+\hline
+\textbf{Test Case Name} & Journal Entry Editing \\
+\hline
+\textbf{Test Case Details} & To test the ability to edit existing journal entries, modify content, mood, and manage image attachments. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Edit text content, mood modification, image replacement, update functionality \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users modify existing entry content, mood, or images & 1. Load existing entry data into edit form. \newline 2. Allow modification of text, mood, and images. \newline 3. Preserve original data if user cancels. \newline 4. Update entry in local and cloud storage. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Select existing journal entry from list. \newline 2. Tap edit button to enter edit mode. \newline 3. Modify text content, mood, or images as needed. \newline 4. Tap save to confirm changes or cancel to discard. \newline 5. Updated entry is saved and synchronized.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case AI Insights Generation}
+\label{tab:test-case-ai-insights}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC05 \\
+\hline
+\textbf{Test Case Name} & AI Insights Generation \\
+\hline
+\textbf{Test Case Details} & To test the AI-powered analysis functionality that generates insights, patterns, and suggestions based on journal entries using DeepSeek API. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & DeepSeek API integration, insight generation, pattern analysis, recommendation display \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users request AI insights for journal entries & 1. Analyze journal content using DeepSeek API. \newline 2. Generate meaningful insights and patterns. \newline 3. Display insights in user-friendly format. \newline 4. Handle API failures gracefully with fallback messages. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to insights or analytics section. \newline 2. Select entries or time period for analysis. \newline 3. Tap generate insights button. \newline 4. System processes entries through AI service. \newline 5. Display generated insights, patterns, and recommendations.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Offline Functionality}
+\label{tab:test-case-offline}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC06 \\
+\hline
+\textbf{Test Case Name} & Offline Functionality \\
+\hline
+\textbf{Test Case Details} & To test the application's ability to function without internet connectivity, including creating, editing, and viewing journal entries offline. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Offline data storage, local database operations, sync queue management, connectivity detection \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users perform journaling activities without internet connection & 1. Detect offline status and display indicator. \newline 2. Allow full functionality using local database. \newline 3. Queue changes for synchronization when online. \newline 4. Maintain data integrity across offline/online transitions. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Disable internet connectivity on device. \newline 2. Open Collective application. \newline 3. Create, edit, and view journal entries. \newline 4. Verify all functions work with local data. \newline 5. Re-enable connectivity and verify sync operation.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Data Synchronization}
+\label{tab:test-case-sync}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC07 \\
+\hline
+\textbf{Test Case Name} & Data Synchronization \\
+\hline
+\textbf{Test Case Details} & To test the synchronization of journal entries between local storage and Firebase cloud storage, ensuring data consistency across devices. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Firebase Firestore sync, conflict resolution, bidirectional sync, data integrity \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users create/modify entries offline and come back online & 1. Detect connectivity restoration. \newline 2. Upload local changes to Firebase. \newline 3. Download remote changes to local storage. \newline 4. Resolve conflicts appropriately and maintain data integrity. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Create entries while offline. \newline 2. Restore internet connectivity. \newline 3. Observe automatic synchronization process. \newline 4. Verify entries appear in Firebase console. \newline 5. Test conflict resolution with simultaneous changes.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Search Functionality}
+\label{tab:test-case-search}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC08 \\
+\hline
+\textbf{Test Case Name} & Search Functionality \\
+\hline
+\textbf{Test Case Details} & To test the search and filtering capabilities for finding specific journal entries based on content, date, mood, or tags. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Text search, date filtering, mood filtering, tag search, search performance \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users enter search terms or apply filters to find entries & 1. Display search interface with filter options. \newline 2. Process search queries efficiently. \newline 3. Return relevant results ranked by relevance. \newline 4. Handle empty results gracefully. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to search interface. \newline 2. Enter search terms or select filters (date, mood, tags). \newline 3. Tap search button or apply filters. \newline 4. Review search results. \newline 5. Tap on result to open specific entry.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Bookmark Management}
+\label{tab:test-case-bookmark}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC09 \\
+\hline
+\textbf{Test Case Name} & Bookmark Management \\
+\hline
+\textbf{Test Case Details} & To test the ability to bookmark important journal entries for quick access and manage favorite entries collection. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Add/remove bookmarks, bookmark persistence, favorites view, bookmark synchronization \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users bookmark and manage favorite journal entries & 1. Allow bookmarking of entries with visual indicator. \newline 2. Provide dedicated favorites/bookmarks view. \newline 3. Persist bookmark status across sessions. \newline 4. Synchronize bookmarks across devices. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. View journal entry and tap bookmark icon. \newline 2. Verify bookmark indicator changes state. \newline 3. Navigate to bookmarks/favorites section. \newline 4. Verify bookmarked entry appears in list. \newline 5. Test removing bookmark and verify removal.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case User Profile Management}
+\label{tab:test-case-profile}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC10 \\
+\hline
+\textbf{Test Case Name} & User Profile Management \\
+\hline
+\textbf{Test Case Details} & To test user profile creation, updates, and management including preferences, settings, and account information. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Profile creation, information updates, preferences settings, account management \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users access and modify profile information and settings & 1. Display current profile information. \newline 2. Allow editing of modifiable fields. \newline 3. Validate input data and save changes. \newline 4. Update profile across all app sections. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to profile/settings screen. \newline 2. View current profile information. \newline 3. Modify user preferences and settings. \newline 4. Save changes and verify updates. \newline 5. Test settings persistence across app sessions.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Image Attachment}
+\label{tab:test-case-image}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC11 \\
+\hline
+\textbf{Test Case Name} & Image Attachment \\
+\hline
+\textbf{Test Case Details} & To test the functionality of attaching, viewing, and managing images within journal entries from camera or gallery sources. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Camera capture, gallery selection, image compression, storage management, image display \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users attach images from camera or gallery to journal entries & 1. Provide options for camera capture or gallery selection. \newline 2. Compress images appropriately for storage efficiency. \newline 3. Display attached images within journal entries. \newline 4. Store images locally and sync to Firebase Storage. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Create new journal entry or edit existing entry. \newline 2. Tap image attachment button. \newline 3. Select camera or gallery option. \newline 4. Capture photo or select from gallery. \newline 5. Confirm image attachment and save entry. \newline 6. Verify image appears in journal entry and syncs to cloud.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Analytics Dashboard}
+\label{tab:test-case-analytics}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC12 \\
+\hline
+\textbf{Test Case Name} & Analytics Dashboard \\
+\hline
+\textbf{Test Case Details} & To test the analytics and insights dashboard that displays journaling patterns, mood trends, and writing statistics over time. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Mood analytics, writing frequency charts, pattern visualization, statistical calculations \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users view analytics dashboard to understand their journaling patterns & 1. Display comprehensive analytics interface. \newline 2. Show mood trends over selected time periods. \newline 3. Present writing frequency and word count statistics. \newline 4. Generate visual charts and insights. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to analytics or insights section. \newline 2. Select time period for analysis (week, month, year). \newline 3. View mood trend charts and patterns. \newline 4. Review writing frequency and statistics. \newline 5. Interact with charts for detailed information.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Social Authentication}
+\label{tab:test-case-social-auth}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC13 \\
+\hline
+\textbf{Test Case Name} & Social Authentication \\
+\hline
+\textbf{Test Case Details} & To test Google and Twitter/X OAuth authentication integration for seamless user login and account creation. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Google Sign-In, Twitter/X OAuth, account linking, profile data retrieval \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users authenticate using Google or Twitter/X accounts & 1. Display social login options on authentication screen. \newline 2. Redirect to respective OAuth provider. \newline 3. Handle authentication callback and token exchange. \newline 4. Create or link user account and redirect to app. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to login screen. \newline 2. Select Google or Twitter/X authentication option. \newline 3. Complete OAuth flow with chosen provider. \newline 4. Authorize app permissions. \newline 5. Return to app with authenticated session. \newline 6. Verify profile data and app access.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Theme Switching}
+\label{tab:test-case-theme}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Functional Testing \\
+\hline
+\textbf{Test Case ID} & TC14 \\
+\hline
+\textbf{Test Case Name} & Theme Switching \\
+\hline
+\textbf{Test Case Details} & To test the light/dark theme switching functionality and system theme detection for optimal user experience. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Light theme, dark theme, system theme detection, theme persistence \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users switch between light, dark, and system themes & 1. Provide theme selection options in settings. \newline 2. Apply chosen theme across all app screens. \newline 3. Detect and follow system theme changes. \newline 4. Persist theme choice across app sessions. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Navigate to app settings or theme preferences. \newline 2. Select theme option (light, dark, or system). \newline 3. Verify theme applies immediately across app. \newline 4. Test system theme detection by changing device theme. \newline 5. Restart app and verify theme persistence.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Performance Testing}
+\label{tab:test-case-performance}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Performance Testing \\
+\hline
+\textbf{Test Case ID} & TC15 \\
+\hline
+\textbf{Test Case Name} & Performance Testing \\
+\hline
+\textbf{Test Case Details} & To test the application's performance under various load conditions including large datasets, memory usage, and response times. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & App startup time, data loading performance, memory usage, battery consumption, response times \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Test app performance with varying data loads and usage patterns & 1. Measure app startup and screen transition times. \newline 2. Monitor memory usage during intensive operations. \newline 3. Test performance with large journal datasets. \newline 4. Evaluate battery consumption during extended use. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Create large dataset of journal entries (1000+ entries). \newline 2. Measure app startup time and memory footprint. \newline 3. Test scrolling performance through large lists. \newline 4. Monitor CPU and battery usage during AI processing. \newline 5. Verify smooth animations and transitions.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Security Testing}
+\label{tab:test-case-security}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Security Testing \\
+\hline
+\textbf{Test Case ID} & TC16 \\
+\hline
+\textbf{Test Case Name} & Security Testing \\
+\hline
+\textbf{Test Case Details} & To test the security measures including data encryption, authentication security, and protection of sensitive user information. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & Data encryption, secure authentication, API security, local data protection \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Verify security measures protect user data and prevent unauthorized access & 1. Ensure journal data is encrypted in local storage. \newline 2. Verify secure transmission to Firebase. \newline 3. Test authentication token security. \newline 4. Validate API key protection and rate limiting. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Inspect local database encryption. \newline 2. Monitor network traffic for secure HTTPS connections. \newline 3. Test session timeout and re-authentication. \newline 4. Verify Firebase security rules prevent unauthorized access. \newline 5. Test API key security and rate limiting mechanisms.} \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Test Case Usability Testing}
+\label{tab:test-case-usability}
+\begin{tabular}{|p{4cm}|p{10cm}|}
+\hline
+\textbf{Test Type} & Black box Testing – Usability Testing \\
+\hline
+\textbf{Test Case ID} & TC17 \\
+\hline
+\textbf{Test Case Name} & Usability Testing \\
+\hline
+\textbf{Test Case Details} & To evaluate the user experience, interface design, and ease of use through structured user testing sessions and feedback collection. \\
+\hline
+\textbf{Tested By} & WAN AMINNUR RASHEED \\
+\hline
+\textbf{Item(s) that will be tested} & User interface design, navigation flow, accessibility, user satisfaction, task completion rates \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Specifications}} \\
+\hline
+\textbf{Input Step(s)} & \textbf{Expected Output} \\
+\hline
+Users complete typical journaling tasks while providing feedback & 1. Achieve high task completion rates (>85\%). \newline 2. Gather positive user satisfaction ratings. \newline 3. Identify and address usability issues. \newline 4. Validate intuitive interface design and navigation. \\
+\hline
+\multicolumn{2}{|l|}{\textbf{Procedural Steps}} \\
+\hline
+\multicolumn{2}{|p{14cm}|}{1. Recruit target users for testing sessions. \newline 2. Provide users with common journaling tasks. \newline 3. Observe user interactions and note difficulties. \newline 4. Collect feedback through surveys and interviews. \newline 5. Analyze results and implement improvements. \newline 6. Conduct follow-up testing to validate changes.} \\
+\hline
+\end{tabular}
+\end{table}
