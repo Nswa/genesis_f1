@@ -5,24 +5,29 @@ Allahyari, M., Pouriyeh, S., Assefi, M., Safaei, S., Trippe, E.~D., Gutierrez, J
 \newblock Text summarization techniques: A brief survey.
 \newblock {\em International Journal of Advanced Computer Science and Applications}, 8(10):397--405.
 
-\bibitem[Chung and Pennebaker, 2011]{chung2011expressive}
-Chung, C.~K. and Pennebaker, J.~W. (2011).
-\newblock Expressive writing: Connections to physical and mental health.
-\newblock {\em Oxford handbook of health psychology}, pages 417--437.
-
-\bibitem[Moore and Cain, 2015]{moore2015notetaking}
-Moore, E. and Cain, J. (2015).
-\newblock Note-taking and handouts in the digital age.
-\newblock {\em American Journal of Pharmaceutical Education}, 79(7):107.
+\bibitem[Frazier and Eick, 2015]{Frazier2015}
+Frazier, L.~C. and Eick, C. (2015).
+\newblock Approaches to critical reflection: Written and video journaling.
+\newblock {\em Reflective Practice}, 16(5):575--594.
 
 \bibitem[Mueller and Oppenheimer, 2014]{mueller2014pen}
 Mueller, P.~A. and Oppenheimer, D.~M. (2014).
 \newblock The pen is mightier than the keyboard: Advantages of longhand over laptop note-taking.
 \newblock {\em Psychological Science}, 25(6):1159--1168.
 
+\bibitem[Pennebaker and Chung, 2011]{pennebaker2011expressive}
+Pennebaker, J.~W. and Chung, C.~K. (2011).
+\newblock Expressive writing: Connections to physical and mental health.
+\newblock {\em Oxford handbook of health psychology}, pages 417--437.
+
 \bibitem[Pennebaker and Seagal, 1999]{pennebaker1999forming}
 Pennebaker, J.~W. and Seagal, J.~D. (1999).
 \newblock Forming a story: The health benefits of narrative.
 \newblock {\em Journal of Clinical Psychology}, 55(10):1243--1254.
+
+\bibitem[Sweller, 1988]{sweller1988cognitive}
+Sweller, J. (1988).
+\newblock Cognitive load during problem solving: Effects on learning.
+\newblock {\em Cognitive Science}, 12(2):257--285.
 
 \end{thebibliography}
