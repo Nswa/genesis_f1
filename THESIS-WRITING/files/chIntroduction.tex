@@ -7,9 +7,9 @@ Journaling has served as a fundamental practice for personal development, emotio
 
 The digital era introduces both opportunities and challenges for journaling practices. While digital platforms provide benefits like searchability, data backup, and organizational tools, these advantages often compromise the simplicity users value. Current applications frequently present complex interfaces and feature saturation, creating cognitive burden and leading to discontinued practices.
 
-Natural language processing technologies present opportunities to address this gap. Contemporary applications can deliver digital benefits while preserving core simplicity by providing AI-powered insights through dedicated interfaces rather than overwhelming the primary writing experience.
+Natural language processing technologies present opportunities to address this gap. Contemporary applications can deliver digital benefits while preserving core simplicity by providing automated insights through dedicated interfaces rather than overwhelming the primary writing experience.
 
-\textbf{Collective} demonstrates a modified approach to digital journaling design. Rather than increasing complexity, this project emphasizes preserving traditional simplicity while providing user-led, AI-supported analysis through dedicated screens. The application maintains a focused writing interface with straightforward gestures while offering separate analytics and insight screens where users can trigger AI analysis for emotional pattern recognition, categorization, and summary generation when desired.
+\textbf{Collective} demonstrates a modified approach to digital journaling design. Rather than increasing complexity, this project emphasizes preserving traditional simplicity while providing user-led analysis through dedicated screens. The application maintains a focused writing interface with straightforward gestures while offering separate analytics and insight screens where users can initiate automated analysis for emotional pattern recognition, categorization, and summary generation when desired.
 
 This implementation addresses both technical challenges in content organization and psychological barriers preventing consistent journaling. By separating the writing experience from analytical features, users can concentrate on the reflective and therapeutic aspects during writing while accessing insights through complementary dedicated interfaces.
 
@@ -21,11 +21,11 @@ Despite these advancements, many digital tools fail to address critical user cha
 
 The emergence of Artificial Intelligence (AI) and Natural Language Processing (NLP) technologies presents promising solutions to these challenges. NLP models can revolutionize digital journaling through automated text summarization, sentiment analysis, and pattern recognition. Text summarization condenses lengthy entries into concise overviews, enabling users to quickly grasp their reflections without rereading entire entries.
 
-Building on these developments, this study introduces \textbf{Collective}, a mobile journaling application that integrates AI-powered analysis capabilities. The application operates with a focused interface where users write entries naturally, and can access AI-generated insights through dedicated screens when desired. Unlike complex real-time processing systems, Collective uses simple API calls to generate insights on-demand, maintaining traditional simplicity while providing digital benefits.
+Building on these developments, this study introduces \textbf{Collective}, a mobile journaling application that integrates automated analysis capabilities. The application operates with a focused interface where users write entries naturally, and can access machine-generated insights through dedicated screens when desired. Unlike complex real-time processing systems, Collective uses simple API calls to generate insights on-demand, maintaining traditional simplicity while providing digital benefits.
 
-Research shows that accessible AI analysis can improve user engagement and self-awareness in digital platforms. In journaling contexts, this supports greater self-reflection by helping users identify patterns in their writing over time. Individuals tracking mental health can trigger AI analysis to detect emotional trends and patterns when they choose to explore their entries further.
+Research shows that accessible automated analysis can improve user engagement and self-awareness in digital platforms. In journaling contexts, this supports greater self-reflection by helping users identify patterns in their writing over time. Individuals tracking mental health can invoke these analytical features to detect emotional trends and patterns when they choose to explore their entries further.
 
-The integration of on-demand AI processing represents an important development in addressing unmet user needs. By combining traditional journaling benefits with accessible AI technologies, Collective simplifies journaling while enriching it with complementary organization and insights.
+The integration of on-demand processing represents an important development in addressing unmet user needs. By combining traditional journaling benefits with accessible machine learning technologies, Collective simplifies journaling while enriching it with complementary organization and insights.
 
 \section{Problem Statement}\label{sec:problem}
 
@@ -45,7 +45,7 @@ The proliferation of features often transforms a simple, meditative practice int
 
 \subsection{Lack of Intelligent Organization and Insights}\label{subsec:lack-intelligence}
 
-Current digital journaling platforms typically require manual organization and categorization, placing additional burden on users. The absence of intelligent features like automatic summarization, emotional pattern recognition, or thematic categorization means users must invest significant time organizing their thoughts retrospectively.
+Current digital journaling platforms typically require manual organization and categorization, placing additional burden on users. The absence of automated features like text summarization, emotional pattern recognition, or thematic categorization means users must invest significant time organizing their thoughts retrospectively.
 
 Research by Baikadi et al. (2016) shows users struggle with organizing and retrieving specific information from extensive entries over time \cite{baikadi2016exploring}. This manual approach often results in inconsistent categorization, missed patterns, and reduced ability to gain meaningful insights from accumulated entries. The lack of automated analysis capabilities represents a missed opportunity to improve journaling's therapeutic and developmental benefits \cite{allahyari2017text}.
 
@@ -64,9 +64,9 @@ The objectives of this project are divided into two categories - research object
 \begin{enumerate}
 	\item To investigate the principles of effective journaling practices and analyze how artificial intelligence technologies can enhance the process by providing on-demand processing of entries, generating insights, and identifying emotional and behavioral patterns to provide actionable self-awareness.
 	
-	\item To design and develop \textbf{Collective}, a mobile application that enables users to create and manage journal entries through a focused interface, integrating AI technologies for triggered analysis of content, pattern recognition, and organization when users access dedicated insight screens.
+	\item To design and develop \textbf{Collective}, a mobile application that enables users to create and manage journal entries through a focused interface, integrating AI technologies for user-initiated analysis of content, pattern recognition, and organization when users access dedicated insight screens.
 	
-	\item To evaluate \textbf{Collective} through comprehensive usability testing and user experience research, collecting quantitative and qualitative feedback to measure user satisfaction, engagement levels, and the effectiveness of on-demand AI features in enhancing the journaling experience.
+	\item To evaluate \textbf{Collective} through comprehensive usability testing and user experience research, collecting quantitative and qualitative feedback to measure user satisfaction, engagement levels, and the effectiveness of on-demand analytical features in enhancing the journaling experience.
 \end{enumerate}
 
 \subsection{Project Objectives}\label{subsec:project-objectives}
@@ -76,9 +76,9 @@ The objectives of this project are divided into two categories - research object
 	
 	\item To create a streamlined mobile journaling platform that allows users to write and save journal entries through an intuitive interface featuring an easily accessible save button and distraction-free writing environment.
 	
-	\item To develop automatic content processing capabilities using natural language processing algorithms to analyze journal entries for emotional sentiment, thematic categorization, and pattern identification when triggered by user requests for insights.
+	\item To develop automatic content processing capabilities using natural language processing algorithms to analyze journal entries for emotional sentiment, thematic categorization, and pattern identification when invoked by user requests for insights.
 	
-	\item To implement intelligent organization features that categorize and tag journal entries based on content analysis through AI-powered topic clustering and emotional pattern recognition accessible via dedicated analytics screens.
+	\item To implement automated organization features that categorize and tag journal entries based on content analysis through machine learning topic clustering and emotional pattern recognition accessible via dedicated analytics screens.
 	
 	\item To integrate summarization functionality that generates concise overviews of individual entries and periodic summaries of journaling patterns and themes through on-demand API-based processing.
 	
@@ -95,7 +95,7 @@ The objectives of this project are divided into two categories - research object
 
 \section{Project Scope}\label{sec:scope}
 
-The scope of \textbf{Collective} encompasses the development of a comprehensive mobile journaling solution with intelligent AI integration. The project boundaries and included features are defined as follows:
+The scope of \textbf{Collective} encompasses the development of a comprehensive mobile journaling solution with AI integration. The project boundaries and included features are defined as follows:
 
 \subsection{Included Features}\label{subsec:included-features}
 
@@ -106,9 +106,9 @@ The scope of \textbf{Collective} encompasses the development of a comprehensive 
 	
 	\item \textbf{Intelligent Content Processing:} Integration of natural language processing capabilities through DeepSeek API to analyze journal entries for emotional content, thematic categorization, and pattern identification when users access dedicated analytics or insight screens.
 	
-	\item \textbf{On-Demand Organization and Tagging:} Implementation of AI-driven categorization system that organizes entries based on content analysis, mood detection, and thematic similarities when triggered through the analytics interface to facilitate easy retrieval and pattern recognition.
+	\item \textbf{On-Demand Organization and Tagging:} Implementation of automated categorization system that organizes entries based on content analysis, mood detection, and thematic similarities when activated through the analytics interface to facilitate easy retrieval and pattern recognition.
 	
-	\item \textbf{Triggered Summarization:} Development of on-demand summary generation for individual entries and periodic overviews that help users quickly review their journaling history and identify significant themes or changes when accessing insight screens.
+	\item \textbf{Summarization:} Development of on-demand summary generation for individual entries and periodic overviews that help users quickly review their journaling history and identify significant themes or changes when accessing insight screens.
 	
 	\item \textbf{Cross-Platform Compatibility:} Creation of a Flutter-based mobile application that functions consistently across iOS and Android platforms, ensuring broad accessibility and user reach.
 	
@@ -116,7 +116,7 @@ The scope of \textbf{Collective} encompasses the development of a comprehensive 
 	
 	\item \textbf{Data Security and Privacy:} Integration of encryption for data storage and transmission, ensuring user privacy and compliance with data protection standards while providing cloud backup services.
 	
-	\item \textbf{Search and Retrieval Capabilities:} Development of intelligent search functionality that allows users to find specific entries based on content, emotional state, date ranges, or automatically generated categories.
+	\item \textbf{Search and Retrieval Capabilities:} Development of advanced search functionality that allows users to find specific entries based on content, emotional state, date ranges, or automatically generated categories.
 	
 	\item \textbf{Insights and Analytics Dashboard:} Creation of personalized analytics that present emotional trends, writing patterns, and behavioral insights derived from AI analysis of journaling history.
 \end{enumerate}
@@ -132,7 +132,7 @@ The scope of \textbf{Collective} encompasses the development of a comprehensive 
 	
 	\item Integration with external health or wellness platforms is not included in the current scope, though the architecture allows for future expansion.
 	
-	\item Advanced AI features such as predictive text generation or writing assistance are not included, maintaining focus on triggered analysis and organization rather than content creation support.
+	\item Advanced AI features such as predictive text generation or writing assistance are not included, maintaining focus on user-initiated analysis and organization rather than content creation support.
 	
 	\item The project scope includes English language processing primarily, with limited support for multilingual content analysis.
 \end{enumerate}
