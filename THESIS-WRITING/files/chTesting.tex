@@ -38,3 +38,38 @@ Figure~\ref{fig:test-process} illustrates the Test Process approach as follows:
 \caption{Test Process Flow for Collective Mobile Journaling Application}
 \label{fig:test-process}
 \end{figure}
+
+\subsection{Risk and Contingencies}\label{sec:riskContingencies}
+
+Several risk-related issues need to be addressed with contingency during testing as they could lead to major troublesome problems that will affect testing development. There are project and product risks; for product risks, they will be specified in risk-based testing sections, while here are the project risks for the Collective mobile journaling application testing:
+
+\begin{table}[H]
+\centering
+\caption{Risks and Contingencies for Collective Mobile Journaling Application Testing}
+\label{tab:risks-contingencies}
+\begin{tabular}{|p{1cm}|p{4cm}|p{3cm}|p{6cm}|}
+\hline
+\textbf{ID NO} & \textbf{Project Risks} & \textbf{Impact} & \textbf{Contingencies} \\
+\hline
+1 & Unavailability of Android test devices & Unable to run mobile tests and delay testing schedule & Proper planning and preparing checklist to ensure all Android devices are available. If event occurs, use emulators or request additional devices from colleagues. \\
+\hline
+2 & Firebase backend service downtime & Unable to test authentication, cloud sync, and data storage features & Implement local testing environment with mock Firebase services. Schedule tests during stable service hours and have backup testing scenarios. \\
+\hline
+3 & DeepSeek API rate limiting or service unavailability & Cannot test AI-powered insights and analysis features & Implement mock AI responses for testing. Cache previous API responses for test scenarios. Consider alternative AI service testing. \\
+\hline
+4 & Internet connectivity issues & Unable to test online features, cloud synchronization, and API integrations & Focus on offline functionality testing first. Use mobile hotspot as backup connection. Prepare test scenarios for both online and offline modes. \\
+\hline
+5 & Time and resource limitations & Not enough time to complete comprehensive testing across all features & Prioritize critical path testing and core functionalities. Eliminate low-priority test cases. Focus on integration and system testing for essential features. \\
+\hline
+6 & Large number of defects found during integration testing & Unable to proceed with system and user acceptance testing & Implement defect triage system. Fix critical defects first. Parallel testing and development approach for non-blocking issues. \\
+\hline
+7 & Lack of real user data for testing & Test scenarios may not reflect actual usage patterns & Generate realistic test data based on user research. Recruit beta testers for realistic data creation. Use anonymized sample journal entries. \\
+\hline
+8 & Changes in Flutter framework or Firebase SDK versions & Compatibility issues affecting test environment stability & Maintain version control and testing on multiple framework versions. Keep rollback options available. Document version-specific test procedures. \\
+\hline
+9 & Insufficient knowledge of mobile testing tools and methodologies & Delayed testing process and potential test inaccuracy & Consult with mobile development experts and supervisor. Conduct training on Flutter testing frameworks. Research mobile testing best practices. \\
+\hline
+10 & User recruitment challenges for usability testing & Limited or biased feedback for user acceptance and usability evaluation & Expand recruitment channels including social media and university networks. Offer incentives for participation. Use remote testing tools if needed. \\
+\hline
+\end{tabular}
+\end{table}
