@@ -13,3 +13,28 @@ The chapter emphasizes four critical testing methodologies: \textbf{Integration 
 The test plan focuses on identifying and documenting as many bugs as possible to enhance the system's reliability. The \textbf{Collective} mobile journaling application underwent extensive testing through four testing phases: Integration Testing to verify component interactions, System Testing to validate complete functionality, User Acceptance Testing with test cases documented in individual tables, and Usability Testing conducted through structured feedback gathering with respondents as testers.
 
 The application testing focused on crucial operations such as journal entry creation, editing, deletion, user authentication, data synchronization, and AI-powered insights generation. The user interface has been carefully crafted to ensure ease of use, facilitating smooth navigation throughout the journaling experience. Throughout the development process, emphasis has been placed on performance and usability to ensure a seamless journaling experience.
+
+\section{Test Process}\label{sec:testProcess}
+
+Figure~\ref{fig:test-process} illustrates the Test Process approach as follows:
+
+\textbf{i. 60\% development progress:} At this stage, the majority of core features are implemented including Flutter framework setup, Firebase authentication, journal entry creation, AI-powered insights integration, and basic offline functionality. This milestone provides sufficient functionality for initial integration testing.
+
+\textbf{ii. Integration Testing:} With core components developed, integration testing begins to verify that different modules work together seamlessly. This includes testing the integration between Firebase authentication, local database storage with Sembast, AI service connectivity with DeepSeek API, and user interface elements to ensure effective communication between components.
+
+\textbf{iii. 80\% development progress:} Following successful integration testing, development continues with advanced features such as enhanced offline synchronization, media attachment capabilities, analytics dashboard, and bookmark management functionality.
+
+\textbf{iv. System Testing:} At this development milestone, comprehensive system testing evaluates the entire Collective mobile journaling application to verify that all specifications and requirements are met. Both functional and non-functional aspects, such as performance, offline functionality, and data synchronization, are thoroughly tested across different Android devices.
+
+\textbf{v. 95\% development progress:} With system testing completed and major issues resolved, the application reaches near-completion status with all critical features implemented and tested, ready for final user validation.
+
+\textbf{vi. User Acceptance Testing:} At this advanced stage, the system undergoes comprehensive test case validation covering all functional requirements. Individual test cases are documented in dedicated tables to ensure systematic coverage of all system features and user scenarios.
+
+\textbf{vii. Usability Testing:} In this final phase, the nearly complete system undergoes usability evaluation through structured feedback gathering with respondents as testers. The Collective mobile journaling application must demonstrate ease of use and user satisfaction to validate its core objective of providing a simplified, distraction-free digital journaling experience.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{files/imgs/test_process_flow.png}
+\caption{Test Process Flow for Collective Mobile Journaling Application}
+\label{fig:test-process}
+\end{figure}

@@ -104,7 +104,8 @@
 \contentsline {chapter}{\numberline {5}Testing and Result}{86}{chapter.5}%
 \contentsline {section}{\numberline {5.1}Introduction}{86}{section.5.1}%
 \contentsline {section}{\numberline {5.2}Test Objective}{87}{section.5.2}%
-\contentsline {chapter}{References}{88}{section.5.2}%
-\contentsline {chapter}{\numberline {A}Gantt Chart}{90}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Construction of Variables}{90}{section.A.1}%
-\contentsline {chapter}{\numberline {B}Questionnaire Sample}{91}{appendix.B}%
+\contentsline {section}{\numberline {5.3}Test Process}{87}{section.5.3}%
+\contentsline {chapter}{References}{89}{figure.caption.101}%
+\contentsline {chapter}{\numberline {A}Gantt Chart}{91}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Construction of Variables}{91}{section.A.1}%
+\contentsline {chapter}{\numberline {B}Questionnaire Sample}{92}{appendix.B}%
