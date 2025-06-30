@@ -133,15 +133,14 @@
 \contentsline {chapter}{\numberline {6}Conclusions and Suggestions}{116}{chapter.6}%
 \contentsline {section}{\numberline {6.1}Introduction}{116}{section.6.1}%
 \contentsline {section}{\numberline {6.2}Accomplishment}{116}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Core Objectives Achievement}{117}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.1}Core Objectives Achievement}{116}{subsection.6.2.1}%
 \contentsline {subsection}{\numberline {6.2.2}Technical Accomplishments}{117}{subsection.6.2.2}%
 \contentsline {subsection}{\numberline {6.2.3}User Validation Success}{118}{subsection.6.2.3}%
 \contentsline {section}{\numberline {6.3}Recommendation}{118}{section.6.3}%
-\contentsline {subsection}{\numberline {6.3.1}Performance and Technical Enhancements}{119}{subsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.3.1}Performance and Technical Enhancements}{118}{subsection.6.3.1}%
 \contentsline {subsection}{\numberline {6.3.2}Feature Expansion Recommendations}{119}{subsection.6.3.2}%
-\contentsline {subsection}{\numberline {6.3.3}User Experience Improvements}{120}{subsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.3.4}Security and Privacy Enhancements}{120}{subsection.6.3.4}%
-\contentsline {section}{\numberline {6.4}Conclusion}{120}{section.6.4}%
-\contentsline {chapter}{References}{123}{section.6.4}%
-\contentsline {chapter}{Appendix A}{125}{appendix*.145}%
-\contentsline {chapter}{Appendix B}{127}{appendix*.149}%
+\contentsline {subsection}{\numberline {6.3.3}User Experience Improvements}{119}{subsection.6.3.3}%
+\contentsline {section}{\numberline {6.4}Conclusion}{119}{section.6.4}%
+\contentsline {chapter}{References}{121}{section.6.4}%
+\contentsline {chapter}{Appendix A}{123}{appendix*.145}%
+\contentsline {chapter}{Appendix B}{125}{appendix*.149}%
