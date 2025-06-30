@@ -6,11 +6,12 @@ A level-1 auxiliary file: files/chLiteratureReview.aux
 A level-1 auxiliary file: files/chMethodology.aux
 A level-1 auxiliary file: files/chProtoDevelop.aux
 A level-1 auxiliary file: files/chTesting.aux
+A level-1 auxiliary file: files/chConclusions.aux
 The style file: apalike.bst
 Database file #1: bib/thesis.bib
 You've used 7 entries,
             1935 wiz_defined-function locations,
-            531 strings with 5234 characters,
+            532 strings with 5257 characters,
 and the built_in function-call counts, 3098 in all, are:
 = -- 310
 > -- 126
