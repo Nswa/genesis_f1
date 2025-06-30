@@ -1,78 +1,78 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {2.1}{\ignorespaces Comparative Analysis of Digital Journaling Applications}}{14}{table.caption.6}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces Comparative Analysis of Digital Journaling Applications}}{13}{table.caption.6}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Visual Studio Code}}{18}{table.caption.8}%
-\contentsline {table}{\numberline {3.2}{\ignorespaces Flutter}}{18}{table.caption.9}%
-\contentsline {table}{\numberline {3.3}{\ignorespaces Dart}}{19}{table.caption.10}%
-\contentsline {table}{\numberline {3.4}{\ignorespaces Google Chrome}}{19}{table.caption.11}%
-\contentsline {table}{\numberline {3.5}{\ignorespaces Microsoft Word}}{19}{table.caption.12}%
-\contentsline {table}{\numberline {3.6}{\ignorespaces Microsoft Excel}}{19}{table.caption.13}%
-\contentsline {table}{\numberline {3.7}{\ignorespaces Draw.io}}{20}{table.caption.14}%
-\contentsline {table}{\numberline {3.8}{\ignorespaces DeepSeek API}}{20}{table.caption.15}%
-\contentsline {table}{\numberline {3.9}{\ignorespaces Hardware Requirements}}{20}{table.caption.16}%
-\contentsline {table}{\numberline {3.10}{\ignorespaces Use Case Description}}{22}{table.caption.18}%
-\contentsline {table}{\numberline {3.11}{\ignorespaces Use Case Register Details}}{44}{table.caption.39}%
-\contentsline {table}{\numberline {3.12}{\ignorespaces Use Case Login Details}}{45}{table.caption.41}%
-\contentsline {table}{\numberline {3.13}{\ignorespaces Use Case Logout Details}}{46}{table.caption.43}%
-\contentsline {table}{\numberline {3.14}{\ignorespaces Use Case Write Entry Details}}{47}{table.caption.45}%
-\contentsline {table}{\numberline {3.15}{\ignorespaces Use Case Append Tags Details}}{48}{table.caption.47}%
-\contentsline {table}{\numberline {3.16}{\ignorespaces Use Case Set Mood Details}}{49}{table.caption.49}%
-\contentsline {table}{\numberline {3.17}{\ignorespaces Use Case Set Bookmark Details}}{50}{table.caption.51}%
-\contentsline {table}{\numberline {3.18}{\ignorespaces Use Case Attach Media Details}}{51}{table.caption.53}%
-\contentsline {table}{\numberline {3.19}{\ignorespaces Use Case Submit Entry Details}}{52}{table.caption.55}%
-\contentsline {table}{\numberline {3.20}{\ignorespaces Use Case Browse Bookmark Details}}{53}{table.caption.57}%
-\contentsline {table}{\numberline {3.21}{\ignorespaces Use Case View Entries Details}}{54}{table.caption.59}%
-\contentsline {table}{\numberline {3.22}{\ignorespaces Use Case Search Details}}{55}{table.caption.61}%
-\contentsline {table}{\numberline {3.23}{\ignorespaces Use Case Browse Calendar Details}}{56}{table.caption.63}%
-\contentsline {table}{\numberline {3.24}{\ignorespaces Use Case View Analytics Details}}{57}{table.caption.65}%
-\contentsline {table}{\numberline {3.25}{\ignorespaces Use Case View AI Insights Details}}{58}{table.caption.67}%
-\contentsline {table}{\numberline {3.26}{\ignorespaces Use Case Manage Offline Details}}{59}{table.caption.69}%
-\contentsline {table}{\numberline {3.27}{\ignorespaces Use Case Generate Analytics Details}}{60}{table.caption.71}%
-\contentsline {table}{\numberline {3.28}{\ignorespaces Use Case Generate Insights Details}}{61}{table.caption.73}%
-\contentsline {table}{\numberline {3.29}{\ignorespaces Functional Requirements Summary}}{62}{table.caption.74}%
-\contentsline {table}{\numberline {3.30}{\ignorespaces Authentication Functions}}{63}{table.caption.75}%
-\contentsline {table}{\numberline {3.31}{\ignorespaces Core Journaling Functions}}{63}{table.caption.76}%
-\contentsline {table}{\numberline {3.32}{\ignorespaces Content Enhancement Functions - Part 1}}{64}{table.caption.77}%
-\contentsline {table}{\numberline {3.33}{\ignorespaces Content Enhancement Functions - Part 2}}{64}{table.caption.78}%
-\contentsline {table}{\numberline {3.34}{\ignorespaces Content Management and Retrieval Functions - Part 1}}{64}{table.caption.79}%
-\contentsline {table}{\numberline {3.35}{\ignorespaces Content Management and Retrieval Functions - Part 2}}{64}{table.caption.80}%
-\contentsline {table}{\numberline {3.36}{\ignorespaces AI-Powered Analysis Functions}}{65}{table.caption.81}%
-\contentsline {table}{\numberline {3.37}{\ignorespaces Data Management and Synchronization Functions - Part 1}}{65}{table.caption.82}%
-\contentsline {table}{\numberline {3.38}{\ignorespaces Data Management and Synchronization Functions - Part 2}}{65}{table.caption.83}%
-\contentsline {table}{\numberline {3.39}{\ignorespaces User Interface and Experience Functions}}{66}{table.caption.84}%
-\contentsline {table}{\numberline {3.40}{\ignorespaces System Utility Functions}}{67}{table.caption.85}%
-\contentsline {table}{\numberline {3.41}{\ignorespaces Project Resource List}}{69}{table.caption.86}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Visual Studio Code}}{17}{table.caption.8}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Flutter}}{17}{table.caption.9}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Dart}}{18}{table.caption.10}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces Google Chrome}}{18}{table.caption.11}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces Microsoft Word}}{18}{table.caption.12}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces Microsoft Excel}}{18}{table.caption.13}%
+\contentsline {table}{\numberline {3.7}{\ignorespaces Draw.io}}{19}{table.caption.14}%
+\contentsline {table}{\numberline {3.8}{\ignorespaces DeepSeek API}}{19}{table.caption.15}%
+\contentsline {table}{\numberline {3.9}{\ignorespaces Hardware Requirements}}{19}{table.caption.16}%
+\contentsline {table}{\numberline {3.10}{\ignorespaces Use Case Description}}{21}{table.caption.18}%
+\contentsline {table}{\numberline {3.11}{\ignorespaces Use Case Register Details}}{43}{table.caption.39}%
+\contentsline {table}{\numberline {3.12}{\ignorespaces Use Case Login Details}}{44}{table.caption.41}%
+\contentsline {table}{\numberline {3.13}{\ignorespaces Use Case Logout Details}}{45}{table.caption.43}%
+\contentsline {table}{\numberline {3.14}{\ignorespaces Use Case Write Entry Details}}{46}{table.caption.45}%
+\contentsline {table}{\numberline {3.15}{\ignorespaces Use Case Append Tags Details}}{47}{table.caption.47}%
+\contentsline {table}{\numberline {3.16}{\ignorespaces Use Case Set Mood Details}}{48}{table.caption.49}%
+\contentsline {table}{\numberline {3.17}{\ignorespaces Use Case Set Bookmark Details}}{49}{table.caption.51}%
+\contentsline {table}{\numberline {3.18}{\ignorespaces Use Case Attach Media Details}}{50}{table.caption.53}%
+\contentsline {table}{\numberline {3.19}{\ignorespaces Use Case Submit Entry Details}}{51}{table.caption.55}%
+\contentsline {table}{\numberline {3.20}{\ignorespaces Use Case Browse Bookmark Details}}{52}{table.caption.57}%
+\contentsline {table}{\numberline {3.21}{\ignorespaces Use Case View Entries Details}}{53}{table.caption.59}%
+\contentsline {table}{\numberline {3.22}{\ignorespaces Use Case Search Details}}{54}{table.caption.61}%
+\contentsline {table}{\numberline {3.23}{\ignorespaces Use Case Browse Calendar Details}}{55}{table.caption.63}%
+\contentsline {table}{\numberline {3.24}{\ignorespaces Use Case View Analytics Details}}{56}{table.caption.65}%
+\contentsline {table}{\numberline {3.25}{\ignorespaces Use Case View AI Insights Details}}{57}{table.caption.67}%
+\contentsline {table}{\numberline {3.26}{\ignorespaces Use Case Manage Offline Details}}{58}{table.caption.69}%
+\contentsline {table}{\numberline {3.27}{\ignorespaces Use Case Generate Analytics Details}}{59}{table.caption.71}%
+\contentsline {table}{\numberline {3.28}{\ignorespaces Use Case Generate Insights Details}}{60}{table.caption.73}%
+\contentsline {table}{\numberline {3.29}{\ignorespaces Functional Requirements Summary}}{61}{table.caption.74}%
+\contentsline {table}{\numberline {3.30}{\ignorespaces Authentication Functions}}{62}{table.caption.75}%
+\contentsline {table}{\numberline {3.31}{\ignorespaces Core Journaling Functions}}{62}{table.caption.76}%
+\contentsline {table}{\numberline {3.32}{\ignorespaces Content Enhancement Functions - Part 1}}{63}{table.caption.77}%
+\contentsline {table}{\numberline {3.33}{\ignorespaces Content Enhancement Functions - Part 2}}{63}{table.caption.78}%
+\contentsline {table}{\numberline {3.34}{\ignorespaces Content Management and Retrieval Functions - Part 1}}{63}{table.caption.79}%
+\contentsline {table}{\numberline {3.35}{\ignorespaces Content Management and Retrieval Functions - Part 2}}{63}{table.caption.80}%
+\contentsline {table}{\numberline {3.36}{\ignorespaces AI-Powered Analysis Functions}}{64}{table.caption.81}%
+\contentsline {table}{\numberline {3.37}{\ignorespaces Data Management and Synchronization Functions - Part 1}}{64}{table.caption.82}%
+\contentsline {table}{\numberline {3.38}{\ignorespaces Data Management and Synchronization Functions - Part 2}}{64}{table.caption.83}%
+\contentsline {table}{\numberline {3.39}{\ignorespaces User Interface and Experience Functions}}{65}{table.caption.84}%
+\contentsline {table}{\numberline {3.40}{\ignorespaces System Utility Functions}}{66}{table.caption.85}%
+\contentsline {table}{\numberline {3.41}{\ignorespaces Project Resource List}}{68}{table.caption.86}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {4.1}{\ignorespaces Local Database Store Structure}}{72}{table.caption.87}%
-\contentsline {table}{\numberline {4.2}{\ignorespaces Entry Entity Schema}}{73}{table.caption.88}%
-\contentsline {table}{\numberline {4.3}{\ignorespaces Firestore Collection Structure}}{73}{table.caption.89}%
-\contentsline {table}{\numberline {4.4}{\ignorespaces User Document Fields}}{74}{table.caption.90}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Local Database Store Structure}}{71}{table.caption.87}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Entry Entity Schema}}{72}{table.caption.88}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Firestore Collection Structure}}{72}{table.caption.89}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces User Document Fields}}{73}{table.caption.90}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {5.1}{\ignorespaces Risks and Contingencies for Collective Mobile Journaling Application Testing}}{94}{table.caption.110}%
-\contentsline {table}{\numberline {5.2}{\ignorespaces Hardware Requirements for Collective Mobile App Testing}}{95}{table.caption.111}%
-\contentsline {table}{\numberline {5.3}{\ignorespaces Software Requirements for Collective Mobile App Testing}}{96}{table.caption.112}%
-\contentsline {table}{\numberline {5.4}{\ignorespaces Testing Group for Collective Mobile Journaling Application}}{97}{table.caption.113}%
-\contentsline {table}{\numberline {5.5}{\ignorespaces Test Case Login Authentication}}{100}{table.caption.114}%
-\contentsline {table}{\numberline {5.6}{\ignorespaces Test Case Registration}}{101}{table.caption.115}%
-\contentsline {table}{\numberline {5.7}{\ignorespaces Test Case Journal Entry Creation}}{101}{table.caption.116}%
-\contentsline {table}{\numberline {5.8}{\ignorespaces Test Case Journal Entry Editing}}{102}{table.caption.117}%
-\contentsline {table}{\numberline {5.9}{\ignorespaces Test Case AI Insights Generation}}{102}{table.caption.118}%
-\contentsline {table}{\numberline {5.10}{\ignorespaces Test Case Offline Functionality}}{103}{table.caption.119}%
-\contentsline {table}{\numberline {5.11}{\ignorespaces Test Case Data Synchronization}}{103}{table.caption.120}%
-\contentsline {table}{\numberline {5.12}{\ignorespaces Test Case Search Functionality}}{104}{table.caption.121}%
-\contentsline {table}{\numberline {5.13}{\ignorespaces Test Case Bookmark Management}}{104}{table.caption.122}%
-\contentsline {table}{\numberline {5.14}{\ignorespaces Test Case User Profile Management}}{105}{table.caption.123}%
-\contentsline {table}{\numberline {5.15}{\ignorespaces Test Case Image Attachment}}{105}{table.caption.124}%
-\contentsline {table}{\numberline {5.16}{\ignorespaces Test Case Analytics Dashboard}}{106}{table.caption.125}%
-\contentsline {table}{\numberline {5.17}{\ignorespaces Test Case Social Authentication}}{106}{table.caption.126}%
-\contentsline {table}{\numberline {5.18}{\ignorespaces Test Case Theme Switching}}{107}{table.caption.127}%
-\contentsline {table}{\numberline {5.19}{\ignorespaces Test Case Performance Testing}}{107}{table.caption.128}%
-\contentsline {table}{\numberline {5.20}{\ignorespaces Test Case Security Testing}}{108}{table.caption.129}%
-\contentsline {table}{\numberline {5.21}{\ignorespaces Test Case Usability Testing}}{108}{table.caption.130}%
-\contentsline {table}{\numberline {5.22}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{109}{table.caption.131}%
-\contentsline {table}{\numberline {5.23}{\ignorespaces Rating Scale for Usability Evaluation}}{109}{table.caption.132}%
-\contentsline {table}{\numberline {5.24}{\ignorespaces Summary of Usability Testing Results}}{115}{table.caption.143}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Risks and Contingencies for Collective Mobile Journaling Application Testing}}{93}{table.caption.110}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces Hardware Requirements for Collective Mobile App Testing}}{94}{table.caption.111}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces Software Requirements for Collective Mobile App Testing}}{95}{table.caption.112}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces Testing Group for Collective Mobile Journaling Application}}{96}{table.caption.113}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces Test Case Login Authentication}}{99}{table.caption.114}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces Test Case Registration}}{100}{table.caption.115}%
+\contentsline {table}{\numberline {5.7}{\ignorespaces Test Case Journal Entry Creation}}{100}{table.caption.116}%
+\contentsline {table}{\numberline {5.8}{\ignorespaces Test Case Journal Entry Editing}}{101}{table.caption.117}%
+\contentsline {table}{\numberline {5.9}{\ignorespaces Test Case AI Insights Generation}}{101}{table.caption.118}%
+\contentsline {table}{\numberline {5.10}{\ignorespaces Test Case Offline Functionality}}{102}{table.caption.119}%
+\contentsline {table}{\numberline {5.11}{\ignorespaces Test Case Data Synchronization}}{102}{table.caption.120}%
+\contentsline {table}{\numberline {5.12}{\ignorespaces Test Case Search Functionality}}{103}{table.caption.121}%
+\contentsline {table}{\numberline {5.13}{\ignorespaces Test Case Bookmark Management}}{103}{table.caption.122}%
+\contentsline {table}{\numberline {5.14}{\ignorespaces Test Case User Profile Management}}{104}{table.caption.123}%
+\contentsline {table}{\numberline {5.15}{\ignorespaces Test Case Image Attachment}}{104}{table.caption.124}%
+\contentsline {table}{\numberline {5.16}{\ignorespaces Test Case Analytics Dashboard}}{105}{table.caption.125}%
+\contentsline {table}{\numberline {5.17}{\ignorespaces Test Case Social Authentication}}{105}{table.caption.126}%
+\contentsline {table}{\numberline {5.18}{\ignorespaces Test Case Theme Switching}}{106}{table.caption.127}%
+\contentsline {table}{\numberline {5.19}{\ignorespaces Test Case Performance Testing}}{106}{table.caption.128}%
+\contentsline {table}{\numberline {5.20}{\ignorespaces Test Case Security Testing}}{107}{table.caption.129}%
+\contentsline {table}{\numberline {5.21}{\ignorespaces Test Case Usability Testing}}{107}{table.caption.130}%
+\contentsline {table}{\numberline {5.22}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{108}{table.caption.131}%
+\contentsline {table}{\numberline {5.23}{\ignorespaces Rating Scale for Usability Evaluation}}{108}{table.caption.132}%
+\contentsline {table}{\numberline {5.24}{\ignorespaces Summary of Usability Testing Results}}{114}{table.caption.143}%
 \addvspace {10\p@ }
 \contentsline {table}{\numberline {1}{\ignorespaces Collective Mobile Journaling Application Usability Questionnaire}}{127}{table.caption.152}%
 \contentsline {table}{\numberline {2}{\ignorespaces Rating Scale for Usability Evaluation Form}}{128}{table.caption.154}%

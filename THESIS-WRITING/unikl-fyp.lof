@@ -1,75 +1,75 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Rapid Application Development (RAD) Methodology Phases}}{17}{figure.caption.7}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Use Case Diagram for Collective Mobile Journaling Application}}{21}{figure.caption.17}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Registration flow for Writer}}{24}{figure.caption.19}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Login flow for Writer}}{25}{figure.caption.20}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Write Entry flow for Writer}}{26}{figure.caption.21}%
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Edit Entry flow for Writer}}{27}{figure.caption.22}%
-\contentsline {figure}{\numberline {3.7}{\ignorespaces Search flow for Writer}}{28}{figure.caption.23}%
-\contentsline {figure}{\numberline {3.8}{\ignorespaces Analytics flow for Writer}}{29}{figure.caption.24}%
-\contentsline {figure}{\numberline {3.9}{\ignorespaces Insights flow for Writer}}{30}{figure.caption.25}%
-\contentsline {figure}{\numberline {3.10}{\ignorespaces Logout flow for Writer}}{31}{figure.caption.26}%
-\contentsline {figure}{\numberline {3.11}{\ignorespaces Append Tags flow for Writer}}{32}{figure.caption.27}%
-\contentsline {figure}{\numberline {3.12}{\ignorespaces Set Mood flow for Writer}}{33}{figure.caption.28}%
-\contentsline {figure}{\numberline {3.13}{\ignorespaces Set Bookmark flow for Writer}}{34}{figure.caption.29}%
-\contentsline {figure}{\numberline {3.14}{\ignorespaces Attach Media flow for Writer}}{35}{figure.caption.30}%
-\contentsline {figure}{\numberline {3.15}{\ignorespaces Browse Bookmark flow for Writer}}{36}{figure.caption.31}%
-\contentsline {figure}{\numberline {3.16}{\ignorespaces View Entries flow for Writer}}{37}{figure.caption.32}%
-\contentsline {figure}{\numberline {3.17}{\ignorespaces Browse Calendar flow for Writer}}{38}{figure.caption.33}%
-\contentsline {figure}{\numberline {3.18}{\ignorespaces Store/Retrieve Entries Flow}}{39}{figure.caption.34}%
-\contentsline {figure}{\numberline {3.19}{\ignorespaces Manage Offline Flow}}{40}{figure.caption.35}%
-\contentsline {figure}{\numberline {3.20}{\ignorespaces Synchronization Flow}}{41}{figure.caption.36}%
-\contentsline {figure}{\numberline {3.21}{\ignorespaces AI Processing Flow}}{42}{figure.caption.37}%
-\contentsline {figure}{\numberline {3.22}{\ignorespaces Use Case Register}}{43}{figure.caption.38}%
-\contentsline {figure}{\numberline {3.23}{\ignorespaces Use Case Login}}{45}{figure.caption.40}%
-\contentsline {figure}{\numberline {3.24}{\ignorespaces Use Case Logout}}{46}{figure.caption.42}%
-\contentsline {figure}{\numberline {3.25}{\ignorespaces Use Case Write Entry}}{47}{figure.caption.44}%
-\contentsline {figure}{\numberline {3.26}{\ignorespaces Use Case Append Tags}}{48}{figure.caption.46}%
-\contentsline {figure}{\numberline {3.27}{\ignorespaces Use Case Set Mood}}{49}{figure.caption.48}%
-\contentsline {figure}{\numberline {3.28}{\ignorespaces Use Case Set Bookmark}}{50}{figure.caption.50}%
-\contentsline {figure}{\numberline {3.29}{\ignorespaces Use Case Attach Media}}{51}{figure.caption.52}%
-\contentsline {figure}{\numberline {3.30}{\ignorespaces Use Case Submit Entry}}{52}{figure.caption.54}%
-\contentsline {figure}{\numberline {3.31}{\ignorespaces Use Case Browse Bookmark}}{53}{figure.caption.56}%
-\contentsline {figure}{\numberline {3.32}{\ignorespaces Use Case View Entries}}{54}{figure.caption.58}%
-\contentsline {figure}{\numberline {3.33}{\ignorespaces Use Case Search}}{55}{figure.caption.60}%
-\contentsline {figure}{\numberline {3.34}{\ignorespaces Use Case Browse Calendar}}{56}{figure.caption.62}%
-\contentsline {figure}{\numberline {3.35}{\ignorespaces Use Case View Analytics}}{57}{figure.caption.64}%
-\contentsline {figure}{\numberline {3.36}{\ignorespaces Use Case View AI Insights}}{58}{figure.caption.66}%
-\contentsline {figure}{\numberline {3.37}{\ignorespaces Use Case Manage Offline}}{59}{figure.caption.68}%
-\contentsline {figure}{\numberline {3.38}{\ignorespaces Use Case Generate Analytics}}{60}{figure.caption.70}%
-\contentsline {figure}{\numberline {3.39}{\ignorespaces Use Case Generate Insights}}{61}{figure.caption.72}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Rapid Application Development (RAD) Methodology Phases}}{16}{figure.caption.7}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Use Case Diagram for Collective Mobile Journaling Application}}{20}{figure.caption.17}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Registration flow for Writer}}{23}{figure.caption.19}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Login flow for Writer}}{24}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Write Entry flow for Writer}}{25}{figure.caption.21}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Edit Entry flow for Writer}}{26}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Search flow for Writer}}{27}{figure.caption.23}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Analytics flow for Writer}}{28}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Insights flow for Writer}}{29}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Logout flow for Writer}}{30}{figure.caption.26}%
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Append Tags flow for Writer}}{31}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Set Mood flow for Writer}}{32}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Set Bookmark flow for Writer}}{33}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.14}{\ignorespaces Attach Media flow for Writer}}{34}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Browse Bookmark flow for Writer}}{35}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.16}{\ignorespaces View Entries flow for Writer}}{36}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.17}{\ignorespaces Browse Calendar flow for Writer}}{37}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.18}{\ignorespaces Store/Retrieve Entries Flow}}{38}{figure.caption.34}%
+\contentsline {figure}{\numberline {3.19}{\ignorespaces Manage Offline Flow}}{39}{figure.caption.35}%
+\contentsline {figure}{\numberline {3.20}{\ignorespaces Synchronization Flow}}{40}{figure.caption.36}%
+\contentsline {figure}{\numberline {3.21}{\ignorespaces AI Processing Flow}}{41}{figure.caption.37}%
+\contentsline {figure}{\numberline {3.22}{\ignorespaces Use Case Register}}{42}{figure.caption.38}%
+\contentsline {figure}{\numberline {3.23}{\ignorespaces Use Case Login}}{44}{figure.caption.40}%
+\contentsline {figure}{\numberline {3.24}{\ignorespaces Use Case Logout}}{45}{figure.caption.42}%
+\contentsline {figure}{\numberline {3.25}{\ignorespaces Use Case Write Entry}}{46}{figure.caption.44}%
+\contentsline {figure}{\numberline {3.26}{\ignorespaces Use Case Append Tags}}{47}{figure.caption.46}%
+\contentsline {figure}{\numberline {3.27}{\ignorespaces Use Case Set Mood}}{48}{figure.caption.48}%
+\contentsline {figure}{\numberline {3.28}{\ignorespaces Use Case Set Bookmark}}{49}{figure.caption.50}%
+\contentsline {figure}{\numberline {3.29}{\ignorespaces Use Case Attach Media}}{50}{figure.caption.52}%
+\contentsline {figure}{\numberline {3.30}{\ignorespaces Use Case Submit Entry}}{51}{figure.caption.54}%
+\contentsline {figure}{\numberline {3.31}{\ignorespaces Use Case Browse Bookmark}}{52}{figure.caption.56}%
+\contentsline {figure}{\numberline {3.32}{\ignorespaces Use Case View Entries}}{53}{figure.caption.58}%
+\contentsline {figure}{\numberline {3.33}{\ignorespaces Use Case Search}}{54}{figure.caption.60}%
+\contentsline {figure}{\numberline {3.34}{\ignorespaces Use Case Browse Calendar}}{55}{figure.caption.62}%
+\contentsline {figure}{\numberline {3.35}{\ignorespaces Use Case View Analytics}}{56}{figure.caption.64}%
+\contentsline {figure}{\numberline {3.36}{\ignorespaces Use Case View AI Insights}}{57}{figure.caption.66}%
+\contentsline {figure}{\numberline {3.37}{\ignorespaces Use Case Manage Offline}}{58}{figure.caption.68}%
+\contentsline {figure}{\numberline {3.38}{\ignorespaces Use Case Generate Analytics}}{59}{figure.caption.70}%
+\contentsline {figure}{\numberline {3.39}{\ignorespaces Use Case Generate Insights}}{60}{figure.caption.72}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Data Synchronization Flow Process}}{75}{figure.caption.91}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Login screen interface}}{77}{figure.caption.92}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Registration screen with user details form}}{78}{figure.caption.93}%
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Google and Twitter/X OAuth authentication}}{79}{figure.caption.94}%
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Journal home screen showing entry timeline}}{80}{figure.caption.95}%
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Basic journal input interface for writing entries}}{81}{figure.caption.96}%
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Emoji selection interface for mood indication}}{81}{figure.caption.97}%
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Photo attachment interface for adding images}}{82}{figure.caption.98}%
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Integrated camera interface for direct photo capture}}{83}{figure.caption.99}%
-\contentsline {figure}{\numberline {4.10}{\ignorespaces GIF recording interface for creating animated content}}{83}{figure.caption.100}%
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Tag input interface}}{84}{figure.caption.101}%
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Search interface for finding journal entries}}{84}{figure.caption.102}%
-\contentsline {figure}{\numberline {4.13}{\ignorespaces Calendar browsing interface for date-based navigation}}{85}{figure.caption.103}%
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Entry insight screen with AI analysis}}{86}{figure.caption.104}%
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Edit entry screen for modifying entries}}{87}{figure.caption.105}%
-\contentsline {figure}{\numberline {4.16}{\ignorespaces Analytics dashboard showing journaling patterns}}{88}{figure.caption.106}%
-\contentsline {figure}{\numberline {4.17}{\ignorespaces Topic clustering visualization}}{89}{figure.caption.107}%
-\contentsline {figure}{\numberline {4.18}{\ignorespaces Favorites screen showing curated entries}}{90}{figure.caption.108}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Data Synchronization Flow Process}}{74}{figure.caption.91}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Login screen interface}}{76}{figure.caption.92}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Registration screen with user details form}}{77}{figure.caption.93}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Google and Twitter/X OAuth authentication}}{78}{figure.caption.94}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Journal home screen showing entry timeline}}{79}{figure.caption.95}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Basic journal input interface for writing entries}}{80}{figure.caption.96}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Emoji selection interface for mood indication}}{80}{figure.caption.97}%
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Photo attachment interface for adding images}}{81}{figure.caption.98}%
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Integrated camera interface for direct photo capture}}{82}{figure.caption.99}%
+\contentsline {figure}{\numberline {4.10}{\ignorespaces GIF recording interface for creating animated content}}{82}{figure.caption.100}%
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Tag input interface}}{83}{figure.caption.101}%
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Search interface for finding journal entries}}{83}{figure.caption.102}%
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Calendar browsing interface for date-based navigation}}{84}{figure.caption.103}%
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Entry insight screen with AI analysis}}{85}{figure.caption.104}%
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Edit entry screen for modifying entries}}{86}{figure.caption.105}%
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Analytics dashboard showing journaling patterns}}{87}{figure.caption.106}%
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Topic clustering visualization}}{88}{figure.caption.107}%
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Favorites screen showing curated entries}}{89}{figure.caption.108}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Test Process Flow for Collective Mobile Journaling Application}}{93}{figure.caption.109}%
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Result of Question 1 - UI Satisfaction}}{110}{figure.caption.133}%
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Result of Question 2 - Navigation Ease}}{110}{figure.caption.134}%
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Result of Question 3 - Application Performance}}{111}{figure.caption.135}%
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Result of Question 4 - AI Insights Satisfaction}}{111}{figure.caption.136}%
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Result of Question 5 - Offline and Synchronization}}{112}{figure.caption.137}%
-\contentsline {figure}{\numberline {5.7}{\ignorespaces Result of Question 6 - Mood Tracking and Analytics}}{112}{figure.caption.138}%
-\contentsline {figure}{\numberline {5.8}{\ignorespaces Result of Question 7 - Goal Achievement Satisfaction}}{113}{figure.caption.139}%
-\contentsline {figure}{\numberline {5.9}{\ignorespaces Result of Question 8 - Recommendation Likelihood}}{113}{figure.caption.140}%
-\contentsline {figure}{\numberline {5.10}{\ignorespaces Result of Question 9 - Distraction-Free Experience}}{114}{figure.caption.141}%
-\contentsline {figure}{\numberline {5.11}{\ignorespaces Result of Question 10 - Overall Experience Rating}}{114}{figure.caption.142}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Test Process Flow for Collective Mobile Journaling Application}}{92}{figure.caption.109}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Result of Question 1 - UI Satisfaction}}{109}{figure.caption.133}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Result of Question 2 - Navigation Ease}}{109}{figure.caption.134}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Result of Question 3 - Application Performance}}{110}{figure.caption.135}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Result of Question 4 - AI Insights Satisfaction}}{110}{figure.caption.136}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Result of Question 5 - Offline and Synchronization}}{111}{figure.caption.137}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Result of Question 6 - Mood Tracking and Analytics}}{111}{figure.caption.138}%
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Result of Question 7 - Goal Achievement Satisfaction}}{112}{figure.caption.139}%
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Result of Question 8 - Recommendation Likelihood}}{112}{figure.caption.140}%
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Result of Question 9 - Distraction-Free Experience}}{113}{figure.caption.141}%
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Result of Question 10 - Overall Experience Rating}}{113}{figure.caption.142}%
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {.1}{\ignorespaces Collective Mobile Journaling App Development Timeline}}{125}{figure.caption.148}%
