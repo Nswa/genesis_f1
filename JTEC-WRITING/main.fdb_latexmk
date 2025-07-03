@@ -1,17 +1,31 @@
 # Fdb version 4
+<<<<<<< HEAD
 ["bibtex main"] 1751539073.65585 "main.aux" "main.bbl" "main" 1751539075.99882 0
   "./jtec.bib" 1751539071 2406 d2090fd734bd6587878f5c85bea1cf7b ""
   "c:/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1748087268 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
   "main.aux" 1751538858 4012 2b96ca1115d232858a04da8be538ed4f "pdflatex"
+=======
+["bibtex main"] 1751516624.73295 "main.aux" "main.bbl" "main" 1751516638.10434 0
+  "./jtec.bib" 1751516622 3899 a04777869e71a5ca28c23b5290ec946d ""
+  "c:/texlive/2025/texmf-dist/bibtex/bst/ieeetran/IEEEtran.bst" 1748087268 57748 7c8250ecf02814ce6ddc0cdbb63df1dd ""
+  "main.aux" 1751516635 4628 40e18f0a5ea36017d7dad1711f3be5b2 "pdflatex"
+>>>>>>> 2b83e4aa95f194230ed17d491b0ba58ee65972ae
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
+<<<<<<< HEAD
 ["pdflatex"] 1751538613.59521 "c:/Users/Administrator/genesis_f1/JTEC-WRITING/main.tex" "main.pdf" "main" 1751539075.99945 0
   "../THESIS-WRITING/files/imgs/mermaid_diagram.png" 1751255463 86923 afa6c99c1bb599d226c2422c9ecbb5fb ""
   "../THESIS-WRITING/files/imgs/prototype/journal_input_basic.jpeg" 1751233122 65459 be8f2d2215b934b0b92e9c06c1135981 ""
   "IEEEtran.cls" 1710879630 281957 5b2e4fa15b0f7eabb840ebf67df4c0f7 ""
   "c:/Users/Administrator/genesis_f1/JTEC-WRITING/main.tex" 1751539071 19017 f84b8139a36b5cafae24b2f89fca1d8e ""
+=======
+["pdflatex"] 1751516633.32976 "c:/Users/Administrator/genesis_f1/JTEC-WRITING/main.tex" "main.pdf" "main" 1751516638.10513 2
+  "IEEEtran.cls" 1710879630 281957 5b2e4fa15b0f7eabb840ebf67df4c0f7 ""
+  "ai_processing_flow.png" 0 -1 0 ""
+  "c:/Users/Administrator/genesis_f1/JTEC-WRITING/main.tex" 1751516622 19057 fc3c1aa48ffdf1c0ebc180d4fee6ff6d ""
+>>>>>>> 2b83e4aa95f194230ed17d491b0ba58ee65972ae
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc" 1748085732 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1748086466 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1748085218 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -36,12 +50,23 @@
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm7.tfm" 1748083404 940 228d6584342e91276bf566bcf9716b83 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmex10.tfm" 1748084832 992 662f679a0b3d2d53c1b94050fdaa3f50 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1748084832 1528 abec98dbc43e172678c11b3b9031252a ""
+<<<<<<< HEAD
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm" 1748084832 1520 eccf95517727cb11801f4f1aee3a21b4 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1748084832 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1748084832 1292 21c1c5bfeaebccffdb478fd231a0997d ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm" 1748084832 1124 6c73e740cf17375f03eec0ee63599741 ""
   "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1748084832 1120 8b7d695260f3cff42e636090a8002094 ""
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1748083404 32569 5e5ddc8df908dea60932f3c484a54c0d ""
+=======
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm" 1748084832 1512 f21f83efb36853c0b70002322c1ab3ad ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm" 1748084832 1520 eccf95517727cb11801f4f1aee3a21b4 ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr10.tfm" 1748084832 1296 45809c5a464d5f32c8f98ba97c1bb47f ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr6.tfm" 1748084832 1300 b62933e007d01cfd073f79b963c01526 ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr8.tfm" 1748084832 1292 21c1c5bfeaebccffdb478fd231a0997d ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm" 1748084832 1124 6c73e740cf17375f03eec0ee63599741 ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1748084832 1116 933a60c408fc0a863a92debe84b2d294 ""
+  "c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1748084832 1120 8b7d695260f3cff42e636090a8002094 ""
+>>>>>>> 2b83e4aa95f194230ed17d491b0ba58ee65972ae
   "c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1748083404 32716 08e384dc442464e7285e891af9f45947 ""
   "c:/texlive/2025/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb" 1748085218 45758 19968a0990191524e34e1994d4a31cb6 ""
   "c:/texlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb" 1748092192 44729 fea0975e20ec51c992338362f05f1146 ""
@@ -85,7 +110,10 @@
   "c:/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg" 1748088000 678 4792914a8f45be57bb98413425e4c7af ""
   "c:/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.ltd.tex" 1748088192 95525 6fd0552101a6b1f9b7a84b402ec435ba ""
   "c:/texlive/2025/texmf-dist/tex/latex/lipsum/lipsum.sty" 1748088192 14690 c2c754218a7108db7823a4839c1bc3cd ""
+<<<<<<< HEAD
   "c:/texlive/2025/texmf-dist/tex/latex/psnfss/omspcr.fd" 1748090140 576 907c194ce74186f4e40247f2ba1986cf ""
+=======
+>>>>>>> 2b83e4aa95f194230ed17d491b0ba58ee65972ae
   "c:/texlive/2025/texmf-dist/tex/latex/psnfss/ot1pcr.fd" 1748090140 985 1ed784d7bfe47179f3550d2303b073f8 ""
   "c:/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd" 1748090140 961 15056f4a61917ceed3a44e4ac11fcc52 ""
   "c:/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd" 1748090140 619 96f56dc5d1ef1fe1121f1cfeec70ee0c ""
@@ -94,10 +122,21 @@
   "c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1748093490 5569470 f263a82cf6bb394f5bc87b63f38b78df ""
   "c:/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1748093831 3568815 a7e1b091257ac4dad2ebc83c0625ed31 ""
   "c:/texlive/2025/texmf.cnf" 1748093445 713 e69b156964470283e0530f5060668171 ""
+<<<<<<< HEAD
   "jtecimage.png" 1710879630 5903 143ba037d510b1e1b061b5149f3c846b ""
   "main.aux" 1751538858 4012 2b96ca1115d232858a04da8be538ed4f "pdflatex"
   "main.bbl" 1751539075 1077 6a76e6220eab36942fd08e080d4a8670 "bibtex main"
   "main.tex" 1751539071 19017 f84b8139a36b5cafae24b2f89fca1d8e ""
+=======
+  "data_flow_diagram.png" 0 -1 0 ""
+  "jtecimage.png" 1710879630 5903 143ba037d510b1e1b061b5149f3c846b ""
+  "main.aux" 1751516635 4628 40e18f0a5ea36017d7dad1711f3be5b2 "pdflatex"
+  "main.bbl" 1751516626 2783 33e49a52264bebd50567a313acda56b5 "bibtex main"
+  "main.tex" 1751516622 19057 fc3c1aa48ffdf1c0ebc180d4fee6ff6d ""
+  "system_architecture.png" 0 -1 0 ""
+  "ui_interface_screens.png" 0 -1 0 ""
+  "usability_testing_results.png" 0 -1 0 ""
+>>>>>>> 2b83e4aa95f194230ed17d491b0ba58ee65972ae
   (generated)
   "main.aux"
   "main.log"
